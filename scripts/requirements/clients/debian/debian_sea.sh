@@ -76,44 +76,44 @@ lpoptions -d pdf
 /etc/init.d/cups restart
 
 # Create directory for Netstorage 
-mkdir -pv /efc/debian/netstorage
+mkdir -pv /home/debian/netstorage
 
 # Create directory for local storage 
-mkdir -pv /efc/debian/localstorage
+mkdir -pv /home/debian/localstorage
 
 # Create directory for log files  
-mkdir -pv /efc/debian/log
+mkdir -pv /home/debian/log
 
 # Configure Seafile (Cloud storage)
-mkdir -pv /efc/debian/sea /efc/debian/seafile-client
-seaf-cli init -d /efc/debian/seafile-client -c /efc/debian/.ccnet
-seaf-cli start -c /efc/debian/.ccnet
-seaf-cli config -k disable_verify_certificate -v true -c /efc/debian/.ccnet
-seaf-cli config -k enable_http_sync -v true -c /efc/debian/.ccnet
-seaf-cli stop -c /efc/debian/.ccnet
-seaf-cli start -c /efc/debian/.ccnet
-chown -R mininet:mininet /efc/debian/sea/ /efc/debian/seafile-client/ /efc/debian/.ccnet
-echo -e "@reboot sleep 60 && seaf-cli start -c /efc/debian/.ccnet 2>&1 > /dev/null\n" | crontab -
+mkdir -pv /home/debian/sea /home/debian/seafile-client
+seaf-cli init -d /home/debian/seafile-client -c /home/debian/.ccnet
+seaf-cli start -c /home/debian/.ccnet
+seaf-cli config -k disable_verify_certificate -v true -c /home/debian/.ccnet
+seaf-cli config -k enable_http_sync -v true -c /home/debian/.ccnet
+seaf-cli stop -c /home/debian/.ccnet
+seaf-cli start -c /home/debian/.ccnet
+chown -R mininet:mininet /home/debian/sea/ /home/debian/seafile-client/ /home/debian/.ccnet
+echo -e "@reboot sleep 60 && seaf-cli start -c /home/debian/.ccnet 2>&1 > /dev/null\n" | crontab -
 
 # Generate dummy files for seafile
-mkdir -pv /efc/debian/tmpseafiles
+mkdir -pv /home/debian/tmpseafiles
 i=0
 while [ $i -le 100 ]
 do
   i=`expr $i + 1`;
   zufall=$RANDOM;
   zufall=$(($zufall % 9999))
-  dd if=/dev/zero of=/efc/debian/tmpseafiles/test-`expr $zufall`.dat bs=1K count=`expr $zufall`
+  dd if=/dev/zero of=/home/debian/tmpseafiles/test-`expr $zufall`.dat bs=1K count=`expr $zufall`
 done
 
-chown -R mininet:mininet /efc/debian/tmpseafiles/
-chmod -R 755 /efc/debian/tmpseafiles/ 
-chmod -R 755 /efc/debian/sea
+chown -R mininet:mininet /home/debian/tmpseafiles/
+chmod -R 755 /home/debian/tmpseafiles/ 
+chmod -R 755 /home/debian/sea
 
 # Unzip the downloaded scripts from Server 
-unzip automation.zip -d /efc/debian/
-chmod -R 755 /efc/debian/automation
-chown -R mininet:mininet /efc/debian/automation
+unzip automation.zip -d /home/debian/
+chmod -R 755 /home/debian/automation
+chown -R mininet:mininet /home/debian/automation
 
 # Configure auto login after booting the OS 
 mkdir -pv /etc/systemd/system/getty@tty1.service.d/
@@ -129,7 +129,7 @@ cat > /etc/systemd/system/automation.service <<EOF
 Description=Start automation scripts
 
 [Service]
-WorkingDirectory=/efc/debian/automation/
+WorkingDirectory=/home/debian/automation/
 ExecStart=/usr/bin/python readIni.py
 Type=simple
 
@@ -144,7 +144,7 @@ systemctl daemon-reload
 systemctl enable automation.service
 
 # Prettify Prompt 
-echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /efc/debian/.bashrc
+echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /home/debian/.bashrc
 
 # Restart 
 reboot

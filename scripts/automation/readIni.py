@@ -2,7 +2,7 @@ from packages.system import mainscript
 from packages.system.echoX import echoC
 from packages.system import setupWorkingSchedule
 from subprocess import Popen, check_output
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 from datetime import datetime
 from shutil import copyfile
 from uuid import getnode
@@ -87,7 +87,7 @@ def getAndSetSubnetHostAndHostname(parser):
 # Downlaod recent server config 
 def getCurrentServerConfig():
 	newConfigFile = URLopener()
-	newConfigFile.retrieve("192.168.0.127/scripts/automation/packages/system/serverconfig.ini", "packages/system/serverconfig.ini")
+	newConfigFile.retrieve("192.168.0.119/scripts/automation/packages/system/serverconfig.ini", "packages/system/serverconfig.ini")
 	
 # Configure different server services 
 def configServers(parser, subnet, host):
@@ -125,7 +125,7 @@ def configServers(parser, subnet, host):
 	# Mount Netstorage 
 	if platform.system() == "Linux":
 		try:
-			cmd = "mount -t cifs -o username=nobody,password=nobody //" + fileIP + "/netstorage /home/debian/netstorage"
+			cmd = "mount -t cifs -o username=mininet,password=mininet //" + fileIP + "/netstorage /home/debian/netstorage"
 			subprocess.check_call(cmd, shell=True)
 		except Exception as e:
 			echoC(__name__, "Mount netstorage error: " + str(e))
@@ -156,7 +156,7 @@ def configServers(parser, subnet, host):
 		instPrinter.wait()
 		
 	# Configure IP of the web server (intranet)
-	parserBrowsing = SafeConfigParser()
+	parserBrowsing = ConfigParser()
 	parserBrowsing.read("packages/browsing/browser.ini")
 	parserBrowsing.set("internWeb", "url", "http://" + webIP)
 	
@@ -182,7 +182,7 @@ def configServers(parser, subnet, host):
 def configMountWithOpenStackServer():
 	if platform.system() == "Linux":
 		try:
-			cmd = "mount -t cifs -o username=nobody,password=nobody //192.168.0.127/instancelogs /home/debian/log"
+			cmd = "mount -t cifs -o username=mininet,password=mininet //192.168.0.119/instancelogs /home/debian/log"
 			subprocess.check_call(cmd, shell=True)
 		except Exception as e:
 			echoC(__name__, "Mount log server error: " + str(e))
@@ -195,7 +195,7 @@ def configMountWithOpenStackServer():
 			echoC(__name__, "Unmount error: " + str(e))
 
 		try:
-			cmd = "net use M: \\\\192.168.0.127\\instancelogs"
+			cmd = "net use M: \\\\192.168.0.119\\instancelogs"
 			subprocess.check_call(cmd, shell=True)
 		except Exception as e:
 			echoC(__name__, "Mount log  server error: " + str(e))
@@ -213,7 +213,7 @@ def saveConfigToServer():
 def main():
 
 	# Init Parser 
-	parser = SafeConfigParser()
+	parser = ConfigParser()
 
 	# Read configuration file 
 	parser.read("packages/system/config.ini")
@@ -258,7 +258,7 @@ def main():
 		myID = str(intMac)
 	
 	# Fetch recent server config 
-	getCurrentServerConfig()
+	#getCurrentServerConfig()
 	
 	# Read server config 
 	parser.read("packages/system/serverconfig.ini")

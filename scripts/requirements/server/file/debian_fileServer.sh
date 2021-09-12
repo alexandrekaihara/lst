@@ -86,7 +86,7 @@ EOF
 mkdir /home/debian/backup/
 
 # Download the script to set up the backup server
-wget -O /home/debian/backup.py "192.168.0.127/scripts/requirements/server/file/backup.py"
+wget -O /home/debian/backup.py "192.168.0.119/scripts/requirements/server/file/backup.py"
 
 # Run the script to set up the backup server on a regular time interval 
 echo -e "55 21 * * * sudo bash -c 'python /home/debian/backup.py'" >> mycron

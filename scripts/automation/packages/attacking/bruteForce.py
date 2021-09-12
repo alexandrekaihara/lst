@@ -7,8 +7,8 @@ import platform
 
 if platform.system() == "Linux":
 	from pexpect import pxssh
-else:
-	return -1
+#else:
+#	return -1
 
 
 ipList = 'packages/attacking/ipList.txt'
