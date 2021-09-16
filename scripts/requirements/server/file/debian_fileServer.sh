@@ -73,6 +73,7 @@ read only = no
 guest ok = yes
 create mask = 777
 force create mode = 777
+
 EOF
 
 # Configure auto login 
@@ -83,10 +84,11 @@ ExecStart=-/sbin/agetty --autologin debian --noclear %I 38400 linux
 EOF
 
 # Mount the mount point for backup
+mkdir /home/debian
 mkdir /home/debian/backup/
 
 # Download the script to set up the backup server
-wget -O /home/debian/backup.py "192.168.0.119/scripts/requirements/server/file/backup.py"
+wget -O /home/debian/backup.py "192.168.56.101/scripts/requirements/server/file/backup.py"
 
 # Run the script to set up the backup server on a regular time interval 
 echo -e "55 21 * * * sudo bash -c 'python /home/debian/backup.py'" >> mycron
@@ -105,7 +107,7 @@ rm mycron
 
 # Prepare for ssh user login (create stack user with appropriate password)
 useradd -m -s /bin/bash stack
-echo "stack:YOUR_PASSWORD" | chpasswd
+echo "stack:mininet" | chpasswd
 usermod -a -G sudo stack
 
 # Prettify Prompt
