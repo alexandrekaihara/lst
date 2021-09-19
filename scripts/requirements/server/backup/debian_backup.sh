@@ -82,6 +82,7 @@ force create mode = 777
 EOF
 
 # Create auto login 
+mkdir /etc/systemd/system/getty@tty1.service.d
 cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF
 [Service]
 ExecStart=

@@ -986,6 +986,8 @@ do
 		user=`printf "user.%03d.%03d" $subnet $host`
 		sh /tmp/mailsetup/genUser.sh $user mailserver.example
 		host=$((host+1))
+    echo $host
+    echo $subnet
 	done
 	subnet=$((subnet+1))
 	host=0

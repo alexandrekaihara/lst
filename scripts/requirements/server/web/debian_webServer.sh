@@ -28,6 +28,7 @@ apt-get -y update
 apt-get -y upgrade
 
 # Configure auto login 
+mkdir /etc/systemd/system/getty@tty1.service.d
 cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF
 [Service]
 ExecStart=
@@ -35,10 +36,11 @@ ExecStart=-/sbin/agetty --autologin debian --noclear %I 38400 linux
 EOF
 
 # Mount the mount point for backup
-mkdir /home/debian/backup/
+mkdir /home/debian
+mkdir /home/debian/backup
 
 # Download the script to set up the backup server
-wget -O /home/debian/backup.py YOUR_SERVER_IP/skripte/requirements/server/web/backup.py
+wget -O /home/debian/backup.py 192.168.56.101/scripts/requirements/server/web/backup.py
 
 # Run the script to set up the backup server on a regular basis
 echo -e "55 21 * * * sudo bash -c 'python /home/debian/backup.py'" >> mycron
@@ -51,7 +53,7 @@ rm mycron
 
 # User for ssh logins 
 useradd -m -s /bin/bash stack
-echo "stack:YOUR_PASSWORD" | chpasswd
+echo "stack:mininet" | chpasswd
 usermod -a -G sudo stack
 
 # Prettify Prompt 

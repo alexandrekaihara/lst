@@ -9,7 +9,7 @@ apt-get update
 apt-get -y upgrade
 
 # Define the packets to install with apt-get 
-declare -a packagesAptGet=("cups-pdf" "samba")
+declare -a packagesAptGet=("printer-driver-cups-pdf" "samba")
 
 # Install all predefined packages 
 for package in "${packagesAptGet[@]}"
@@ -48,7 +48,7 @@ EOF
 
 # Add user for ssh script 
 useradd -m -s /bin/bash stack
-echo "stack:YOUR_PASSWORD" | chpasswd
+echo "stack:mininet" | chpasswd
 usermod -a -G sudo stack
 
 # Prettify Prompt 
