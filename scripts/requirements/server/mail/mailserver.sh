@@ -11,7 +11,7 @@ echo postfix postfix/mailname string mailserver.com | debconf-set-selections
 echo postfix postfix/main_mailer_type string 'Internet Site' | debconf-set-selections
 
 # Correction for installing the php5
-sudo apt-get install software-properties-common aptitude
+sudo apt-get install software-properties-common aptitude -y
 dpkg -l | grep php| awk '{print $2}' |tr "\n" " "
 sudo aptitude purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
 sudo add-apt-repository ppa:ondrej/php
@@ -19,7 +19,7 @@ sudo apt-get update
 sudo apt-get install php5.6
 
 # Define the packets to install with apt-get 
-declare -a packagesAptGet=("curl" "whois" "mysql-server" "php5.6" "php5.6-imap" "php5.6-mysql" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql")
+declare -a packagesAptGet=("curl" "whois" "mysql-server" "php5.6-imap" "php5.6-mysql" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql")
 
 # Install all predefined packages 
 for package in "${packagesAptGet[@]}"
@@ -976,7 +976,7 @@ curl -d "form=createadmin&setup_password=PWfMS2015&username=postmaster@mailserve
 #setup mailing domain and users
 #every possible user gets an own user
 wget -O /tmp/mailsetup/genDomain.sh 192.168.56.101/scripts/requirements/server/mail/genDomain.sh
-source /tmp/mailsetup/genDomain.sh mailserver.example
+source /tmp/mailsetup/genDomain.sh mailserver.example #fail
 subnet=0
 host=0
 while [ $subnet -le 255 ]

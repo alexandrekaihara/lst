@@ -1,5 +1,5 @@
 from packages.system.echoX import echoC
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -155,7 +155,7 @@ def main():
 	echoC(__name__, "Started mailing script...")
 	
 	# Init parser 
-	parser = SafeConfigParser()
+	parser = ConfigParser()
 	parser.read('packages/mailing/mail.ini')
 
 	# Read e-mail user and password

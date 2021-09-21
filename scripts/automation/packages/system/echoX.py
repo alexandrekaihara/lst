@@ -1,5 +1,5 @@
 from datetime import datetime
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 import time
 import sys
 
@@ -25,7 +25,7 @@ def echoC(modul, text):
 def getRuntime():
 	
 	# Read start time from configuration 
-	parser = SafeConfigParser()
+	parser = ConfigParser()
 	parser.read("packages/system/config.ini")
 	startTime = datetime.strptime(parser.get("starttime", "starttime"), "%y%m%d-%H%M%S%f")
 	

@@ -41,6 +41,7 @@ chmod 777 /media/mailserverbackup
 echo -e "0 20 * * * sudo bash -c 'rm -r /media/webserverbackup/*'" >> mycron
 echo -e "0 20 * * * sudo bash -c 'rm -r /media/fileserverbackup/*'" >> mycron
 echo -e "0 20 * * * sudo bash -c 'rm -r /media/mailserverbackup/*'" >> mycron
+echo -e "@reboot /home/" >> mycron
 
 # Create Cron-Daemon which deletes every night at 01:00 the backup folders 
 echo -e "0 1 * * * sudo bash -c 'apt-get update && apt-get upgrade' >> /var/log/apt/myupdates.log\n" >> mycron

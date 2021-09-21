@@ -10,13 +10,13 @@ crontab -r
 
 
 # Download the scripts from the webserver 
-wget 192.168.0.172/scripts/automation.zip
+wget 192.168.56.101/scripts/automation.zip
 
 
 # From Ubuntu 18 and later, there is no support for libqt4-dev, so must run the following commands
-sudo apt-get install software-properties-common
+sudo apt-get install software-properties-common -y
 sudo add-apt-repository ppa:rock-core/qt4
-sudo apt-get install --yes aptitude
+sudo apt-get install -y aptitude
 #
 
 # Add sources  
@@ -47,18 +47,19 @@ do
 done
 
 # Definition of the Python-Libraries to install 
+python3 -m pip install --upgrade pip
 declare -a packagesPip=("selenium" "pillow" "pyvirtualdisplay" "xvfbwrapper" "pexpect" "python-nmap")
 
 # Install Python-Libs using pip 
 for package in "${packagesPip[@]}"
 do
-	echo "Looking for package $package."
-	until pip show $package | grep -q Location;
-	do
-		echo "$package not found. Installing..."
-		pip install $package
-	done
-	echo "$package found."
+echo "Looking for package $package."
+until pip show $package | grep -q Location;
+do
+echo "$package not found. Installing..."
+python3 -mpip install $package
+done
+echo "$package found."
 done
 
 # Update the system 

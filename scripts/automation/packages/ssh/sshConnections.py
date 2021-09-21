@@ -1,4 +1,4 @@
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 from packages.system.echoX import echoC
 import getpass
 import subprocess
@@ -35,7 +35,7 @@ def main():
 	error = 0
 	
 	# Config file which contains all the IPs of the server
-	parser = SafeConfigParser()
+	parser = ConfigParser()
 	parser.read('packages/system/serverconfig.ini')
 	
 	# Randomly select a subnet

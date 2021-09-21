@@ -3,7 +3,7 @@ from packages.attacking import scan, dos, bruteForce
 from subprocess import Popen
 from datetime import datetime
 from uuid import getnode
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 import threading
 import random
 import datetime
@@ -107,7 +107,7 @@ def main():
 	
 	# Determine end of workday 
 	# Since the attacks can take quite a long time must be checked between whether or not is already evening
-	parser = SafeConfigParser()
+	parser = ConfigParser()
 	parser.read("packages/system/config.ini")
 	endOfWorkday = parser.getint("workinghours", "clock_out")
 	startOfWorkday = parser.getint("workinghours", "clock_in")

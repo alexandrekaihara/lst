@@ -3,7 +3,7 @@ from subprocess import Popen
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 import platform
 import sys
 import time
@@ -186,7 +186,7 @@ def main(mode):
 		slist = 'packages/browsing/privateSearch.txt'
 	
 	# Read private or business page from ini file
-	parser = SafeConfigParser()
+	parser = ConfigParser()
 	parser.read('packages/browsing/browser.ini')
 	site = pick_url(browse, parser)
 	url = parser.get(site, 'url')

@@ -159,14 +159,13 @@ def isWorkingHours(parser):
 
 	# If a status change takes place, a corresponding output is generated
 	# as well as the global flag
-	global isTimeToWork	
+	global isTimeToWork, hadLunchToday
 	if isTimeToWork != isTimeToWorkNew:
 		isTimeToWork = isTimeToWorkNew
 		if isTimeToWork == 1:
 			echoC(__name__, "Workday starts")
 
 			# Status flag for showing whether already lunch break was made already today
-			global hadLunchToday
 			hadLunchToday = False
 		else:
 			echoC(__name__, "Workday ends")

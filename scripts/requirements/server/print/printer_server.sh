@@ -40,6 +40,7 @@ sed -i "/<Location \/>/a \ \ Allow All" /etc/cups/cupsd.conf
 echo -e "0 1 * * * sudo bash -c 'apt-get update && apt-get upgrade' >> /var/log/apt/myupdates.log\n" | crontab -
 
 # Configure auto login 
+mkdir /etc/systemd/system/getty@tty1.service.d/
 cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF
 [Service]
 ExecStart=
@@ -52,6 +53,7 @@ echo "stack:mininet" | chpasswd
 usermod -a -G sudo stack
 
 # Prettify Prompt 
+mkdir /home/debian
 echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /home/debian/.bashrc
 
 reboot
