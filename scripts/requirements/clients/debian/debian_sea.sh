@@ -48,7 +48,7 @@ done
 
 # Definition of the Python-Libraries to install 
 python3 -m pip install --upgrade pip
-declare -a packagesPip=("selenium" "pillow" "pyvirtualdisplay" "xvfbwrapper" "pexpect" "python-nmap")
+declare -a packagesPip=("selenium" "pillow" "pyvirtualdisplay" "xvfbwrapper" "pexpect" "python-nmap" "pycups")
 
 # Install Python-Libs using pip 
 for package in "${packagesPip[@]}"

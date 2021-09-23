@@ -5,6 +5,7 @@ import platform
 import sys
 import random
 import time
+import pups
 
 def main():
 	echoC(__name__, "Start Printing...")
@@ -16,7 +17,6 @@ def main():
 		
 		try:
 			# Determine Default printer	
-			import cups
 			conn = cups.Connection()
 			printers = conn.getPrinters()
 			printer = printers.keys()[0]
