@@ -87,7 +87,7 @@ def getAndSetSubnetHostAndHostname(parser):
 # Downlaod recent server config 
 def getCurrentServerConfig():
 	newConfigFile = URLopener()
-	newConfigFile.retrieve("192.168.56.120/scripts/automation/packages/system/serverconfig.ini", "packages/system/serverconfig.ini")
+	newConfigFile.retrieve("192.168.56.114/scripts/automation/packages/system/serverconfig.ini", "packages/system/serverconfig.ini")
 	
 # Configure different server services 
 def configServers(parser, subnet, host):
@@ -187,7 +187,7 @@ def configServers(parser, subnet, host):
 def configMountWithOpenStackServer():
 	if platform.system() == "Linux":
 		try:
-			cmd = "mount -t cifs -o username=mininet,password=mininet //192.168.56.120/instancelogs /home/debian/log"
+			cmd = "mount -t cifs -o username=mininet,password=mininet //192.168.56.114/instancelogs /home/debian/log"
 			subprocess.check_call(cmd, shell=True)
 		except Exception as e:
 			echoC(__name__, "Mount log server error: " + str(e))
@@ -200,7 +200,7 @@ def configMountWithOpenStackServer():
 			echoC(__name__, "Unmount error: " + str(e))
 
 		try:
-			cmd = "net use M: \\\\192.168.56.120\\instancelogs"
+			cmd = "net use M: \\\\192.168.56.114\\instancelogs"
 			subprocess.check_call(cmd, shell=True)
 		except Exception as e:
 			echoC(__name__, "Mount log  server error: " + str(e))
