@@ -11,7 +11,7 @@ apt-get -y upgrade
 # Define the packets to install with apt-get 
 declare -a packagesAptGet=("printer-driver-cups-pdf" "samba")
 
-# Install all predefined packages 
+# Install all predefined packages 	
 for package in "${packagesAptGet[@]}"
 do
 	echo "Looking for package $package."

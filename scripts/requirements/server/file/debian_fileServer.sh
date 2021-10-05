@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#https://manual.seafile.com/deploy/using_mysql/
 # Set system time 
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime

@@ -5,22 +5,26 @@ import platform
 import sys
 import random
 import time
-import pups
+import cups
 
 def main():
 	echoC(__name__, "Start Printing...")
-	
+
 	# Return value for error detection
 	error = 0
-	
+
 	if platform.system() == "Linux":
 		
 		try:
 			# Determine Default printer	
 			conn = cups.Connection()
 			printers = conn.getPrinters()
-			printer = printers.keys()[0]
-			echoC(__name__, "Found " + printer + " as default printer.")
+			aux = list(printers.keys())
+			if len(aux) > 0:
+				printer = aux[0]
+				echoC(__name__, "Found " + printer + " as default printer.")
+			else:
+				raise 
 			time.sleep(5)
 		
 			# Create print command and call (multiple)
@@ -88,7 +92,7 @@ def main():
 	else:
 		echoC(__name__, "Could not determine OS.")
 		error = -1
-	
+
 	echoC(__name__, "Done")
 	return error
 

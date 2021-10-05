@@ -15,8 +15,8 @@ import platform
 if platform.system() == "Linux":
 	from pexpect import pxssh
 
-user = 'stack'
-secret = 'YOUR_PASSWORD'
+user = 'mininet'
+secret = 'mininet'
 ssh_cmdList = 'packages/ssh/sshOrders.txt'
 ipList = ['mail', 'file', 'web', 'seafile']
 

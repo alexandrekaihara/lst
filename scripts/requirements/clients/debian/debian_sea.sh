@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#https://manual.seafile.com/deploy/using_mysql/ para instalar o seafile server
+
 # Set system time 
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
@@ -67,6 +69,7 @@ aptitude -y update
 aptitude -y upgrade
 
 # Install the geckodriver for selenium (needed for browsing)
+sudo apt-get install firefox
 wget "https://github.com/mozilla/geckodriver/releases/download/v0.29.1/geckodriver-v0.29.1-linux64.tar.gz"
 tar -xzf "geckodriver-v0.29.1-linux64.tar.gz"
 mv geckodriver /opt/
