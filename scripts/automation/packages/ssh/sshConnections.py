@@ -72,7 +72,7 @@ def main():
 			# Send command
 			s.sendline(cmd)
 			s.prompt()
-			echoC(__name__, "SSH output on " + str(ip) +  ": " + s.before)
+			echoC(__name__, "SSH output on " + str(ip) +  ": " + s.before.decode("utf8"))
 			
 			# Wait a bit before it goes on
 			time.sleep(random.randint(3, 60))

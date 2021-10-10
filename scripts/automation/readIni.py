@@ -61,7 +61,7 @@ def setRandomPrivateAndBreak(parser):
 def getAndSetSubnetHostAndHostname(parser):
 	# Determine IP 
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	s.connect(("google.com", 80))
+	s.connect(("www.google.com", 80))
 	ip = (s.getsockname()[0])
 	s.close()
 	echoC(__name__, "My IP is " + ip)
@@ -171,7 +171,7 @@ def configServers(parser, subnet, host):
 	
 	# Configure Seafile (works only for linux, windows must be configured manually)
 	if platform.system() == "Linux":
-		cmd = "seaf-cli sync -l '" + seaFolder + "' -s  'http://" + seaIP + ":80/' -d '/home/debian/sea' -u 'alexandreamk1@gmail.com' -p 'Password123' -c '/home/debian/.ccnet'"
+		cmd = "seaf-cli sync -l '" + seaFolder + "' -s  'http://" + seaIP + ":80' -d '/home/debian/sea' -u 'alexandreamk1@gmail.com' -p 'Password123' -c '/home/debian/.ccnet'"
 		
 		cntErrors = 0
 		while cntErrors < 3:
