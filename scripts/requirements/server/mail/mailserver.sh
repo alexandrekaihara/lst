@@ -37,7 +37,13 @@ apt-get -y update
 apt-get -y upgrade
 
 #postfix configuration
-mysql -uroot --password=PWfMS2015 -e "CREATE DATABASE postfixdb; GRANT ALL PRIVILEGES ON postfixdb.* TO 'postfix'@'localhost' IDENTIFIED BY 'MYSQLPW'; FLUSH PRIVILEGES;"
+mysql -uroot --password=PWfMS2015 -e "CREATE DATABASE postfixdb; CREATE USER 'postfix'@'localhost' IDENTIFIED BY 'MYSQLPW'; GRANT ALL PRIVILEGES ON postfixdb.* TO 'postfix'@'localhost' IDENTIFIED BY 'MYSQLPW'; FLUSH PRIVILEGES;"
+mysql -uroot --password=PWfMS2015 -e "USE postfixdb; 
+CREATE TABLE mailbox (
+  domain VARCHAR(15) PRIMARY KEY,
+  aliases 
+
+); CREATE TABLE alias; CREATE TABLE domain;"
 cd /var/www
 wget --content-disposition https://sourceforge.net/projects/postfixadmin/files/postfixadmin/postfixadmin-3.0.2/postfixadmin-3.0.2.tar.gz/download
 tar xfvz postfixadmin-*.tar.gz
@@ -976,7 +982,7 @@ curl -d "form=createadmin&setup_password=PWfMS2015&username=postmaster@mailserve
 #setup mailing domain and users
 #every possible user gets an own user
 wget -O /tmp/mailsetup/genDomain.sh 192.168.56.101/scripts/requirements/server/mail/genDomain.sh
-source /tmp/mailsetup/genDomain.sh mailserver.example #fail
+source /tmp/mailsetup/genDomain.sh mailserver.example
 subnet=0
 host=0
 while [ $subnet -le 255 ]
@@ -1030,7 +1036,7 @@ rm mycron
 
 # User for ssh script 
 useradd -m -s /bin/bash stack
-echo "stack:YOUR_PASSWORD" | chpasswd
+echo "stack:mininet" | chpasswd
 usermod -a -G sudo stack
 
 # Prettify Prompt 
