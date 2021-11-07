@@ -16,10 +16,10 @@ dpkg -l | grep php| awk '{print $2}' |tr "\n" " "
 sudo aptitude purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
 sudo add-apt-repository ppa:ondrej/php
 sudo apt-get update
-sudo apt-get install php5.6
+sudo apt-get install php5.6 -y
 
 # Define the packets to install with apt-get 
-declare -a packagesAptGet=("curl" "whois" "mysql-server" "php5.6-imap" "php5.6-mysql" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql")
+declare -a packagesAptGet=("curl" "whois" "mysql-server" "php5.6-imap" "php5.6-mbstring" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql")
 
 # Install all predefined packages 
 for package in "${packagesAptGet[@]}"
@@ -37,13 +37,7 @@ apt-get -y update
 apt-get -y upgrade
 
 #postfix configuration
-mysql -uroot --password=PWfMS2015 -e "CREATE DATABASE postfixdb; CREATE USER 'postfix'@'localhost' IDENTIFIED BY 'MYSQLPW'; GRANT ALL PRIVILEGES ON postfixdb.* TO 'postfix'@'localhost' IDENTIFIED BY 'MYSQLPW'; FLUSH PRIVILEGES;"
-mysql -uroot --password=PWfMS2015 -e "USE postfixdb; 
-CREATE TABLE mailbox (
-  domain VARCHAR(15) PRIMARY KEY,
-  aliases 
-
-); CREATE TABLE alias; CREATE TABLE domain;"
+mysql -uroot --password=PWfMS2015 -e "CREATE DATABASE postfixdb; CREATE USER 'postfix'@'localhost' IDENTIFIED BY 'MYSQLPW'; GRANT ALL PRIVILEGES ON postfixdb.* TO 'postfix'@'localhost'; FLUSH PRIVILEGES;SET GLOBAL default_storage_engine = 'InnoDB';"
 cd /var/www
 wget --content-disposition https://sourceforge.net/projects/postfixadmin/files/postfixadmin/postfixadmin-3.0.2/postfixadmin-3.0.2.tar.gz/download
 tar xfvz postfixadmin-*.tar.gz
@@ -134,7 +128,7 @@ function language_hook(\$PALANG, \$language) {
 // mysql = MySQL 3.23 and 4.0, 4.1 or 5
 // mysqli = MySQL 4.1+
 // pgsql = PostgreSQL
-\$CONF['database_type'] = 'mysql';
+\$CONF['database_type'] = 'mysqli';
 \$CONF['database_host'] = 'localhost';
 \$CONF['database_user'] = 'postfix';
 \$CONF['database_password'] = 'MYSQLPW';
@@ -680,7 +674,7 @@ smtpd_tls_session_cache_database = btree:\${data_directory}/smtpd_scache
 smtp_tls_cert_file = /etc/postfix/sslcert/mailserver.crt
 Ösmtp_tls_key_file = /etc/postfix/sslcert/mailserver.key
 smtp_tls_security_level=may
-smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3
+smtpd_tls_mandatory_protocols = !SSLv3
 smtp_tls_session_cache_database = btree:\${data_directory}/smtp_scache
 tls_high_cipherlist=EDH+CAMELLIA:EDH+aRSA:EECDH+aRSA+AESGCM:EECDH+aRSA+SHA384:EECDH+aRSA+SHA256:EECDH:+CAMELLIA256:+AES256:+CAMELLIA128:+AES128:+SSLv3:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!DSS:!RC4:!SEED:!ECDSA:CAMELLIA256-SHA:AES256-SHA:CAMELLIA128-SHA:AES128-SHA
 
@@ -946,7 +940,7 @@ service auth {
 listen = *
 ssl_cert = </etc/postfix/sslcert/mailserver.crt
 ssl_key = </etc/postfix/sslcert/mailserver.key
-ssl_protocols = !SSLv3 !SSLv2
+ssl_min_protocol = !SSLv3
 ssl_cipher_list = EDH+CAMELLIA:EDH+aRSA:EECDH+aRSA+AESGCM:EECDH+aRSA+SHA384:EECDH+aRSA+SHA256:EECDH:+CAMELLIA256:+AES256:+CAMELLIA128:+AES128:+SSLv3:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!DSS:!RC4:!SEED:!ECDSA:CAMELLIA256-SHA:AES256-SHA:CAMELLIA128-SHA:AES128-SHA
 userdb {
   args = /etc/dovecot/dovecot-mysql.conf
@@ -971,12 +965,54 @@ EOF
 chmod o-rwx,g+r /etc/dovecot/dovecot-mysql.conf
 chgrp vmail /etc/dovecot/dovecot-mysql.conf
 /etc/init.d/postfix restart
+# Solving the problem that !SSLv3 was not recognized by dovecot https://b4d.sablun.org/blog/2019-02-25-dovecot_2.3_upgrade_on_debian/
+sudo sed -i "s/!SSLv3/TLSv1.2/g" /etc/dovecot/dovecot.conf
 /etc/init.d/dovecot restart
 /etc/init.d/apache2 restart
 
 #postfix configuration
+# Correcction to connect to database on setup.php
+cat > /etc/mysql/my.cnf << EOF
+#
+# The MySQL database server configuration file.
+#
+# You can copy this to one of:
+# - "/etc/mysql/my.cnf" to set global options,
+# - "~/.my.cnf" to set user-specific options.
+#
+# One can use all long options that the program supports.
+# Run program with --help to get a list of available options and with
+# --print-defaults to see which it would actually understand and use.
+#
+# For explanations see
+# http://dev.mysql.com/doc/mysql/en/server-system-variables.html
+
+#
+# * IMPORTANT: Additional settings that can override those from this file!
+#   The files must end with '.cnf', otherwise they'll be ignored.
+#
+
+!includedir /etc/mysql/conf.d/
+!includedir /etc/mysql/mysql.conf.d/
+
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+[mysqld]
+collation-server = utf8_unicode_ci
+character-set-server = utf8
+default-authentication-plugin=mysql_native_password
+EOF
+
+# Correct the problem with key cannot be more than 1000 bytes long. See more on https://confluence.atlassian.com/fishkb/mysql-database-migration-fails-with-specified-key-was-too-long-max-key-length-is-1000-bytes-298978735.html
+sed -i "s/[Mm][Yy][Ii][Ss][Aa][Mm]/InnoDb/g" /var/www/postfixadmin/upgrade.php
+
 mv /var/www/postfixadmin /var/www/html/
-curl http://127.0.0.1/postfixadmin/setup.php
+curl http://127.0.0.1/postfixadmin/setup.php?debug=1
+# If has a problem with acess to postfixdb access https://askubuntu.com/questions/1268295/phpmyadmin-is-not-working-in-ubuntu-20-04-with-php5-6
 curl -d "form=createadmin&setup_password=PWfMS2015&username=postmaster@mailserver.com&password=PWfMS2015&password2=PWfMS2015&submit=Add+Admin"  http://127.0.0.1/postfixadmin/setup.php
 
 #setup mailing domain and users
@@ -987,16 +1023,16 @@ subnet=0
 host=0
 while [ $subnet -le 255 ]
 do
-	while [ $host -le 255 ]
-	do
-		user=`printf "user.%03d.%03d" $subnet $host`
-		sh /tmp/mailsetup/genUser.sh $user mailserver.example
-		host=$((host+1))
-    echo $host
-    echo $subnet
-	done
-	subnet=$((subnet+1))
-	host=0
+while [ $host -le 255 ]
+do
+user=`printf "user.%03d.%03d" $subnet $host`
+sh /tmp/mailsetup/genUser.sh $user mailserver.example
+host=$((host+1))
+echo $host
+echo $subnet
+done
+subnet=$((subnet+1))
+host=0
 done
 
 # Configure auto login 
@@ -1020,10 +1056,11 @@ fi
 echo -e "0 1 * * * sudo bash -c 'apt-get update && apt-get upgrade' >> /var/log/apt/myupdates.log" >> mycron
 
 # Mount the mount point for backup
+mkdir /home/debian/
 mkdir /home/debian/backup/
 
 # Download the script to set up the backup server
-wget -O /home/debian/backup.py YOUR_SERVER_IP/scripts/requirements/server/mail/backup.py
+wget -O /home/debian/backup.py 192.168.56.101/scripts/requirements/server/mail/backup.py
 
 # Run the script to set up the backup server on a regular basis
 echo -e "55 21 * * * sudo bash -c 'python /home/debian/backup.py'" >> mycron

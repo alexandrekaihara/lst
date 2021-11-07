@@ -24,7 +24,7 @@ def readMails(mailuser, mailuserpw, mailserverIP):
 	mail.login(mailuser, mailuserpw)
 
 	# Selecting a folder - returns the number of mails (as a string) in [1] [0]
-	no_of_msg = mail.select("inbox")[1][0]
+	no_of_msg = mail.select("inbox")[1][0].decode("utf8")
 	echoC(__name__, "Messages in inbox: " + no_of_msg)
 	
 	# Read existing e-mails
@@ -43,7 +43,7 @@ def readMails(mailuser, mailuserpw, mailserverIP):
 			# Read most recent E-Mail 
 			result, data = mail.uid('fetch', latest_email_uid, "(RFC822)")
 	
-		raw_email = data[0][1]
+		raw_email = data[0][1].decode("utf8")
 
 		#Create Email object 
 		email_message = email.message_from_string(raw_email)
@@ -54,7 +54,7 @@ def readMails(mailuser, mailuserpw, mailserverIP):
 				continue
 			if part.get('Content-Disposition') is None:
 				continue
-			data = part.get_payload(decode=True)
+			data = part.get_payload(decode=True).decode("utf8")
 			if not data:
 				continue
 			
@@ -121,7 +121,7 @@ def createMessage(mailuser, to):
 
 	# Random content 
 	noOfChars = random.randint(200, 5000)
-	body = "".join([random.choice(string.letters) for i in xrange(noOfChars)])
+	body = "".join([random.choice(string.ascii_letters) for i in range(noOfChars)])
 	msg.attach(MIMEText(body))
 	
 	return msg

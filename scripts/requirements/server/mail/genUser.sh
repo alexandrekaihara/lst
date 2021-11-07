@@ -21,7 +21,7 @@ domain=$2
 
 
 mysql --host=$DHBOST --user=$DBUSERNAME --password=$DBUSERPASS postfixdb << EOF
-insert into mailbox (username,password,maildir,quota,local_part,domain) values('$username','$password','$maildir','$quota','$local_part','$domain');
+insert into mailbox (username,password, name, maildir,quota,local_part,domain) values('$username','$password', ' ', '$maildir','$quota','$local_part','$domain');
 EOF
 
 address=$1@$2

@@ -22,5 +22,5 @@ backupmx=0
 active=1
 
 mysql --host=$DHBOST --user=$DBUSERNAME --password=$DBUSERPASS postfixdb << EOF
-insert into domain (domain,aliases,mailboxes,maxquota,quota,transport,backupmx,active) values('$domain','$aliases','$mailboxes','$maxquota','$quota','$transport','$backupmx','$active');
+insert into domain (domain, description,aliases,mailboxes,maxquota,quota,transport,backupmx,active) values('$domain', ' ', '$aliases','$mailboxes','$maxquota','$quota','$transport','$backupmx','$active');
 EOF

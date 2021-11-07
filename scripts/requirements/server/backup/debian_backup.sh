@@ -91,6 +91,7 @@ ExecStart=-/sbin/agetty --autologin debian --noclear %I 38400 linux
 EOF
 
 # Prettify Prompt 
+mkdir /home/debian
 echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /home/debian/.bashrc
 
 # Reboot
