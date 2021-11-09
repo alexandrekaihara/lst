@@ -16,10 +16,9 @@ dpkg -l | grep php| awk '{print $2}' |tr "\n" " "
 sudo aptitude purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
 sudo add-apt-repository ppa:ondrej/php
 sudo apt-get update
-sudo apt-get install php5.6 -y
 
 # Define the packets to install with apt-get 
-declare -a packagesAptGet=("curl" "whois" "mysql-server" "php5.6-imap" "php5.6-mbstring" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql")
+declare -a packagesAptGet=("curl" "whois" "mysql-server" "php5.6-mysql" "php5.6" "php5.6-imap" "php5.6-mbstring" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql")
 
 # Install all predefined packages 
 for package in "${packagesAptGet[@]}"
@@ -128,7 +127,7 @@ function language_hook(\$PALANG, \$language) {
 // mysql = MySQL 3.23 and 4.0, 4.1 or 5
 // mysqli = MySQL 4.1+
 // pgsql = PostgreSQL
-\$CONF['database_type'] = 'mysqli';
+\$CONF['database_type'] = 'mysql';
 \$CONF['database_host'] = 'localhost';
 \$CONF['database_user'] = 'postfix';
 \$CONF['database_password'] = 'MYSQLPW';
@@ -966,12 +965,12 @@ chmod o-rwx,g+r /etc/dovecot/dovecot-mysql.conf
 chgrp vmail /etc/dovecot/dovecot-mysql.conf
 /etc/init.d/postfix restart
 # Solving the problem that !SSLv3 was not recognized by dovecot https://b4d.sablun.org/blog/2019-02-25-dovecot_2.3_upgrade_on_debian/
-sudo sed -i "s/!SSLv3/TLSv1.2/g" /etc/dovecot/dovecot.conf
+sudo sed -i "s/\!SSLv3/TLSv1.2/g" /etc/dovecot/dovecot.conf
 /etc/init.d/dovecot restart
 /etc/init.d/apache2 restart
 
 #postfix configuration
-# Correcction to connect to database on setup.php
+# Correction to connect to database on setup.php
 cat > /etc/mysql/my.cnf << EOF
 #
 # The MySQL database server configuration file.
@@ -1009,6 +1008,8 @@ EOF
 
 # Correct the problem with key cannot be more than 1000 bytes long. See more on https://confluence.atlassian.com/fishkb/mysql-database-migration-fails-with-specified-key-was-too-long-max-key-length-is-1000-bytes-298978735.html
 sed -i "s/[Mm][Yy][Ii][Ss][Aa][Mm]/InnoDb/g" /var/www/postfixadmin/upgrade.php
+mysql -uroot --password=PWfMS2015 -e "alter user 'postfix'@'localhost' identified with mysql_native_password by 'MYSQLPW';"
+service mysql restart
 
 mv /var/www/postfixadmin /var/www/html/
 curl http://127.0.0.1/postfixadmin/setup.php?debug=1

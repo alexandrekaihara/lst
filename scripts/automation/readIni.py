@@ -60,12 +60,16 @@ def setRandomPrivateAndBreak(parser):
 
 def getAndSetSubnetHostAndHostname(parser):
 	# Determine IP 
-	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	s.connect(("www.google.com", 80))
-	ip = (s.getsockname()[0])
-	s.close()
-	echoC(__name__, "My IP is " + ip)
-	
+	try:
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		s.connect(("www.google.com", 80))
+		ip = (s.getsockname()[0])
+		s.close()
+		echoC(__name__, "My IP is " + ip)
+	except Exception as e:
+		echoC(__name__, "getandSetSubnetHostAndHostname job error: " + str(e))
+		echoC(__name__, "Trying again to connect to google.com")
+		return -1, -1, -1
 	# Determine subnet using the IP Address 
 	subnet = ip.split('.')[2]
 	
@@ -249,7 +253,9 @@ def main():
 	t = parser.getint("time", "counter")
 	
 	# Determine Subnet- and Host Part of the IP 
-	subnet, host, hostname = getAndSetSubnetHostAndHostname(parser)
+	subnet = host = hostname =-1
+	while (subnet == -1 and host == -1 and hostname == -1):
+		subnet, host, hostname = getAndSetSubnetHostAndHostname(parser)
 	
 	# Determine ID of the instance (MAC-Address as Integer)
 	global myID

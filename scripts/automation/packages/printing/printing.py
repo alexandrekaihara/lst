@@ -24,7 +24,7 @@ def main():
 				printer = aux[0]
 				echoC(__name__, "Found " + printer + " as default printer.")
 			else:
-				raise 
+				raise Exception(" 0 printers found")
 			time.sleep(5)
 		
 			# Create print command and call (multiple)

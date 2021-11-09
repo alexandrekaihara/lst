@@ -76,7 +76,9 @@ mv geckodriver /opt/
 
 # Configure printers 
 /etc/init.d/cups restart
-lpoptions -d pdf
+#lpoptions -d pdf
+# Use instead this command, needs to specify the host https://www.thegeekstuff.com/2015/01/lpadmin-examples/
+lpadmin -p PDF -v socket://192.168.56.117 -E
 /etc/init.d/cups restart
 
 # Create directory for Netstorage 

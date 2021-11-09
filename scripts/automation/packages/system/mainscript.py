@@ -92,11 +92,16 @@ def writeLog(a_start, a_end, act, a_err):
 
 def getSubnetHostAndHostname():
 	# Determine IP of VM 
-	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	s.connect(("google.com", 80))
-	ip = (s.getsockname()[0])
-	s.close()
-	echoC(__name__, "My IP is " + ip)
+	try:
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		s.connect(("google.com", 80))
+		ip = (s.getsockname()[0])
+		s.close()
+		echoC(__name__, "My IP is " + ip)
+	except Exception as e:
+		echoC(__name__, "getSubnetHostAndHostname job error: " + str(e))
+		echoC(__name__, "Trying again to connect to google.com")
+		return -1, -1, -1
 	
 	# Determine Subnet using IP 
 	subnet = ip.split('.')[2]
@@ -320,7 +325,9 @@ def init(browsing, mailing, printing, copyfiles, copysea, ssh, meeting, offline,
 	parser = SafeConfigParser()
 	parser.read("packages/system/config.ini")
 	
-	subnet, host, hostname = getSubnetHostAndHostname()
+	subnet = host = hostname = -1
+	while (subnet == -1 and host == -1 and hostname == -1):
+		subnet, host, hostname = getSubnetHostAndHostname()
 	global myID
 	
 	if platform.system() == "Linux":
