@@ -216,7 +216,7 @@ def main(mode):
 				# Refresh drivers
 				try:
 					driver.get(driver.current_url)
-				except Exception as e:0
+				except Exception as e:
 					echoC(myName, "Error renewing driver after click_on_stuff()")
 					continue
 
