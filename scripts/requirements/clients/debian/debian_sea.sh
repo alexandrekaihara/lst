@@ -34,32 +34,27 @@ apt-get -y upgrade
 
 
 # Define the packets to install with apt-get 
-declare -a packagesAptGet=("aptitude" "python3" "python3-xlib" "libcups2-dev" "python3-pip" "xvfb" "unzip" "cups" "cups-client" "cups-bsd" "cifs-utils" "cmake" "sqlite3" "python2.7" "python3-setuptools" "python3-simplejson" "autoconf" "automake" "libtool" "libevent-dev" "libcurl4-openssl-dev" "libgtk2.0-dev" "uuid-dev" "intltool" "libsqlite3-dev" "valac" "libjansson-dev" "libqt4-dev" "libfuse-dev" "seafile-cli" "grub2" "nmap") # "iceweasel" "python-imaging"
-
-# Install all predefined packages 
-for package in "${packagesAptGet[@]}"
-do
-	echo "Looking for package $package."
-	until dpkg -s $package | grep -q Status;
-	do
-	    echo "$package not found. Installing..."
-	    apt-get --allow-downgrades --allow-remove-essential --allow-change-held-packages --yes install $package
-	done
-	echo "$package found."
-done
 
 # Definition of the Python-Libraries to install 
 python3 -m pip install --upgrade pip
-declare -a packagesPip=("selenium" "pillow" "pyvirtualdisplay" "xvfbwrapper" "pexpect" "python-nmap" "pycups")
+
+# No module selenium found https://shashanksrivastava.medium.com/how-to-fix-no-module-named-selenium-error-in-python-3-da3fd7b61485
+wget https://files.pythonhosted.org/packages/ed/9c/9030520bf6ff0b4c98988448a93c04fcbd5b13cd9520074d8ed53569ccfe/selenium-3.141.0.tar.gz
+tar xf selenium-3.141.0.tar.gz/
+cd selenium-3.141.0
+python3 setup.py install
+
+
+declare -a packagesPip=("selenium" "pillow" "pyvirtualdisplay" "xvfbwrapper" "pexpect" "nmap" "pycups")
 
 # Install Python-Libs using pip 
 for package in "${packagesPip[@]}"
 do
 echo "Looking for package $package."
-until pip show $package | grep -q Location;
+until pip3 show $package | grep -q Location;
 do
 echo "$package not found. Installing..."
-python3 -mpip install $package
+pip3 install $package
 done
 echo "$package found."
 done
@@ -69,7 +64,7 @@ aptitude -y update
 aptitude -y upgrade
 
 # Install the geckodriver for selenium (needed for browsing)
-sudo apt-get install firefox
+sudo apt-get install firefox -y
 wget "https://github.com/mozilla/geckodriver/releases/download/v0.29.1/geckodriver-v0.29.1-linux64.tar.gz"
 tar -xzf "geckodriver-v0.29.1-linux64.tar.gz"
 mv geckodriver /opt/
