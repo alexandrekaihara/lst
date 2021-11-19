@@ -93,7 +93,7 @@ def getRecipient():
 	return user + domain
 
 # Connect to SMTP server
-def getConnection(parser, mailuser, mailuserpw):
+def  getConnection(parser, mailuser, mailuserpw):
 	# Read server names from Mailconfig
 	smtp_server = parser.get('mailconfig', 'smtp')
 	

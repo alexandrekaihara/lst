@@ -7,6 +7,7 @@ rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 # Add to start
+apt-get install --no-install-recommends -y cron=3.0pl1-136ubuntu1
 crontab -r
 
 # Download the scripts from the webserver 
@@ -160,6 +161,3 @@ systemctl enable automation.service
 
 # Prettify Prompt 
 echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /home/debian/.bashrc
-
-# Restart 
-reboot

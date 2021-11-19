@@ -1,9 +1,10 @@
 #!/bin/bash
 
-#update and upgrade
-apt-get -y update
-apt-get -y upgrade
+# Set system time 
+rm /etc/localtime
+ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
+cd /tmp/mailsetup
 echo mysql-server mysql-server/root_password select PWfMS2015 | debconf-set-selections
 echo mysql-server mysql-server/root_password_again select PWfMS2015 | debconf-set-selections
 
@@ -11,32 +12,34 @@ echo postfix postfix/mailname string mailserver.com | debconf-set-selections
 echo postfix postfix/main_mailer_type string 'Internet Site' | debconf-set-selections
 
 # Correction for installing the php5
-sudo apt-get install software-properties-common aptitude -y
+sudo apt-get install -y --no-install-recommends software-properties-common=0.99.9.8 aptitude=0.8.12-1ubuntu4
 dpkg -l | grep php| awk '{print $2}' |tr "\n" " "
 sudo aptitude purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
-sudo add-apt-repository ppa:ondrej/php
-apt install -y --no-intall-recommends php5.6
+echo "\n" | sudo add-apt-repository ppa:ondrej/php
+RUNLEVEL=1 apt install -y --no-install-recommends php5.6
 sudo apt-get update
 
+# Resolve MySQLd missing directory: https://stackoverflow.com/questions/34954455/mysql-daemon-lock-issue
+mkdir /var/run/mysqld
+chmod 777 /var/run/mysqld
+
 # Define the packets to install with apt-get 
-declare -a packagesAptGet=("curl" "whois" "mysql-server" "php5.6-mysql" "php5.6-imap" "php5.6-mbstring" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql" "dos2unix")
+declare -a packagesAptGet=("php5.6-mysql" "php5.6" "php5.6-imap" "php5.6-mbstring" "apache2=2.4.41-4ubuntu3.8" "dovecot-core=1:2.3.7.2-1ubuntu3.5" "dovecot-mysql=1:2.3.7.2-1ubuntu3.5" "dovecot-imapd=1:2.3.7.2-1ubuntu3.5" "dovecot-pop3d=1:2.3.7.2-1ubuntu3.5" "postfix=3.4.13-0ubuntu1.2" "postfix-mysql=3.4.13-0ubuntu1.2" "curl=7.68.0-1ubuntu2.7" "whois=5.5.6" "wget" "dos2unix" "mysql-server=8.0.27-0ubuntu0.20.04.1")
 
 # Install all predefined packages 
 for package in "${packagesAptGet[@]}"
 do
-	echo "Looking for package $package."
-	until dpkg -s $package | grep -q Status;
-	do
-	    echo "$package not found. Installing..."
-	    apt-get --force-yes --yes install $package
-	done
-	echo "$package found."
+  RUNLEVEL=1 apt-get --force-yes --yes --no-install-recommends install $package
 done
 
+# Continuation of MySQLd problem
+chown mysql:mysql /var/run/mysqld
+
+# Update again
 apt-get -y update
 apt-get -y upgrade
 
-#postfix configuration
+# Postfix configuration
 mysql -uroot --password=PWfMS2015 -e "CREATE DATABASE postfixdb; CREATE USER 'postfix'@'localhost' IDENTIFIED BY 'MYSQLPW'; GRANT ALL PRIVILEGES ON postfixdb.* TO 'postfix'@'localhost'; FLUSH PRIVILEGES;SET GLOBAL default_storage_engine = 'InnoDB';"
 cd /var/www
 wget --content-disposition https://sourceforge.net/projects/postfixadmin/files/postfixadmin/postfixadmin-3.0.2/postfixadmin-3.0.2.tar.gz/download
@@ -44,9 +47,6 @@ tar xfvz postfixadmin-*.tar.gz
 mv postfixadmin*/ postfixadmin
 chown www-data:www-data -R postfixadmin
 cd postfixadmin
-#??
-#sed -i "s/change-this-to-your.domain.tld/domain.tld/g" config.inc.php
-#write config.inc.php, end at line 648
 cat > config.inc.php <<EOF
 <?php
 /**
@@ -995,7 +995,7 @@ cat > /etc/mysql/my.cnf << EOF
 !includedir /etc/mysql/conf.d/
 !includedir /etc/mysql/mysql.conf.d/
 
-[client]
+[client] 
 default-character-set=utf8
 
 [mysql]
@@ -1013,15 +1013,15 @@ mysql -uroot --password=PWfMS2015 -e "alter user 'postfix'@'localhost' identifie
 service mysql restart
 
 mv /var/www/postfixadmin /var/www/html/
-curl http://127.0.0.1/postfixadmin/setup.php?debug=1
+php /var/www/postfixadmin/setup.php #curl http://127.0.0.1/postfixadmin/setup.php?debug=1
 # If has a problem with acess to postfixdb access https://askubuntu.com/questions/1268295/phpmyadmin-is-not-working-in-ubuntu-20-04-with-php5-6
 curl -d "form=createadmin&setup_password=PWfMS2015&username=postmaster@mailserver.com&password=PWfMS2015&password2=PWfMS2015&submit=Add+Admin"  http://127.0.0.1/postfixadmin/setup.php
 
-
-
 #setup mailing domain and users
 #every possible user gets an own user
-wget -O /tmp/mailsetup/genDomain.sh 192.168.56.101/scripts/requirements/server/mail/genDomain.sh
+## Corretion of Docker COPY files not in UNIX format https://askubuntu.com/questions/966488/how-do-i-fix-r-command-not-found-errors-running-bash-scripts-in-wsl
+dos2unix /tmp/mailsetup/genDomain.sh
+dos2unix /tmp/mailsetup/genUser.sh
 source /tmp/mailsetup/genDomain.sh mailserver.example
 subnet=0
 host=0
@@ -1060,11 +1060,7 @@ fi
 echo -e "0 1 * * * sudo bash -c 'apt-get update && apt-get upgrade' >> /var/log/apt/myupdates.log" >> mycron
 
 # Mount the mount point for backup
-mkdir /home/debian/
 mkdir /home/debian/backup/
-
-# Download the script to set up the backup server
-wget -O /home/debian/backup.py 192.168.56.101/scripts/requirements/server/mail/backup.py
 
 # Run the script to set up the backup server on a regular basis
 echo -e "55 21 * * * sudo bash -c 'python /home/debian/backup.py'" >> mycron
@@ -1083,4 +1079,5 @@ usermod -a -G sudo stack
 # Prettify Prompt 
 echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /home/debian/.bashrc
 
-reboot
+mysql -uroot --password=PWfMS2015 -e "USE posfixdb; showtables;"
+sleep 60

