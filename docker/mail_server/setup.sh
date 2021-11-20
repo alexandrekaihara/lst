@@ -15,8 +15,13 @@ echo postfix postfix/main_mailer_type string 'Internet Site' | debconf-set-selec
 sudo apt-get install -y --no-install-recommends software-properties-common=0.99.9.8 aptitude=0.8.12-1ubuntu4
 dpkg -l | grep php| awk '{print $2}' |tr "\n" " "
 sudo aptitude purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
-echo "\n" | sudo add-apt-repository ppa:ondrej/php
-RUNLEVEL=1 apt install -y --no-install-recommends php5.6
+# Guarantee what is going to 
+declare -a packagesAptGet=("php5.6")
+until dpkg -s php5.6 | grep -q Status;
+do
+  echo "\n" | sudo add-apt-repository ppa:ondrej/php
+  RUNLEVEL=1 apt install -y --no-install-recommends php5.6
+done
 sudo apt-get update
 
 # Resolve MySQLd missing directory: https://stackoverflow.com/questions/34954455/mysql-daemon-lock-issue
@@ -42,8 +47,10 @@ apt-get -y upgrade
 # Postfix configuration
 mysql -uroot --password=PWfMS2015 -e "CREATE DATABASE postfixdb; CREATE USER 'postfix'@'localhost' IDENTIFIED BY 'MYSQLPW'; GRANT ALL PRIVILEGES ON postfixdb.* TO 'postfix'@'localhost'; FLUSH PRIVILEGES;SET GLOBAL default_storage_engine = 'InnoDB';"
 cd /var/www
-wget --content-disposition https://sourceforge.net/projects/postfixadmin/files/postfixadmin/postfixadmin-3.0.2/postfixadmin-3.0.2.tar.gz/download
-tar xfvz postfixadmin-*.tar.gz
+until tar xfvz postfixadmin-*.tar.gz
+do
+  wget --content-disposition https://sourceforge.net/projects/postfixadmin/files/postfixadmin/postfixadmin-3.0.2/postfixadmin-3.0.2.tar.gz/download
+done
 mv postfixadmin*/ postfixadmin
 chown www-data:www-data -R postfixadmin
 cd postfixadmin
@@ -1013,7 +1020,7 @@ mysql -uroot --password=PWfMS2015 -e "alter user 'postfix'@'localhost' identifie
 service mysql restart
 
 mv /var/www/postfixadmin /var/www/html/
-php /var/www/postfixadmin/setup.php #curl http://127.0.0.1/postfixadmin/setup.php?debug=1
+php /var/www/html/postfixadmin/setup.php #curl http://127.0.0.1/postfixadmin/setup.php?debug=1
 # If has a problem with acess to postfixdb access https://askubuntu.com/questions/1268295/phpmyadmin-is-not-working-in-ubuntu-20-04-with-php5-6
 curl -d "form=createadmin&setup_password=PWfMS2015&username=postmaster@mailserver.com&password=PWfMS2015&password2=PWfMS2015&submit=Add+Admin"  http://127.0.0.1/postfixadmin/setup.php
 
@@ -1080,4 +1087,4 @@ usermod -a -G sudo stack
 echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /home/debian/.bashrc
 
 mysql -uroot --password=PWfMS2015 -e "USE posfixdb; showtables;"
-sleep 60
+sleep 100000
