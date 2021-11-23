@@ -51,7 +51,7 @@ python3 -m pip install --upgrade pip
 
 # No module selenium found https://shashanksrivastava.medium.com/how-to-fix-no-module-named-selenium-error-in-python-3-da3fd7b61485
 wget https://files.pythonhosted.org/packages/ed/9c/9030520bf6ff0b4c98988448a93c04fcbd5b13cd9520074d8ed53569ccfe/selenium-3.141.0.tar.gz
-tar xf selenium-3.141.0.tar.gz/
+tar xf selenium-3.141.0.tar.gz
 cd selenium-3.141.0
 python3 setup.py install
 
