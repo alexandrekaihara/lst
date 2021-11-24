@@ -21,6 +21,14 @@ ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 #rm main.zip
 #source /home/cidds-main/docker/utils.sh
 
+## Corretion of Docker COPY files not in UNIX format https://askubuntu.com/questions/966488/how-do-i-fix-r-command-not-found-errors-running-bash-scripts-in-wsl
+dos2unix /tmp/mailsetup/genDomain.sh
+dos2unix /tmp/mailsetup/genUser.sh
+dos2unix /tmp/mailsetup/mysql_conf.sh
+dos2unix /tmp/mailsetup/config_inc_php.sh
+dos2unix /tmp/mailsetup/postfix_config.sh
+dos2unix /tmp/mailsetup/dovecot_config.sh
+
 # Configure database
 cd /tmp/mailsetup
 echo mysql-server mysql-server/root_password select PWfMS2015 | debconf-set-selections
@@ -138,9 +146,6 @@ curl -d "form=createadmin&setup_password=PWfMS2015&username=postmaster@mailserve
 
 # Setup mailing domain and users
 ## Every possible user gets an own user
-## Corretion of Docker COPY files not in UNIX format https://askubuntu.com/questions/966488/how-do-i-fix-r-command-not-found-errors-running-bash-scripts-in-wsl
-dos2unix /tmp/mailsetup/genDomain.sh
-dos2unix /tmp/mailsetup/genUser.sh
 source /tmp/mailsetup/genDomain.sh mailserver.example
 subnet=0
 host=0
