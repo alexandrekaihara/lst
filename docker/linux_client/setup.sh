@@ -12,15 +12,17 @@ crontab -r
 
 # Download the scripts from the webserver 
 #wget 192.168.56.101/scripts/automation.zip
-wget -m http://192.168.56.101/scripts/automation
-mv 192.168.56.101/scripts/automation /home/debian/automation/
+until mv 192.168.56.101/scripts/automation /home/debian/automation/
+do
+    wget -m http://192.168.56.101/scripts/automation
+done
 rm -r 192.168.56.101
 chmod -R 755 /home/debian/automation
 
 # From Ubuntu 18 and later, there is no support for libqt4-dev, so must run the following commands
-sudo apt-get install software-properties-common -y
 until dpkg -s aptitude | grep -q Status;
 do
+    apt-get install -y --no-install-recommends software-properties-common
     echo "\n" | sudo add-apt-repository ppa:rock-core/qt4
     sudo apt-get install -y aptitude
 done

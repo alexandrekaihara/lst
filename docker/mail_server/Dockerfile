@@ -21,14 +21,14 @@ COPY genUser.sh /tmp/mailsetup
 COPY genDomain.sh /tmp/mailsetup
 
 # Start setup
-COPY setup.sh .
-RUN chmod +x setup.sh\
-&& ./setup.sh
+#COPY setup.sh .
+#RUN chmod +x setup.sh\
+#&& ./setup.sh
 
 # Start samba and dummy files on start
-COPY onboot.sh /home
-RUN chmod +x /home/onboot.sh
-CMD ["./home/onboot.sh"]
+#COPY onboot.sh /home
+#RUN chmod +x /home/onboot.sh
+#CMD ["./home/onboot.sh"]
 
 # For conecting via Open SSL
 EXPOSE 22

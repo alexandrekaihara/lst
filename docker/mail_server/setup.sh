@@ -4,6 +4,13 @@
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
+# Get a common files
+apt install -y --no-install-recommends unzip wget
+wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip
+unzip main.zip -d /home/  
+source /home/cidds-main/docker/utils.sh
+
+# Configure database
 cd /tmp/mailsetup
 echo mysql-server mysql-server/root_password select PWfMS2015 | debconf-set-selections
 echo mysql-server mysql-server/root_password_again select PWfMS2015 | debconf-set-selections
@@ -12,7 +19,16 @@ echo postfix postfix/mailname string mailserver.com | debconf-set-selections
 echo postfix postfix/main_mailer_type string 'Internet Site' | debconf-set-selections
 
 # Correction for installing the php5
-sudo apt-get install -y --no-install-recommends software-properties-common=0.99.9.8 aptitude=0.8.12-1ubuntu4
+declare -a versionsAptGet=("=0.99.9.8" "=0.8.12-1ubuntu4")
+declare -a packagesAptGet=("software-properties-common" "aptitude")
+count=${#packagesAptGet[@]}
+for i in `seq 1 $count`
+  do
+    until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
+    do
+      apt-get install -y --no-install-recommends --force-yes ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    done
+done
 dpkg -l | grep php| awk '{print $2}' |tr "\n" " "
 sudo aptitude purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
 # Guarantee what is going to 
@@ -29,9 +45,7 @@ mkdir /var/run/mysqld
 chmod 777 /var/run/mysqld
 
 # Define the packets to install with apt-get 
-declare -a packagesAptGet=("php5.6-mysql" "php5.6" "php5.6-imap" "php5.6-mbstring" "apache2=2.4.41-4ubuntu3.8" "dovecot-core=1:2.3.7.2-1ubuntu3.5" "dovecot-mysql=1:2.3.7.2-1ubuntu3.5" "dovecot-imapd=1:2.3.7.2-1ubuntu3.5" "dovecot-pop3d=1:2.3.7.2-1ubuntu3.5" "postfix=3.4.13-0ubuntu1.2" "postfix-mysql=3.4.13-0ubuntu1.2" "curl=7.68.0-1ubuntu2.7" "whois=5.5.6" "wget" "dos2unix" "mysql-server=8.0.27-0ubuntu0.20.04.1")
-
-# Install all predefined packages 
+declare -a packagesAptGet=("php5.6-mysql" "php5.6" "php5.6-imap" "php5.6-mbstring" "apache2=2.4.41-4ubuntu3.8" "dovecot-core=1:2.3.7.2-1ubuntu3.5" "dovecot-mysql=1:2.3.7.2-1ubuntu3.5" "dovecot-imapd=1:2.3.7.2-1ubuntu3.5" "dovecot-pop3d=1:2.3.7.2-1ubuntu3.5" "postfix=3.4.13-0ubuntu1.2" "postfix-mysql=3.4.13-0ubuntu1.2" "curl=7.68.0-1ubuntu2.7" "whois=5.5.6" "dos2unix" "mysql-server=8.0.27-0ubuntu0.20.04.1")
 for package in "${packagesAptGet[@]}"
 do
   RUNLEVEL=1 apt-get --force-yes --yes --no-install-recommends install $package
@@ -1039,7 +1053,9 @@ do
 user=`printf "user.%03d.%03d" $subnet $host`
 sh /tmp/mailsetup/genUser.sh $user mailserver.example
 host=$((host+1))
-echo $host
+#echo $host
+#
+
 echo $subnet
 done
 subnet=$((subnet+1))
