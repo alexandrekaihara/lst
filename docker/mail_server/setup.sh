@@ -5,40 +5,43 @@ rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 # Get common files from github
-declare -a packagesAptGet=("unzip" "wget")
-count=${#packagesAptGet[@]}
-for i in `seq 1 $count` 
-do
-  until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
-  do
-    apt-get install -y --force-yes ${packagesAptGet[$i-1]}
-  done
-done
-until unzip -o main.zip -d /home/
-do
-  wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
-done
-rm main.zip
-source /home/cidds-main/docker/utils.sh
+#declare -a packagesAptGet=("unzip" "wget")
+#count=${#packagesAptGet[@]}
+#for i in `seq 1 $count` 
+#do
+#  until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
+#  do
+#    apt-get install -y ${packagesAptGet[$i-1]}
+#  done
+#done
+#until unzip -o main.zip -d /home/
+#do
+#  wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
+#done
+#rm main.zip
+#source /home/cidds-main/docker/utils.sh
 
 # Configure database
 cd /tmp/mailsetup
 echo mysql-server mysql-server/root_password select PWfMS2015 | debconf-set-selections
-echo mysql-server mysql-server/root_passworda_again select PWfMS2015 | debconf-set-selections
+echo mysql-server mysql-server/root_password_again select PWfMS2015 | debconf-set-selections
+
 echo postfix postfix/mailname string mailserver.com | debconf-set-selections
 echo postfix postfix/main_mailer_type string 'Internet Site' | debconf-set-selections
 
-# Correction for installing the right version of php and adding repository to install the dependencies
+# Correction for installing the php5
 declare -a versionsAptGet=("=0.99.9.8" "=0.8.12-1ubuntu4")
 declare -a packagesAptGet=("software-properties-common" "aptitude")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do
-  SafeAptInstall ${packagesAptGet[$i-1]} ${versionsAptGet[$i-1]}
+  until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
+  do
+    apt install -y --no-install-recommends ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    done
 done
 dpkg -l | grep php| awk '{print $2}' |tr "\n" " "
 sudo aptitude purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
-## Guarantee that it is going to add repository
 until dpkg -s php5.6 | grep -q Status;
 do
   echo "\n" | sudo add-apt-repository ppa:ondrej/php
@@ -51,12 +54,15 @@ mkdir /var/run/mysqld
 chmod 777 /var/run/mysqld
 
 # Define the packets to install with apt-get 
-declare -a versionsAptGet=("" "" "" "=2.4.41-4ubuntu3.8" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=3.4.13-0ubuntu1.2" "=3.4.13-0ubuntu1.2" "=7.68.0-1ubuntu2.7" "=5.5.6" "=7.4.0-2" "=8.0.27-0ubuntu0.20.04.1")
-declare -a packagesAptGet=("php5.6-mysql" "php5.6-imap" "php5.6-mbstring" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql" "curl" "whois" "dos2unix" "mysql-server")
+declare -a versionsAptGet=("=8.0.27-0ubuntu0.20.04.1" "" "" "" "=2.4.41-4ubuntu3.8" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=3.4.13-0ubuntu1.2" "=3.4.13-0ubuntu1.2" "=7.68.0-1ubuntu2.7" "=5.5.6" "=7.4.0-2" "=1.20.3-1ubuntu1")
+declare -a packagesAptGet=("mysql-server" "php5.6-mysql" "php5.6-imap" "php5.6-mbstring" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql" "curl" "whois" "dos2unix" "wget")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do
-  SafeAptInstall ${packagesAptGet[$i-1]} ${versionsAptGet[$i-1]}
+    until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
+  do
+    RUNLEVEL=1 apt-get --force-yes --yes --no-install-recommends install ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+  done
 done
 
 # Continuation of MySQLd solution
@@ -69,14 +75,16 @@ apt-get -y upgrade
 # Postfix configuration
 mysql -uroot --password=PWfMS2015 -e "CREATE DATABASE postfixdb; CREATE USER 'postfix'@'localhost' IDENTIFIED BY 'MYSQLPW'; GRANT ALL PRIVILEGES ON postfixdb.* TO 'postfix'@'localhost'; FLUSH PRIVILEGES;SET GLOBAL default_storage_engine = 'InnoDB';"
 cd /var/www
-until tar xfvz postfixadmin-*.tar.gz
+until mv postfixadmin*/ postfixadmin
 do
   wget --content-disposition https://sourceforge.net/projects/postfixadmin/files/postfixadmin/postfixadmin-3.0.2/postfixadmin-3.0.2.tar.gz/download
+  tar xfvz postfixadmin-*.tar.gz
+  rm postfixadmin-*.tar.gz
 done
-mv postfixadmin*/ postfixadmin
 chown www-data:www-data -R postfixadmin
 cd postfixadmin
 source /tmp/mailsetup/config_inc_php.sh
+
 ## Postfix user
 groupadd -g 5000 vmail
 useradd -g vmail -u 5000 vmail -d /var/vmail
@@ -108,7 +116,6 @@ source /tmp/mailsetup/dovecot_config.sh
 chmod o-rwx,g+r /etc/dovecot/dovecot-mysql.conf
 chgrp vmail /etc/dovecot/dovecot-mysql.conf
 /etc/init.d/postfix restart
-
 # Solving the problem that !SSLv3 was not recognized by dovecot https://b4d.sablun.org/blog/2019-02-25-dovecot_2.3_upgrade_on_debian/
 sudo sed -i "s/\!SSLv3/TLSv1.2/g" /etc/dovecot/dovecot.conf
 /etc/init.d/dovecot restart
@@ -123,12 +130,14 @@ mysql -uroot --password=PWfMS2015 -e "alter user 'postfix'@'localhost' identifie
 service mysql restart
 
 mv /var/www/postfixadmin /var/www/html/
+test -f /var/www/postfixadmin/config.inc.php && echo "$FILE exists" 
 php /var/www/html/postfixadmin/setup.php #curl http://127.0.0.1/postfixadmin/setup.php?debug=1
+sleep 30
 # If has a problem with acess to postfixdb access https://askubuntu.com/questions/1268295/phpmyadmin-is-not-working-in-ubuntu-20-04-with-php5-6
 curl -d "form=createadmin&setup_password=PWfMS2015&username=postmaster@mailserver.com&password=PWfMS2015&password2=PWfMS2015&submit=Add+Admin"  http://127.0.0.1/postfixadmin/setup.php
 
-#setup mailing domain and users
-#every possible user gets an own user
+# Setup mailing domain and users
+## Every possible user gets an own user
 ## Corretion of Docker COPY files not in UNIX format https://askubuntu.com/questions/966488/how-do-i-fix-r-command-not-found-errors-running-bash-scripts-in-wsl
 dos2unix /tmp/mailsetup/genDomain.sh
 dos2unix /tmp/mailsetup/genUser.sh
@@ -188,6 +197,3 @@ usermod -a -G sudo stack
 
 # Prettify Prompt 
 echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /home/debian/.bashrc
-
-mysql -uroot --password=PWfMS2015 -e "USE posfixdb; showtables;"
-sleep 100000

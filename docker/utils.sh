@@ -6,6 +6,6 @@ function SafeAptInstall (){
     versions=$2
     until dpkg -s $packages | grep -q Status;
     do
-        apt-get install -y --no-install-recommends --force-yes $packages$versions
+        apt-get install -y $packages$versions
     done
 }
