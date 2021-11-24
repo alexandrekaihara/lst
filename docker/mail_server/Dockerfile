@@ -19,6 +19,8 @@ RUN mkdir /home/debian \
 COPY backup.py /home/debian
 COPY genUser.sh /tmp/mailsetup
 COPY genDomain.sh /tmp/mailsetup
+COPY config_inc_php.sh /tmp/mailserver
+COPY postfix_config.sh /tmp/mailserver
 
 # Start setup
 #COPY setup.sh .
