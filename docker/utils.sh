@@ -1,12 +1,14 @@
 #!/bin/bash
 
 SafeAptInstall (){
-    count=${1[@]}
+    packages=$1
+    versions=$2
+    count=${#packages[@]}
     for i in `seq 1 $count`
     do
-        until dpkg -s ${1[$i-1]} | grep -q Status;
+        until dpkg -s ${packages[$i-1]} | grep -q Status;
         do
-        apt-get install -y --no-install-recommends --force-yes ${1[$i-1]}${2[$i-1]}
+            RUNLEVEL=1 apt-get install -y --no-install-recommends --force-yes ${packages[$i-1]}${versions[$i-1]}
         done
     done
 }
