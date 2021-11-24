@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SafeAptInstall (){
-    count=${#1[@]}
+    count=${1[@]}
     for i in `seq 1 $count`
     do
         until dpkg -s ${1[$i-1]} | grep -q Status;

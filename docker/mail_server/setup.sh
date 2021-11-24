@@ -4,31 +4,25 @@
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
-# Get a common files
+# Get a common files fron github
 apt install -y --no-install-recommends unzip wget
 wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip
 unzip main.zip -d /home/  
+rm main.zip
 source /home/cidds-main/docker/utils.sh
+rm -r /home/cidds-main
 
 # Configure database
 cd /tmp/mailsetup
 echo mysql-server mysql-server/root_password select PWfMS2015 | debconf-set-selections
-echo mysql-server mysql-server/root_password_again select PWfMS2015 | debconf-set-selections
-
+echo mysql-server mysql-server/root_passworda_again select PWfMS2015 | debconf-set-selections
 echo postfix postfix/mailname string mailserver.com | debconf-set-selections
 echo postfix postfix/main_mailer_type string 'Internet Site' | debconf-set-selections
 
 # Correction for installing the php5
 declare -a versionsAptGet=("=0.99.9.8" "=0.8.12-1ubuntu4")
 declare -a packagesAptGet=("software-properties-common" "aptitude")
-count=${#packagesAptGet[@]}
-for i in `seq 1 $count`
-  do
-    until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
-    do
-      apt-get install -y --no-install-recommends --force-yes ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
-    done
-done
+SafeAptInstall packagesAptGet versionsAptGet
 dpkg -l | grep php| awk '{print $2}' |tr "\n" " "
 sudo aptitude purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
 # Guarantee what is going to 
