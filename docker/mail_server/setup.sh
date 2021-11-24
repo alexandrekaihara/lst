@@ -4,10 +4,20 @@
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
-# Get a common files fron github
-apt install -y --no-install-recommends unzip wget
-wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip
-unzip -o main.zip -d /home/  
+# Get common files from github
+declare -a packagesAptGet=("unzip" "wget")
+count=${#packagesAptGet[@]}
+for i in `seq 1 $count` 
+do
+  until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
+  do
+    apt-get install -y --force-yes ${packagesAptGet[$i-1]}
+  done
+done
+until unzip -o main.zip -d /home/
+do
+  wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
+done
 rm main.zip
 source /home/cidds-main/docker/utils.sh
 
@@ -21,10 +31,14 @@ echo postfix postfix/main_mailer_type string 'Internet Site' | debconf-set-selec
 # Correction for installing the right version of php and adding repository to install the dependencies
 declare -a versionsAptGet=("=0.99.9.8" "=0.8.12-1ubuntu4")
 declare -a packagesAptGet=("software-properties-common" "aptitude")
-SafeAptInstall $packagesAptGet $versionsAptGet
+count=${#packagesAptGet[@]}
+for i in `seq 1 $count` 
+do
+  SafeAptInstall ${packagesAptGet[$i-1]} ${versionsAptGet[$i-1]}
+done
 dpkg -l | grep php| awk '{print $2}' |tr "\n" " "
 sudo aptitude purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
-# Guarantee that it is going to add repository
+## Guarantee that it is going to add repository
 until dpkg -s php5.6 | grep -q Status;
 do
   echo "\n" | sudo add-apt-repository ppa:ondrej/php
@@ -37,11 +51,15 @@ mkdir /var/run/mysqld
 chmod 777 /var/run/mysqld
 
 # Define the packets to install with apt-get 
-declare -a versionsAptGet=("5.6.40-57+ubuntu20.04.1+deb.sury.org+1" "5.6.40-57+ubuntu20.04.1+deb.sury.org+1" "5.6.40-57+ubuntu20.04.1+deb.sury.org+1" "=2.4.41-4ubuntu3.8" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=3.4.13-0ubuntu1.2" "=3.4.13-0ubuntu1.2" "=7.68.0-1ubuntu2.7" "=8.0.27-0ubuntu0.20.04.1")
-declare -a packagesAptGet=("php5.6-mysql" "php5.6-imap" "php5.6-mbstring" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql" "curl" "whois=5.5.6" "dos2unix" "mysql-server")
-SafeAptInstall $packagesAptGet $versionsAptGet
+declare -a versionsAptGet=("" "" "" "=2.4.41-4ubuntu3.8" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=3.4.13-0ubuntu1.2" "=3.4.13-0ubuntu1.2" "=7.68.0-1ubuntu2.7" "=5.5.6" "=7.4.0-2" "=8.0.27-0ubuntu0.20.04.1")
+declare -a packagesAptGet=("php5.6-mysql" "php5.6-imap" "php5.6-mbstring" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql" "curl" "whois" "dos2unix" "mysql-server")
+count=${#packagesAptGet[@]}
+for i in `seq 1 $count` 
+do
+  SafeAptInstall ${packagesAptGet[$i-1]} ${versionsAptGet[$i-1]}
+done
 
-# Continuation of MySQLd problem
+# Continuation of MySQLd solution
 chown mysql:mysql /var/run/mysqld
 
 # Update again
@@ -59,13 +77,12 @@ mv postfixadmin*/ postfixadmin
 chown www-data:www-data -R postfixadmin
 cd postfixadmin
 source /tmp/mailsetup/config_inc_php.sh
-
-#postfix user
+## Postfix user
 groupadd -g 5000 vmail
 useradd -g vmail -u 5000 vmail -d /var/vmail
 mkdir /var/vmail
 chown vmail:vmail /var/vmail
-#cert
+## cert
 mkdir /etc/postfix/sslcert
 cd /etc/postfix/sslcert
 openssl req -new -newkey rsa:3072 -nodes -keyout mailserver.key -sha256 -days 730 -x509 -out mailserver.crt <<EOF
@@ -78,69 +95,27 @@ ${FHWi}
 .
 EOF
 chmod go-rwx mailserver.key
-#write /etc/postfix/main.cf
+## Write /etc/postfix/main.cf
 cd /etc/postfix/
 source /tmp/postfix_config.sh
-
-#change rights
+## Change rights
 cd /etc/postfix
 chmod o-rwx,g+r mysql_*
 chgrp postfix mysql_*
+## Configure Dovecot
 mv /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.conf.sample
-source
-
-#writing /etc/dovecot/dovecot-mysql.conf
-cat > /etc/dovecot/dovecot-mysql.conf <<EOF
-driver = mysql
-connect = "host=localhost dbname=postfixdb user=postfix password=MYSQLPW"
-default_pass_scheme = MD5-CRYPT
-password_query = SELECT password FROM mailbox WHERE username = '%u'
-user_query = SELECT CONCAT('maildir:/var/vmail/',maildir) AS mail, 5000 AS uid, 5000 AS gid FROM mailbox INNER JOIN domain WHERE username = '%u' AND mailbox.active = '1' AND domain.active = '1'
-EOF
+source /tmp/mailsetup/dovecot_config.sh
 chmod o-rwx,g+r /etc/dovecot/dovecot-mysql.conf
 chgrp vmail /etc/dovecot/dovecot-mysql.conf
 /etc/init.d/postfix restart
+
 # Solving the problem that !SSLv3 was not recognized by dovecot https://b4d.sablun.org/blog/2019-02-25-dovecot_2.3_upgrade_on_debian/
 sudo sed -i "s/\!SSLv3/TLSv1.2/g" /etc/dovecot/dovecot.conf
 /etc/init.d/dovecot restart
 /etc/init.d/apache2 restart
 
-#postfix configuration
 # Correction to connect to database on setup.php
-cat > /etc/mysql/my.cnf << EOF
-#
-# The MySQL database server configuration file.
-#
-# You can copy this to one of:
-# - "/etc/mysql/my.cnf" to set global options,
-# - "~/.my.cnf" to set user-specific options.
-#
-# One can use all long options that the program supports.
-# Run program with --help to get a list of available options and with
-# --print-defaults to see which it would actually understand and use.
-#
-# For explanations see
-# http://dev.mysql.com/doc/mysql/en/server-system-variables.html
-
-#
-# * IMPORTANT: Additional settings that can override those from this file!
-#   The files must end with '.cnf', otherwise they'll be ignored.
-#
-
-!includedir /etc/mysql/conf.d/
-!includedir /etc/mysql/mysql.conf.d/
-
-[client] 
-default-character-set=utf8
-
-[mysql]
-default-character-set=utf8
-
-[mysqld]
-collation-server = utf8_unicode_ci
-character-set-server = utf8
-default-authentication-plugin=mysql_native_password
-EOF
+source /tmp/mailsetup/mysql_conf.sh
 
 # Correct the problem with key cannot be more than 1000 bytes long. See more on https://confluence.atlassian.com/fishkb/mysql-database-migration-fails-with-specified-key-was-too-long-max-key-length-is-1000-bytes-298978735.html
 sed -i "s/[Mm][Yy][Ii][Ss][Aa][Mm]/InnoDb/g" /var/www/postfixadmin/upgrade.php
@@ -162,18 +137,16 @@ subnet=0
 host=0
 while [ $subnet -le 255 ]
 do
-while [ $host -le 255 ]
-do
-user=`printf "user.%03d.%03d" $subnet $host`
-sh /tmp/mailsetup/genUser.sh $user mailserver.example
-host=$((host+1))
-#echo $host
-#
-
-echo $subnet
-done
-subnet=$((subnet+1))
-host=0
+  while [ $host -le 255 ]
+  do
+    user=`printf "user.%03d.%03d" $subnet $host`
+    sh /tmp/mailsetup/genUser.sh $user mailserver.example
+    host=$((host+1))
+    echo $host
+    echo $subnet
+  done
+  subnet=$((subnet+1))
+  host=0
 done
 
 # Configure auto login 
@@ -184,14 +157,14 @@ ExecStart=-/sbin/agetty --autologin debian --noclear %I 38400 linux
 EOF
 
 # Necessary for finding the NetBIOS name 
-#samba
-echo "Looking for package samba."
-if dpkg -s samba | grep -q Status; then
-    echo "samba found."
-else
-    echo "samba not found. Setting up samba..."
-    apt-get --force-yes --yes install samba
-fi
+declare -a versionsAptGet=("=2:4.13.14+dfsg-0ubuntu0.20.04.1")
+declare -a packagesAptGet=("samba")
+count=${#packagesAptGet[@]}
+for i in `seq 1 $count` 
+do
+  SafeAptInstall ${packagesAptGet[$i-1]} ${versionsAptGet[$i-1]}
+done
+
 
 # Cron daemon set up to make every night at 01:00 clock updates
 echo -e "0 1 * * * sudo bash -c 'apt-get update && apt-get upgrade' >> /var/log/apt/myupdates.log" >> mycron

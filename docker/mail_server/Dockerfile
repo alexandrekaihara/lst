@@ -16,11 +16,13 @@ RUN chmod +x ubuntu_setup.sh \
 # Copy the backup file, genDomain e genUser
 RUN mkdir /home/debian \
 && mkdir /tmp/mailsetup
-COPY backup.py /home/debian
-COPY genUser.sh /tmp/mailsetup
-COPY genDomain.sh /tmp/mailsetup
-COPY config_inc_php.sh /tmp/mailserver
-COPY postfix_config.sh /tmp/mailserver
+COPY mailscripts/backup.py         /home/debian
+COPY mailscripts/genUser.sh        /tmp/mailsetup
+COPY mailscripts/genDomain.sh      /tmp/mailsetup
+COPY mailscripts/mysql_conf.sh     /tmp/mailsetup
+COPY mailscripts/config_inc_php.sh /tmp/mailsetup
+COPY mailscripts/postfix_config.sh /tmp/mailsetup
+COPY mailscripts/dovecot_config.sh /tmp/mailsetup
 
 # Start setup
 #COPY setup.sh .

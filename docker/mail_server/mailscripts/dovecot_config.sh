@@ -59,3 +59,11 @@ protocol lda {
   postmaster_address = postmaster@mailserver.com
 }
 EOF
+#writing /etc/dovecot/dovecot-mysql.conf
+cat > /etc/dovecot/dovecot-mysql.conf <<EOF
+driver = mysql
+connect = "host=localhost dbname=postfixdb user=postfix password=MYSQLPW"
+default_pass_scheme = MD5-CRYPT
+password_query = SELECT password FROM mailbox WHERE username = '%u'
+user_query = SELECT CONCAT('maildir:/var/vmail/',maildir) AS mail, 5000 AS uid, 5000 AS gid FROM mailbox INNER JOIN domain WHERE username = '%u' AND mailbox.active = '1' AND domain.active = '1'
+EOF
