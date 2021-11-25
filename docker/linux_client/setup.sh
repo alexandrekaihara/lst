@@ -10,14 +10,25 @@ ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 RUNLEVEL=1 apt-get install --no-install-recommends -y cron=3.0pl1-136ubuntu1 wget
 crontab -r
 
-# Download the scripts from the webserver 
-#wget 192.168.56.101/scripts/automation.zip
-until mv 192.168.56.101/scripts/automation /home/debian/automation/
+
+# Get common files from github
+declare -a packagesAptGet=("unzip" "wget")
+count=${#packagesAptGet[@]}
+for i in `seq 1 $count` 
 do
-    wget -m http://192.168.56.101/scripts/automation
+  until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
+  do
+    apt-get install -y ${packagesAptGet[$i-1]}
+  done
 done
-rm -r 192.168.56.101
+until unzip -o main.zip -d /home/debian
+do
+  wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
+done
+rm main.zip 
+mv /home/debian/cidds-main/automation /home/debian/
 chmod -R 755 /home/debian/automation
+rm -r /home/debian/cidds-main
 
 # From Ubuntu 18 and later, there is no support for libqt4-dev, so must run the following commands
 until dpkg -s aptitude | grep -q Status;

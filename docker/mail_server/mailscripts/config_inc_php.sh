@@ -1,3 +1,5 @@
+#!/bin/bash
+cat > config.inc.php << EOF
 <?php
 /**
  * Postfix Admin
@@ -573,3 +575,4 @@ if (file_exists(dirname(__FILE__) . '/config.local.php')) {
 // END OF CONFIG FILE
 //
 /* vim: set expandtab softtabstop=4 tabstop=4 shiftwidth=4: */
+EOF

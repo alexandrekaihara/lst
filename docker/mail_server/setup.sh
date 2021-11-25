@@ -4,31 +4,6 @@
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
-# Get common files from github
-#declare -a packagesAptGet=("unzip" "wget")
-#count=${#packagesAptGet[@]}
-#for i in `seq 1 $count` 
-#do
-#  until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
-#  do
-#    apt-get install -y ${packagesAptGet[$i-1]}
-#  done
-#done
-#until unzip -o main.zip -d /home/
-#do
-#  wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
-#done
-#rm main.zip
-#source /home/cidds-main/docker/utils.sh
-
-## Corretion of Docker COPY files not in UNIX format https://askubuntu.com/questions/966488/how-do-i-fix-r-command-not-found-errors-running-bash-scripts-in-wsl
-dos2unix /tmp/mailsetup/genDomain.sh
-dos2unix /tmp/mailsetup/genUser.sh
-dos2unix /tmp/mailsetup/mysql_conf.sh
-dos2unix /tmp/mailsetup/config_inc_php.sh
-dos2unix /tmp/mailsetup/postfix_config.sh
-dos2unix /tmp/mailsetup/dovecot_config.sh
-
 # Configure database
 cd /tmp/mailsetup
 echo mysql-server mysql-server/root_password select PWfMS2015 | debconf-set-selections
@@ -75,6 +50,14 @@ done
 
 # Continuation of MySQLd solution
 chown mysql:mysql /var/run/mysqld
+
+## Corretion of Docker COPY files not in UNIX format https://askubuntu.com/questions/966488/how-do-i-fix-r-command-not-found-errors-running-bash-scripts-in-wsl
+dos2unix /tmp/mailsetup/genDomain.sh
+dos2unix /tmp/mailsetup/genUser.sh
+dos2unix /tmp/mailsetup/mysql_conf.sh
+dos2unix /tmp/mailsetup/config_inc_php.sh
+dos2unix /tmp/mailsetup/postfix_config.sh
+dos2unix /tmp/mailsetup/dovecot_config.sh
 
 # Update again
 apt-get -y update
@@ -137,12 +120,10 @@ sed -i "s/[Mm][Yy][Ii][Ss][Aa][Mm]/InnoDb/g" /var/www/postfixadmin/upgrade.php
 mysql -uroot --password=PWfMS2015 -e "alter user 'postfix'@'localhost' identified with mysql_native_password by 'MYSQLPW';"
 service mysql restart
 
+# Create database
 mv /var/www/postfixadmin /var/www/html/
-test -f /var/www/postfixadmin/config.inc.php && echo "$FILE exists" 
-php /var/www/html/postfixadmin/setup.php #curl http://127.0.0.1/postfixadmin/setup.php?debug=1
-sleep 30
-# If has a problem with acess to postfixdb access https://askubuntu.com/questions/1268295/phpmyadmin-is-not-working-in-ubuntu-20-04-with-php5-6
-curl -d "form=createadmin&setup_password=PWfMS2015&username=postmaster@mailserver.com&password=PWfMS2015&password2=PWfMS2015&submit=Add+Admin"  http://127.0.0.1/postfixadmin/setup.php
+cd /var/www/html/postfixadmin
+php setup.php #curl http://127.0.0.1/postfixadmin/setup.php?debug=1
 
 # Setup mailing domain and users
 ## Every possible user gets an own user
@@ -162,6 +143,8 @@ do
   subnet=$((subnet+1))
   host=0
 done
+## Save database configuration, because the docker reset all mysql after build
+mysqldump -uroot --password=PWfMS2015 postfixdb > /tmp/mailsetup/postfixdb.sql 
 
 # Configure auto login 
 cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF
