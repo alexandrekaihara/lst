@@ -26,34 +26,26 @@ def setStartTime(parser):
 
 # Determine working days and working times randomly
 def setWorkingSchedule(parser):
-
 	# If the corresponding flag set finds the determination instead
 	if parser.get("workingschedule", "random_generated_schedule") == "1":
-		
 		# Deactivate the flag for the random determination of working time and days 
 		# This means that only the very first start of the script the settings are carried out 
 		parser.set("workingschedule", "random_generated_schedule", "0")
-		
 		# "flush" 
 		with open("packages/system/config.ini", "w") as config:
 			parser.write(config)
-		
 		# Determination of working time and days has been outsourced to a separate module
 		setupWorkingSchedule.main(parser)
 
 # Private and break levels
 def setRandomPrivateAndBreak(parser):
-
 	# If the corresponding flag set finds the determination instead
 	if parser.get("actions", "random_generated_private_and_break") == "1":
-		
 		# Disable the flag for random determination
 		# This means that only the very first start of the script the settings are carried out 
 		parser.set("actions", "random_generated_private_and_break", "0")
-		
 		parser.set("actions", "private", str(random.randint(5, 10)))
 		parser.set("actions", "breaks", str(random.randint(5, 10)))
-		
 		# "flush"
 		with open("packages/system/config.ini", "w") as config:
 			parser.write(config)
@@ -72,20 +64,15 @@ def getAndSetSubnetHostAndHostname(parser):
 		return -1, -1, -1
 	# Determine subnet using the IP Address 
 	subnet = ip.split('.')[2]
-	
 	# Determine the host part of the IP 
 	host = ip.split('.')[3]
-	
 	hostname = socket.gethostname()
-	
 	parser.set("network", "hostname", hostname)
 	parser.set("network", "subnet", subnet)
 	parser.set("network", "host", host)
-	
 	# "flush" 
 	with open("packages/system/config.ini", "w") as config:
 		parser.write(config)
-	
 	return subnet, host, hostname
 
 # Downlaod recent server config 
@@ -95,7 +82,6 @@ def getCurrentServerConfig():
 	
 # Configure different server services 
 def configServers(parser, subnet, host):
-	
 	# Determine the server ips using the subnet information 
 	try:
 		printIP = parser.get(subnet, "print")
@@ -112,20 +98,16 @@ def configServers(parser, subnet, host):
 		webIP = "0.0.0.0"
 		seaIP = "0.0.0.0"
 		seaFolder = "empty"
-	
 	# Adapt mail.ini for Mail-Server 
 	with open("packages/mailing/mail.ini", "w") as file:
 		file.write("# Login-Informationen fuer mailing.py anlegen\n")
 		file.write("[mailconfig]\n")
-		
 		# Determine user name and fill ip parts with zeros 
 		user = "user." + subnet.zfill(3) + "." + host.zfill(3)
 		file.write("user = " + user + "@mailserver.example\n")
 		file.write("pw = hollahe23\n")
-		
 		# Mail-Server IP from ServerConfig-file
 		file.write("smtp = " + mailIP + "\n")
-	
 	# Mount Netstorage 
 	if platform.system() == "Linux":
 		try:
@@ -138,20 +120,17 @@ def configServers(parser, subnet, host):
 			subprocess.check_call(cmd, shell=True)
 		except Exception as e:
 			echoC(__name__, "Mount netstorage error: " + str(e))
-			
 	elif platform.system() == "Windows":
 		try:			
 			cmd = "net use N: /delete"
 			subprocess.check_call(cmd, shell=True)
 		except Exception as e:
 			echoC(__name__, "Unmount error: " + str(e))
-
 		try:
 			cmd = "net use N: \\\\" + fileIP + "\\netstorage"
 			subprocess.check_call(cmd, shell=True)
 		except Exception as e:
 			echoC(__name__, "Mount netstorage error: " + str(e))
-	
 	# Configure printer 
 	# On Linux, the printer is determined by default before each printing
 	# For Windows, a batch script must be prepared and executed
@@ -163,21 +142,18 @@ def configServers(parser, subnet, host):
 			file.write("timeout 30\n")
 		instPrinter = Popen(["C:\skripte\\requirements\printer.bat"])
 		instPrinter.wait()
-		
 	# Configure IP of the web server (intranet)
 	parserBrowsing = ConfigParser()
 	parserBrowsing.read("packages/browsing/browser.ini")
 	parserBrowsing.set("internWeb", "url", "http://" + webIP)
-	
 	# "flush" 
 	with open("packages/browsing/browser.ini", "w") as config:
 		parserBrowsing.write(config)
-	
 	# Configure Seafile (works only for linux, windows must be configured manually)
 	if platform.system() == "Linux":
 		cmd = "seaf-cli sync -l '" + seaFolder + "' -s  'http://" + seaIP + ":80' -d '/home/debian/sea' -u 'alexandreamk1@gmail.com' -p 'Password123' -c '/home/debian/.ccnet'"
-		
 		cntErrors = 0
+		output=0
 		while cntErrors < 3:
 			try:
 				subprocess.check_call(cmd, shell=True)
@@ -195,14 +171,12 @@ def configMountWithOpenStackServer():
 			subprocess.check_call(cmd, shell=True)
 		except Exception as e:
 			echoC(__name__, "Mount log server error: " + str(e))
-			
 	elif platform.system() == "Windows":
 		try:			
 			cmd = "net use M: /delete"
 			subprocess.check_call(cmd, shell=True)
 		except Exception as e:
 			echoC(__name__, "Unmount error: " + str(e))
-
 		try:
 			cmd = "net use M: \\\\192.168.56.123\\instancelogs"
 			subprocess.check_call(cmd, shell=True)
@@ -210,12 +184,10 @@ def configMountWithOpenStackServer():
 			echoC(__name__, "Mount log  server error: " + str(e))
 
 def saveConfigToServer():
-	
 	if platform.system() == "Linux":
 		path = "/home/debian/log/"
 	else:
 		path = "M:\\"
-
 	copyfile("packages/system/config.ini", path + myID + ".conf")
 
 # Init scripts 

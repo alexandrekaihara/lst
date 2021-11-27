@@ -51,7 +51,7 @@ class RunCmd(threading.Thread):
 	# is called with start() 
 	# CONSIDER: asynchronous function! 
 	def run(self):
-		self.p = Popen(["python", "-m", "packages.browsing.browsing", self.arg])
+		self.p = Popen(["python3", "-m", "packages.browsing.browsing", self.arg])
 		self.queue.put(self.p.wait())
 	
 	# Indirect start of the Thread 

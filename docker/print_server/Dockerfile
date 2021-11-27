@@ -12,17 +12,21 @@
 # Imports
 FROM ubuntu:20.04
 
-# Updates
-RUN apt-get clean && apt-get update
-RUN apt-get upgrade
-RUN apt-get install -y sudo
-RUN sudo su
+# Install dependencies
+COPY dependencies.sh .
+RUN chmod +x dependencies.sh \
+&& ./dependencies.sh \
+&& sudo su
 
 # Start setup
 COPY setup.sh .
-RUN chmod +x setup.sh
-RUN ./setup.sh
-RUN apt-get clean
+RUN chmod +x setup.sh\
+&& ./setup.sh
+
+# Start samba
+COPY onboot.sh /home
+RUN chmod +x /home/onboot.sh
+CMD ["./home/onboot.sh"]
 
 # For conecting via Open SSL
 EXPOSE 22

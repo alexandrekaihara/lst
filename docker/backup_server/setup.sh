@@ -2,16 +2,12 @@
 #https://manual.seafile.com/deploy/using_mysql/
 
 # Set system time 
-rm /etc/localtime
+#rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
-
-# Define the packets to install with apt-get 
-apt-get install --no-install-recommends -y samba=2:4.13.14+dfsg-0ubuntu0.20.04.1 cron=3.0pl1-136ubuntu1
 
 # Update the system
 apt-get -y update
 apt-get -y upgrade
-
 
 # Create directories for samba 
 mkdir /media/webserverbackup

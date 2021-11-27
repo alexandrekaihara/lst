@@ -7,10 +7,10 @@
 # Imports
 FROM ubuntu:20.04
 
-# Updates
-COPY ubuntu_setup.sh .
-RUN chmod +x ubuntu_setup.sh \
-&& ./ubuntu_setup.sh \
+# Install dependencies
+COPY dependencies.sh .
+RUN chmod +x dependencies.sh \
+&& ./dependencies.sh \
 && sudo su
 
 # Copy the backup file
@@ -22,7 +22,7 @@ COPY setup.sh .
 RUN chmod +x setup.sh\
 && ./setup.sh
 
-# Start samba and dummy files on start
+# Start samba
 COPY onboot.sh /home
 RUN chmod +x /home/onboot.sh
 CMD ["./home/onboot.sh"]

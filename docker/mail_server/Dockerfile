@@ -8,9 +8,9 @@
 FROM ubuntu:20.04
 
 # Updates
-COPY ubuntu_setup.sh .
-RUN chmod +x ubuntu_setup.sh \
-&& ./ubuntu_setup.sh \
+COPY dependencies.sh .
+RUN chmod +x dependencies.sh \
+&& ./dependencies.sh \
 && sudo su
 
 # Copy the backup file, genDomain e genUser

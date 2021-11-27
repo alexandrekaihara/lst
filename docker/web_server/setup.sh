@@ -4,17 +4,6 @@
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
-# Install all predefined packages 
-declare -a packagesAptGet=("apache2=2.4.41-4ubuntu3.8" "unzip=6.0-25ubuntu1" "rsync=3.1.3-8" "cron=3.0pl1-136ubuntu1")
-for package in "${packagesAptGet[@]}"
-do
-	apt-get --force-yes --no-install-recommends --yes install $package
-done
-
-# System update
-apt-get -y update
-apt-get -y upgrade
-
 # Configure auto login 
 mkdir /etc/systemd/system/getty@tty1.service.d
 cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF

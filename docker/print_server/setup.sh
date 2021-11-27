@@ -4,24 +4,6 @@
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
-# Solve problems on installing cups:
-## 1.0 Dialog not found
-apt-get install -y apt-utils=2.0.6
-apt-get install -y dialog=1.3-20190808-1 -y
-## 1.1 Policy-rc.d not permit start process on reboot
-printf '#!/bin/sh\nexit 0' > /usr/sbin/policy-rc.d
-## 1.2 Failed to create symbolic link em /etc/resolv.conf https://stackoverflow.com/questions/40877643/apt-get-install-in-ubuntu-16-04-docker-image-etc-resolv-conf-device-or-reso
-echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-selections
-apt-get update
-apt-get install -y resolvconf=1.82
-
-# Install dependencies
-RUNLEVEL=1 apt-get install samba=2:4.13.14+dfsg-0ubuntu0.20.04.1 -y
-RUNLEVEL=1 apt-get install printer-driver-cups-pdf=3.0.1-6 -y
-apt-get install openssl=1.1.1f-1ubuntu2.8 -y
-apt-get install cron=3.0pl1-136ubuntu1 -y
-
 # Configure Cups
 service cups restart
 

@@ -76,12 +76,12 @@ aptitude -y upgrade
 
 # Install the geckodriver for selenium (needed for browsing)
 sudo apt-get install firefox -y
-sudo apt-get install fireforx-geckodriver -y
-#wget "https://github.com/mozilla/geckodriver/releases/download/v0.29.1/geckodriver-v0.29.1-linux64.tar.gz"
-#tar -xzf "geckodriver-v0.29.1-linux64.tar.gz"
-#rm geckodriver-v0.29.1-linux64.tar.gz
-#mv geckodriver /opt/
-#export PATH="$PATH:/opt/geckodriver"
+#sudo apt-get install firefox-geckodriver -y
+wget "https://github.com/mozilla/geckodriver/releases/download/v0.29.1/geckodriver-v0.29.1-linux64.tar.gz"
+tar -xzf "geckodriver-v0.29.1-linux64.tar.gz"
+rm geckodriver-v0.29.1-linux64.tar.gz
+mv geckodriver /opt/
+export PATH="$PATH:/opt/geckodriver"
 
 # Configure printers 
 /etc/init.d/cups restart

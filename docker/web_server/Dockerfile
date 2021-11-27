@@ -7,11 +7,11 @@
 # Imports
 FROM ubuntu:20.04
 
-# Updates
-COPY ubuntu_setup.sh .
-RUN chmod +x ubuntu_setup.sh;
-RUN ./ubuntu_setup.sh
-RUN sudo su                
+# Install dependencies
+COPY dependencies.sh .
+RUN chmod +x dependencies.sh \
+&& ./dependencies.sh \
+&& sudo su
 
 # Copy the backup file
 RUN mkdir /home/debian
@@ -19,13 +19,10 @@ COPY backup.py /home/debian/
 
 # Start setup
 COPY setup.sh .
-RUN chmod +x setup.sh
-RUN ./setup.sh
+RUN chmod +x setup.sh\
+&& ./setup.sh
 
-# Clean installation packages
-RUN apt-get clean
-
-# Start apache2 on start
+# Start samba
 COPY onboot.sh /home
 RUN chmod +x /home/onboot.sh
 CMD ["./home/onboot.sh"]
