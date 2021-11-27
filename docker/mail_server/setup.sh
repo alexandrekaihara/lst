@@ -116,6 +116,9 @@ done
 ## Save database configuration, because the docker reset all mysql after build
 mysqldump -uroot --password=PWfMS2015 postfixdb > $mailsetup/postfixdb.sql 
 
+# Script to enable listening on port 587
+. $mailsetup/postfix_master.sh
+
 # Configure auto login 
 cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF
 [Service]
