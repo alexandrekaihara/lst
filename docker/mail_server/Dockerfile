@@ -23,7 +23,6 @@ COPY mailscripts/mysql_conf.sh     /tmp/mailsetup
 COPY mailscripts/config_inc_php.sh /tmp/mailsetup
 COPY mailscripts/postfix_config.sh /tmp/mailsetup
 COPY mailscripts/dovecot_config.sh /tmp/mailsetup
-COPY mailscripts/postfix_master.sh /tmp/mailsetup
 
 # Start setup
 COPY setup.sh .

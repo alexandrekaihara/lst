@@ -27,7 +27,7 @@ smtpd_use_tls=yes
 smtpd_tls_session_cache_database = btree:\${data_directory}/smtpd_scache
 
 smtp_tls_cert_file = /etc/postfix/sslcert/mailserver.crt
-Ösmtp_tls_key_file = /etc/postfix/sslcert/mailserver.key
+#Ösmtp_tls_key_file = /etc/postfix/sslcert/mailserver.key
 smtp_tls_security_level=may
 smtpd_tls_mandatory_protocols = !SSLv3
 smtp_tls_session_cache_database = btree:\${data_directory}/smtp_scache

@@ -8,11 +8,19 @@ ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 crontab -r
 
+
 # Configure printers 
 /etc/init.d/cups restart
-#lpoptions -d pdf
 # Use instead this command, needs to specify the host https://www.thegeekstuff.com/2015/01/lpadmin-examples/
-lpadmin -p PDF -v socket://192.168.56.117 -E
+## Returns the printer ip to be configured
+cd /home/debian/automation/packages/system
+until printerip=`cat printerip`
+do
+    python3 getprinterip.py
+done
+lpadmin -p PDF -v socket://$printerip -E
+echo $printerip
+sleep 30
 /etc/init.d/cups restart
 
 # Create directory for Netstorage 

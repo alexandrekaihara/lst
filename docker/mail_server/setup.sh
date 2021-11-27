@@ -66,18 +66,23 @@ EOF
 chmod go-rwx mailserver.key
 ## Write /etc/postfix/main.cf
 cd /etc/postfix/
-. /tmp/postfix_config.sh
+. $mailsetup/postfix_config.sh
 ## Change rights
 cd /etc/postfix
 chmod o-rwx,g+r mysql_*
 chgrp postfix mysql_*
+
 ## Configure Dovecot
 mv /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.conf.sample
 . $mailsetup/dovecot_config.sh
 chmod o-rwx,g+r /etc/dovecot/dovecot-mysql.conf
 chgrp vmail /etc/dovecot/dovecot-mysql.conf
+## Solving /etc/mailname not found https://tutorialforlinux.com/2015/03/17/troubleshooting-starting-postfix-fatal-etcmailname-cannot-open-file-on-linux-unix/
+hostname --fqdn > /etc/mailname
+postconf compatibility_level=2
+postfix reload
 /etc/init.d/postfix restart
-# Solving the problem that !SSLv3 was not recognized by dovecot https://b4d.sablun.org/blog/2019-02-25-dovecot_2.3_upgrade_on_debian/
+## Solving the problem that !SSLv3 was not recognized by dovecot https://b4d.sablun.org/blog/2019-02-25-dovecot_2.3_upgrade_on_debian/
 sudo sed -i "s/\!SSLv3/TLSv1.2/g" /etc/dovecot/dovecot.conf
 /etc/init.d/dovecot restart
 /etc/init.d/apache2 restart
@@ -115,9 +120,6 @@ do
 done
 ## Save database configuration, because the docker reset all mysql after build
 mysqldump -uroot --password=PWfMS2015 postfixdb > $mailsetup/postfixdb.sql 
-
-# Script to enable listening on port 587
-. $mailsetup/postfix_master.sh
 
 # Configure auto login 
 cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF
