@@ -16,16 +16,7 @@ def getAndSetSubnetHostAndHostname(parser):
 		return -1, -1, -1
 	# Determine subnet using the IP Address 
 	subnet = ip.split('.')[2]
-	# Determine the host part of the IP 
-	host = ip.split('.')[3]
-	hostname = socket.gethostname()
-	parser.set("network", "hostname", hostname)
-	parser.set("network", "subnet", subnet)
-	parser.set("network", "host", host)
-	# "flush" 
-	with open("config.ini", "w") as config:
-		parser.write(config)
-	return subnet, host, hostname
+	return subnet
 
 
 # Get current subnet
@@ -33,7 +24,7 @@ parser = ConfigParser()
 parser.read("config.ini")
 subnet = host = hostname =-1
 while (subnet == -1 and host == -1 and hostname == -1):
-    subnet, host, hostname = getAndSetSubnetHostAndHostname(parser)
+    subnet = getAndSetSubnetHostAndHostname(parser)
 	
 # Get printer ip
 parser = ConfigParser()

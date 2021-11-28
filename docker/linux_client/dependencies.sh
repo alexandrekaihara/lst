@@ -28,17 +28,6 @@ do
 done
 apt-get update
 
-# Get automation script from github
-mkdir /home/debian
-until unzip -o main.zip -d /home/debian
-do
-  wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
-done
-rm main.zip 
-mv /home/debian/cidds-main/scripts/automation /home/debian/
-chmod -R 755 /home/debian/automation
-rm -r /home/debian/cidds-main
-
 # From Ubuntu 18 and later, there is no support for libqt4-dev, so must run the following commands
 until dpkg -s libqt4-dev | grep -q Status;
 do

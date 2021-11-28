@@ -8,6 +8,16 @@ ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 crontab -r
 
+# Get automation script from github
+mkdir /home/debian
+until unzip -o main.zip -d /home/debian
+do
+  wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
+done
+rm main.zip 
+mv /home/debian/cidds-main/scripts/automation /home/debian/
+chmod -R 755 /home/debian/automation
+rm -r /home/debian/cidds-main
 
 # Configure printers 
 /etc/init.d/cups restart
