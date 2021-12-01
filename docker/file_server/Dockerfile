@@ -25,7 +25,7 @@ RUN chmod +x setup.sh\
 # Start samba and dummy files on start
 COPY onboot.sh /home
 RUN chmod +x /home/onboot.sh
-CMD ["./home/onboot.sh"]
+CMD ["./home/onboot.sh"] 
 
 # For conecting via Open SSL
 EXPOSE 22

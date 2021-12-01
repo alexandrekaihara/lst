@@ -2,6 +2,8 @@
 
 # Start smbd
 service smbd start
+service ssh start
 
-# Start shell
-/bin/bash
+# Keep alive
+tail -f /dev/null
+#/bin/bash

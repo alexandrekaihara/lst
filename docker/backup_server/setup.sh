@@ -2,7 +2,6 @@
 #https://manual.seafile.com/deploy/using_mysql/
 
 # Set system time 
-#rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 # Update the system
@@ -79,16 +78,11 @@ echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot
 crontab mycron
 rm mycron
 
-# Prepare for ssh user login (create stack user with appropriate password)
-useradd -m -s /bin/bash stack
-echo "stack:mininet" | chpasswd
-usermod -a -G sudo stack
+# Prepare for ssh user login (create user with appropriate password)
+useradd -m -s /bin/bash mininet
+echo "mininet:mininet" | chpasswd
+usermod -a -G sudo mininet
 
 # Prettify Prompt
 echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /home/debian/.bashrc
-
-# Reduce Docker images size
-apt-get autoclean
-apt-get autoremove -y
-rm -rf /var/lib/apt/lists/*
 

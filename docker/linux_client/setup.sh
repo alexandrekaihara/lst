@@ -8,6 +8,11 @@ ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 crontab -r
 
+# Create user on machine
+useradd -m -s /bin/bash mininet
+echo "mininet:mininet" | chpasswd
+usermod -a -G sudo mininet
+
 # Get automation script from github
 mkdir /home/debian
 until unzip -o main.zip -d /home/debian
@@ -29,8 +34,6 @@ do
     python3 getprinterip.py
 done
 lpadmin -p PDF -v socket://$printerip -E
-echo $printerip
-sleep 30
 /etc/init.d/cups restart
 
 # Create directory for Netstorage 
@@ -44,11 +47,14 @@ mkdir -pv /home/debian/log
 
 # Configure Seafile (Cloud storage)
 mkdir -pv /home/debian/sea /home/debian/seafile-client
-until seaf-cli start -c /home/debian/.ccnet
+until test -e /home/debian/.ccnet
 do
 seaf-cli init -d /home/debian/seafile-client -c /home/debian/.ccnet
 done
-seaf-cli config -k disable_verify_certificate -v true -c /home/debian/.ccnet
+until seaf-cli config -k disable_verify_certificate -v true -c /home/debian/.ccnet
+do
+seaf-cli start -c /home/debian/.ccnet
+done
 seaf-cli config -k enable_http_sync -v true -c /home/debian/.ccnet
 seaf-cli stop -c /home/debian/.ccnet
 seaf-cli start -c /home/debian/.ccnet

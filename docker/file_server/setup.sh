@@ -26,7 +26,7 @@ workgroup = WORKGROUP
 security = user
 map to guest = bad user
 [netstorage]
-comment = Netstorage fuer OpenStack-VMs
+comment = Netstorage fuer Openmininet-VMs
 path = /media/storage
 read only = no
 guest ok = yes
@@ -59,10 +59,10 @@ echo -e "0 1 * * * sudo bash -c 'apt-get update && apt-get upgrade' >> /var/log/
 crontab mycron
 rm mycron
 
-# Prepare for ssh user login (create stack user with appropriate password)
-useradd -m -s /bin/bash stack
+# Prepare for ssh user login (create mininet user with appropriate password)
+useradd -m -s /bin/bash mininet
 echo "mininet:mininet" | chpasswd
-usermod -a -G sudo stack
+usermod -a -G sudo mininet
 
 # Prettify Prompt
 echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /home/debian/.bashrc

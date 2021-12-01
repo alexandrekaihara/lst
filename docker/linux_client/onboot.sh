@@ -12,5 +12,9 @@ done
 
 # Start cups
 cupsd
+seaf-cli start -c /home/debian/.ccnet
 
-/bin/bash
+# Keep alive
+cd /home/debian/automation
+python3 readIni.py
+#/bin/bash

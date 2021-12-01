@@ -154,9 +154,9 @@ crontab mycron
 rm mycron
 
 # User for ssh script 
-useradd -m -s /bin/bash stack
-echo "stack:mininet" | chpasswd
-usermod -a -G sudo stack
+useradd -m -s /bin/bash mininet
+echo "mininet:mininet" | chpasswd
+usermod -a -G sudo mininet
 
 # Prettify Prompt 
 echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /home/debian/.bashrc

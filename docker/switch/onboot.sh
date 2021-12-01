@@ -21,9 +21,6 @@ dd if=/dev/zero of=/media/storage/file100MB.dat bs=1M count=100
 dd if=/dev/zero of=/media/storage/file300MB.dat bs=1M count=300
 dd if=/dev/zero of=/media/storage/file700MB.dat bs=1M count=700
 
-# Start services
+# Start smbd
 service smbd start
-service ssh start
-
-# Keep alive
-tail -f /dev/null
+/bin/bash
