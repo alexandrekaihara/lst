@@ -1,6 +1,7 @@
 version: "3.8"
 
 
+# Define networks to use
 networks:
   servernet: 
     name: cidds100
