@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.7"
 
 
 # Define networks to use
@@ -18,28 +18,28 @@ services:
   ## Server Subnet
   fileserver:
     image: ${REPOSITORY}:${FILE}
-    container_name : ${FILE}
+    container_name: ${FILE}
     restart: always
     networks:
       servernet:
         ipv4_address: 192.168.100.1
   mailserver:
     image: ${REPOSITORY}:${MAIL}
-    container_name : ${MAIL}
+    container_name: ${MAIL}
     restart: always
     networks:
       servernet:
         ipv4_address: 192.168.100.2
   webserver:
     image: ${REPOSITORY}:${WEB}
-    container_name : ${WEB}
+    container_name: ${WEB}
     restart: always
     networks:
       servernet:
         ipv4_address: 192.168.100.3
   backupserver:
     image: ${REPOSITORY}:${BACKUP}
-    container_name : ${BACKUP}
+    container_name: ${BACKUP}
     restart: always
     networks:
       servernet:
@@ -49,15 +49,14 @@ services:
   ## Management Subnet
   Mprinter:
     image: ${REPOSITORY}:${PRINTER}
-    container_name : M${PRINTER}
+    container_name: M${PRINTER}
     restart: always
     networks:
       managementnet:
-  
-        ipv4_address: 192.168.200.1
+        ipv4_address: 192.168.200.1  
   Mclient1:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : M${LCLIENT}1
+    container_name: M${LCLIENT}1
     restart: always
     privileged: true
     depends_on: 
@@ -65,14 +64,14 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - M${PRINTER}
+      - Mprinter
     networks:
       managementnet:
         ipv4_address: 192.168.200.2
   #client2:
   Mclient2:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : M${LCLIENT}2
+    container_name: M${LCLIENT}2
     restart: always
     privileged: true
     depends_on: 
@@ -80,14 +79,14 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - M${PRINTER}
+      - Mprinter
     networks:
       managementnet:
         ipv4_address: 192.168.200.3
   #client3:
   Mclient3:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : M${LCLIENT}3
+    container_name: M${LCLIENT}3
     restart: always
     privileged: true
     depends_on: 
@@ -95,14 +94,14 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - M${PRINTER}
+      - Mprinter
     networks:
       managementnet:
         ipv4_address: 192.168.200.4
   #client4:
   Mclient4:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : M${LCLIENT}4
+    container_name: M${LCLIENT}4
     restart: always
     privileged: true
     depends_on: 
@@ -110,7 +109,7 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - M${PRINTER}
+      - Mprinter
     networks:
       managementnet:
         ipv4_address: 192.168.200.5
@@ -119,14 +118,14 @@ services:
   ## Office Subnet
   Oprinter:
     image: ${REPOSITORY}:${PRINTER}
-    container_name : O${PRINTER}
+    container_name: O${PRINTER}
     restart: always
     networks:
       officenet:
         ipv4_address: 192.168.210.1
   Oclient1:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : O${LCLIENT}1
+    container_name: O${LCLIENT}1
     restart: always
     privileged: true
     depends_on: 
@@ -134,14 +133,14 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - O${PRINTER}
+      - Oprinter
     networks:
       officenet:
         ipv4_address: 192.168.210.2
   #Oclient2:
   Oclient2:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : O${LCLIENT}2
+    container_name: O${LCLIENT}2
     restart: always
     privileged: true
     depends_on: 
@@ -149,7 +148,7 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - M${PRINTER}
+      - Mprinter
     networks:
       officenet:
         ipv4_address: 192.168.210.3
@@ -158,14 +157,14 @@ services:
   ## Developer Subnet
   Dprinter:
     image: ${REPOSITORY}:${PRINTER}
-    container_name : D${PRINTER}
+    container_name: D${PRINTER}
     restart: always
     networks:
       developernet:
         ipv4_address: 192.168.220.1
   Dclient1:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : D${LCLIENT}1
+    container_name: D${LCLIENT}1
     restart: always
     privileged: true
     depends_on: 
@@ -173,14 +172,14 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - D${PRINTER}
+      - Dprinter
     networks:
       developernet:
         ipv4_address: 192.168.220.2
   #Dclient2:
   Dclient2:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : D${LCLIENT}2
+    container_name: D${LCLIENT}2
     restart: always
     privileged: true
     depends_on: 
@@ -188,14 +187,14 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - D${PRINTER}
+      - Dprinter
     networks:
       developernet:
         ipv4_address: 192.168.220.3
   #Dclient3:
   Dclient3:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : D${LCLIENT}3
+    container_name: D${LCLIENT}3
     restart: always
     privileged: true
     depends_on: 
@@ -203,14 +202,14 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - D${PRINTER}
+      - Dprinter
     networks:
       developernet:
         ipv4_address: 192.168.220.4
   #Dclient4:
   Dclient4:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : D${LCLIENT}4
+    container_name: D${LCLIENT}4
     restart: always
     privileged: true
     depends_on: 
@@ -218,14 +217,14 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - D${PRINTER}
+      - Dprinter
     networks:
       developernet:
         ipv4_address: 192.168.220.5
   #Dclient5:
   Dclient5:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : D${LCLIENT}5
+    container_name: D${LCLIENT}5
     restart: always
     privileged: true
     depends_on: 
@@ -233,14 +232,14 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - D${PRINTER}
+      - Dprinter
     networks:
       developernet:
         ipv4_address: 192.168.220.6
   #Dclient6:
   Dclient6:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : D${LCLIENT}6
+    container_name: D${LCLIENT}6
     restart: always
     privileged: true
     depends_on: 
@@ -248,14 +247,14 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - D${PRINTER}
+      - Dprinter
     networks:
       developernet:
         ipv4_address: 192.168.220.7
   #Dclient7:
   Dclient7:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : D${LCLIENT}7
+    container_name: D${LCLIENT}7
     restart: always
     privileged: true
     depends_on: 
@@ -263,14 +262,14 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - D${PRINTER}
+      - Dprinter
     networks:
       developernet:
         ipv4_address: 192.168.220.8
   #Dclient8:
   Dclient8:
     image: ${REPOSITORY}:${LCLIENT}
-    container_name : D${LCLIENT}8
+    container_name: D${LCLIENT}8
     restart: always
     privileged: true
     depends_on: 
@@ -278,7 +277,7 @@ services:
       - ${MAIL}
       - ${WEB}
       - ${BACKUP}
-      - D${PRINTER}
+      - Dprinter
     networks:
       developernet:
         ipv4_address: 192.168.220.9
