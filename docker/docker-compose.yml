@@ -5,27 +5,31 @@ version: "3.7"
 networks:
   servernet: 
     name: cidds100
+    external: true
   managementnet:
     name: cidds200
+    external: true
   officenet:
     name: cidds210
+    external: true
   developernet:
     name: cidds220
+    external: true
 
 
 # Define the machines on its subnet
 services:
   ## Server Subnet
-  fileserver:
-    image: ${REPOSITORY}:${FILE}
-    container_name: ${FILE}
+  mailserver:
+    image: ${REPOSITORY}:${MAIL}
+    container_name: ${MAIL}
     restart: always
     networks:
       servernet:
         ipv4_address: 192.168.100.1
-  mailserver:
-    image: ${REPOSITORY}:${MAIL}
-    container_name: ${MAIL}
+  fileserver:
+    image: ${REPOSITORY}:${FILE}
+    container_name: ${FILE}
     restart: always
     networks:
       servernet:

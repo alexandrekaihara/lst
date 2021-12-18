@@ -4,4 +4,4 @@
 . config_network.sh
 
 # Set up all machines
-docker-compose --env-file docker.env -d up
+docker-compose --env-file=".env" up -d

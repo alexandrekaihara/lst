@@ -24,18 +24,6 @@ mv /home/debian/cidds-main/scripts/automation /home/debian/
 chmod -R 755 /home/debian/automation
 rm -r /home/debian/cidds-main
 
-# Configure printers 
-/etc/init.d/cups restart
-# Use instead this command, needs to specify the host https://www.thegeekstuff.com/2015/01/lpadmin-examples/
-## Returns the printer ip to be configured
-cd /home/debian/automation/packages/system
-until printerip=`cat printerip`
-do
-    python3 getprinterip.py
-done
-lpadmin -p PDF -v socket://$printerip -E
-/etc/init.d/cups restart
-
 # Create directory for Netstorage 
 mkdir -pv /home/debian/netstorage
 
@@ -46,21 +34,7 @@ mkdir -pv /home/debian/localstorage
 mkdir -pv /home/debian/log
 
 # Configure Seafile (Cloud storage)
-mkdir -pv /home/debian/sea /home/debian/seafile-client
-until test -e /home/debian/.ccnet
-do
-seaf-cli init -d /home/debian/seafile-client -c /home/debian/.ccnet
-done
-until seaf-cli config -k disable_verify_certificate -v true -c /home/debian/.ccnet
-do
-seaf-cli start -c /home/debian/.ccnet
-done
-seaf-cli config -k enable_http_sync -v true -c /home/debian/.ccnet
-seaf-cli stop -c /home/debian/.ccnet
-seaf-cli start -c /home/debian/.ccnet
-#chown -R mininet:mininet /home/debian/sea/ /home/debian/seafile-client/ /home/debian/.ccnet
-echo -e "@reboot sleep 60 && seaf-cli start -c /home/debian/.ccnet 2>&1 > /dev/null\n" | crontab -
-
+echo -e "@reboot sleep 60 && seaf-cli start -c /home/debian/.ccnet 2>&1 > /dev/null\n" | crontab 
 chown -R mininet:mininet /home/debian/tmpseafiles/
 chmod -R 755 /home/debian/tmpseafiles/ 
 chmod -R 755 /home/debian/sea
