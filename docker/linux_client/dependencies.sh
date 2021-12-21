@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Update
-apt-get update
-apt-get upgrade
+apt-get update -y
+apt-get upgrade -y
 
 declare -a versionsAptGet=("=1:8.2p1-4ubuntu0.3" "=2.0.6"    ""     "=1.3-20190808-1" "=3.0pl1-136ubuntu1" "=0.99.9.8"                  "=0.8.12-1ubuntu4" ""     ""      "=2.2.19-3ubuntu2.1" "" "" "" "" "")
 declare -a packagesAptGet=("openssh-client"     "apt-utils" "sudo" "dialog"          "cron"               "software-properties-common" "aptitude"         "wget" "unzip" "dirmngr" "nano" "iptables" "net-tools" "iproute2" "iputils-ping")
@@ -26,7 +26,7 @@ until dpkg -s resolvconf | grep -q Status;
 do
   RUNLEVEL=1 apt install -y --no-install-recommends resolvconf=1.82
 done
-apt-get update
+apt-get update -y
 
 # From Ubuntu 18 and later, there is no support for libqt4-dev, so must run the following commands
 until dpkg -s libqt4-dev | grep -q Status;
@@ -54,8 +54,8 @@ rm geckodriver-v0.29.1-linux64.tar.gz
 export PATH="$PATH:/opt/geckodriver"
 
 # Install all predefined packages
-declare -a versionsAptGet=("=0.8.12-1ubuntu4" "=3.8.2-0ubuntu2" "=0.23-2build1" "=20.0.2-5ubuntu1.6" "=94.0+build3-0ubuntu0.20.04.1" "=2:1.20.11-1ubuntu1~20.04.2" "6.0-25ubuntu1" "=2.3.1-9ubuntu1.1" "=2.3.1-9ubuntu1.1" "=2.3.1-9ubuntu1.1" "=2:6.9-1ubuntu0.1" "=3.16.3-1ubuntu1" "=3.31.1-4ubuntu0.2" "45.2.0-1"           "=3.16.0-2ubuntu2"   "=2.69-11.1" "=1:1.16.1-4ubuntu6" "=2.4.6-14" "=2.1.11-stable-1" "=7.68.0-1ubuntu2.7"   "=2.24.32-4ubuntu4" "=2.34-0.1ubuntu9.1" "=0.51.0-5ubuntu1" "=3.31.1-4ubuntu0.2" "=0.48.6-0ubuntu1" "=2.12-1build1"  "=2.9.9-3" "=7.0.6-1"    "=2.04-1ubuntu26.13" "=7.80+dfsg1-2build1" "=3.8.10-0ubuntu1~20.04.1" "=2.3.1-9ubuntu1.1" "=4:9.3.0-1ubuntu2" "=94.0+build3-0ubuntu0.20.04.1")  
-declare -a packagesAptGet=("aptitude"         "python3"         "python3-xlib"  "python3-pip"        "firefox"                       "xvfb"                        "unzip"         "cups"              "cups-client"       "cups-bsd"          "cifs-utils"        "cmake"            "sqlite3"            "python3-setuptools" "python3-simplejson" "autoconf"   "automake"          "libtool"    "libevent-dev"     "libcurl4-openssl-dev" "libgtk2.0-dev"     "uuid-dev"           "intltool"         "libsqlite3-dev"     "valac"            "libjansson-dev" "libfuse2" "seafile-cli" "grub2"              "nmap"                "python3.8-dev"            "libcups2-dev"      "gcc"               "firefox-geckodriver"           ) 
+declare -a versionsAptGet=("=0.8.12-1ubuntu4" "=3.8.2-0ubuntu2" "=0.23-2build1" "=20.0.2-5ubuntu1.6" "=95.0.1+build2-0ubuntu0.20.04.1" "=2:1.20.13-1ubuntu1~20.04.2" "6.0-25ubuntu1" "=2.3.1-9ubuntu1.1" "=2.3.1-9ubuntu1.1" "=2.3.1-9ubuntu1.1" "=2:6.9-1ubuntu0.1" "=3.16.3-1ubuntu1" "=3.31.1-4ubuntu0.2" "45.2.0-1"           "=3.16.0-2ubuntu2"   "=2.69-11.1" "=1:1.16.1-4ubuntu6" "=2.4.6-14" "=2.1.11-stable-1" "=7.68.0-1ubuntu2.7"   "=2.24.32-4ubuntu4" "=2.34-0.1ubuntu9.1" "=0.51.0-5ubuntu1" "=3.31.1-4ubuntu0.2" "=0.48.6-0ubuntu1" "=2.12-1build1"  "=2.9.9-3" "=7.0.6-1"    "=2.04-1ubuntu26.13" "=7.80+dfsg1-2build1" "=3.8.10-0ubuntu1~20.04.1" "=2.3.1-9ubuntu1.1" "=4:9.3.0-1ubuntu2" "=95.0.1+build2-0ubuntu0.20.04.1")  
+declare -a packagesAptGet=("aptitude"         "python3"         "python3-xlib"  "python3-pip"        "firefox"                         "xvfb"                        "unzip"         "cups"              "cups-client"       "cups-bsd"          "cifs-utils"        "cmake"            "sqlite3"            "python3-setuptools" "python3-simplejson" "autoconf"   "automake"          "libtool"    "libevent-dev"     "libcurl4-openssl-dev" "libgtk2.0-dev"     "uuid-dev"           "intltool"         "libsqlite3-dev"     "valac"            "libjansson-dev" "libfuse2" "seafile-cli" "grub2"              "nmap"                "python3.8-dev"            "libcups2-dev"      "gcc"               "firefox-geckodriver"           ) 
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count`
 do

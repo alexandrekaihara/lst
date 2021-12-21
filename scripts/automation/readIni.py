@@ -13,6 +13,7 @@ import socket
 import platform
 import sys
 import socket
+from shutil import copyfile
 
 # ID of the instance consisting of the host name and the int value of the MAC address
 myID = "emtpy"
@@ -76,8 +77,8 @@ def getAndSetSubnetHostAndHostname(parser):
 	return subnet, host, hostname
 
 def gethostconfig(parser, subnet, host):
-	print(subnet, host)
-	print(parser.get("config", "192.168.200.2"))
+	config = parser.get("config", "192.168.{}.{}".format(subnet, host))
+	copyfile("packages/system/configs/{}.ini".format(config), "packages/system/config.ini")
 
 # Downlaod recent server config 
 def getCurrentServerConfig():
