@@ -75,6 +75,10 @@ def getAndSetSubnetHostAndHostname(parser):
 		parser.write(config)
 	return subnet, host, hostname
 
+def gethostconfig(parser, subnet, host):
+	print(subnet, host)
+	print(parser.get("config", "192.168.200.2"))
+
 # Downlaod recent server config 
 def getCurrentServerConfig():
 	newConfigFile = URLopener()
@@ -243,10 +247,12 @@ def main():
 	# Fetch recent server config 
 	#getCurrentServerConfig()
 	
-	# Read server config 
-	parser.read("packages/system/serverconfig.ini")
-	
+	# Get host configuration according to its ip address
+	parser.read("packages/system/configs/iplistconfig.conf")
+	gethostconfig(parser, subnet, host)
+
 	# Configure the servers using the IPs in the ServerConfig file
+	parser.read("packages/system/serverconfig.ini")
 	configServers(parser, subnet, host)
 	
 	# Set up a mount with the OpenStack server (to save the logs)

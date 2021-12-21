@@ -141,7 +141,6 @@ services:
     networks:
       officenet:
         ipv4_address: 192.168.210.2
-  #Oclient2:
   Oclient2:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: O${LCLIENT}2
@@ -180,7 +179,6 @@ services:
     networks:
       developernet:
         ipv4_address: 192.168.220.2
-  #Dclient2:
   Dclient2:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}2
@@ -195,7 +193,6 @@ services:
     networks:
       developernet:
         ipv4_address: 192.168.220.3
-  #Dclient3:
   Dclient3:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}3
@@ -210,7 +207,6 @@ services:
     networks:
       developernet:
         ipv4_address: 192.168.220.4
-  #Dclient4:
   Dclient4:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}4
@@ -225,7 +221,6 @@ services:
     networks:
       developernet:
         ipv4_address: 192.168.220.5
-  #Dclient5:
   Dclient5:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}5
@@ -240,7 +235,6 @@ services:
     networks:
       developernet:
         ipv4_address: 192.168.220.6
-  #Dclient6:
   Dclient6:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}6
@@ -255,7 +249,6 @@ services:
     networks:
       developernet:
         ipv4_address: 192.168.220.7
-  #Dclient7:
   Dclient7:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}7
@@ -270,7 +263,6 @@ services:
     networks:
       developernet:
         ipv4_address: 192.168.220.8
-  #Dclient8:
   Dclient8:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}8
@@ -285,3 +277,73 @@ services:
     networks:
       developernet:
         ipv4_address: 192.168.220.9
+  Dclient9:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}9
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    networks:
+      developernet:
+        ipv4_address: 192.168.220.10
+  Dclient10:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}10
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    networks:
+      developernet:
+        ipv4_address: 192.168.220.11
+  Dclient11:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}11
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    networks:
+      developernet:
+        ipv4_address: 192.168.220.12
+  Dclient12:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}12
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    networks:
+      developernet:
+        ipv4_address: 192.168.220.13
+  Dclient13:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}13
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    networks:
+      developernet:
+        ipv4_address: 192.168.220.14

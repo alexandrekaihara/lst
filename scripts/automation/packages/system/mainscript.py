@@ -158,7 +158,7 @@ def isWorkingHours(parser):
 
 	# Determine whether the working time has elapsed
 	if clockIn <= currHour < clockOut:
- 		isTimeToWorkNew = 1
+		isTimeToWorkNew = 1
 	else:
 		isTimeToWorkNew = 0
 
