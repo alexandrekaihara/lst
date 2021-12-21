@@ -76,6 +76,7 @@ def getAndSetSubnetHostAndHostname(parser):
 		parser.write(config)
 	return subnet, host, hostname
 
+# Get the right config file 
 def gethostconfig(parser, subnet, host):
 	config = parser.get("config", "192.168.{}.{}".format(subnet, host))
 	copyfile("packages/system/configs/{}.ini".format(config), "packages/system/config.ini")
