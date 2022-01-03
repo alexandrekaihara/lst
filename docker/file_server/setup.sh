@@ -45,7 +45,7 @@ EOF
 mkdir /home/debian/backup/
 
 # Run the script to set up the backup server on a regular time interval 
-echo -e "55 21 * * * sudo bash -c 'python /home/debian/backup.py'" >> mycron
+echo -e "55 21 * * * sudo bash -c 'python3 /home/debian/backup.py'" >> mycron
 
 # Run backup service periodically
 echo -e "0 22 * * * sudo bash -c 'tar -cf /home/debian/backup/backup.tar /media/storage/'" >> mycron
