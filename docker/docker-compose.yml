@@ -18,15 +18,15 @@ networks:
 
 
 # Define mount point to get the log of linuxclients
-volumes:
-  myhost:
-    external: true
+#volumes:
+#  myhost:
+#    external: true
 
 
 # Define the machines on its subnet
 services:
   ## Server Subnet
-  MAILSERVERserver:
+  mailserver:
     image: ${REPOSITORY}:${MAILSERVER}
     container_name: ${MAILSERVER}
     restart: always
@@ -70,8 +70,8 @@ services:
     networks:
       managementnet:
         ipv4_address: 192.168.200.2
-    volumes:
-      - myhost:/home/debian/logs
+    #volumes:
+    #  - myhost:/home/debian/logs
   ## Office Subnet
   Oclient1:
     image: ${REPOSITORY}:${LCLIENT}
@@ -86,8 +86,8 @@ services:
     networks:
       officenet:
         ipv4_address: 192.168.210.2
-    volumes:
-      - myhost:/home/debian/logs
+    #volumes:
+    #  - myhost:/home/debian/logs
   Dclient1:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}1
@@ -101,5 +101,5 @@ services:
     networks:
       developernet:
         ipv4_address: 192.168.220.2
-    volumes:
-      - myhost:/home/debian/logs
+    #volumes:
+    #  - myhost:/home/debian/logs
