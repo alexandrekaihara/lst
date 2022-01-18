@@ -26,8 +26,6 @@ Then, clone this repository to your local machine via:
 
 ## 3.3 Execution
 To execute the script to setup the network topology, execute thise commands:
-> chmod +x setup.sh && chmod +x config_network.sh
-
 > ./setup.sh
 
 
