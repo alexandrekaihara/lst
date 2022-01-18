@@ -30,13 +30,13 @@ To execute the script to setup the network topology, execute these commands:
 
 > chmod +x setup.sh && chmod +x config_network.sh
 
-> ./setup.sh
+> sudo ./setup.sh
 
 If you want to finish the experiment e get back to your original network configuration execute these commands:
 > docker-compose down
 
 > chmod +x remove_network_config.sh
 
-> ./remove_network_config.sh
+> sudo ./remove_network_config.sh
 
  
