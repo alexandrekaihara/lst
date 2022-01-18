@@ -25,7 +25,9 @@ Then, clone this repository to your local machine via:
 > git clone https://github.com/mdewinged/cidds.git
 
 ## 3.3 Execution
-To execute the script to setup the network topology, execute thise commands:
+To execute the script to setup the network topology, execute these commands:
+> cd cidds/docker
+
 > ./setup.sh
 
 
