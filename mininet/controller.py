@@ -1,3 +1,4 @@
+# ruy-manager controller.py
 from ryu.base import app_manager
 from ryu.controller import ofp_event
 from ryu.controller.handler import DEAD_DISPATCHER, MAIN_DISPATCHER, CONFIG_DISPATCHER, HANDSHAKE_DISPATCHER, set_ev_cls
@@ -25,7 +26,6 @@ class SimpleSwitch(app_manager.RyuApp):
                 super(SimpleSwitch, self).__init__(*args, **kwargs)
                 self.datapaths   = {}
                 self.mac_to_port = {}
-                self.monitor_thread = hub.spawn(self._monitor)
                 self.delays = pd.DataFrame(columns = ["Timestamp", "Delay"])
                 self.flows  = pd.DataFrame(columns = ['Date first seen', 'Duration', 'Proto', 'Src IP Addr', 
                                                      'Src Pt', 'Dst IP Addr', 'Dst Pt', 'Packets', 'Bytes', 
@@ -92,7 +92,7 @@ class SimpleSwitch(app_manager.RyuApp):
                 src  = eth.src
                 dpid = datapath.id
                 in_port = msg.match['in_port']
-                
+        
                 # LLDP type will not be supported
                 if eth.ethertype == ether_types.ETH_TYPE_LLDP:
                         return

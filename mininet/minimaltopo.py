@@ -1,5 +1,5 @@
 # ryu-manager ryu.app.simple_switch_13 --verbose --ofp-listen-host 127.10.0.0 --ofp-tcp-listen-port 6633 --observe-links
-# sudo -E mn --custom topo.py --topo topoteste --controller remote,ip=192.168.56.102,port=6633 --mac
+# sudo -E mn --custom minimaltopo.py --topo topo --controller remote,ip=192.168.56.102,port=6633 --mac
 from mininet.cli import CLI
 from mininet.log import setLogLevel
 from mininet.net import Mininet
@@ -28,3 +28,5 @@ if __name__ == '__main__':
     # This runs if this file is executed directly
     setLogLevel( 'info' )
     runMinimalTopo()
+
+TOPOS = {'topo': runMinimalTopo}

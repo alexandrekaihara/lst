@@ -26,9 +26,9 @@ volumes:
 # Define the machines on its subnet
 services:
   ## Server Subnet
-  mailserver:
-    image: ${REPOSITORY}:${MAIL}
-    container_name: ${MAIL}
+  MAILSERVERserver:
+    image: ${REPOSITORY}:${MAILSERVER}
+    container_name: ${MAILSERVER}
     restart: always
     networks:
       servernet:
@@ -64,7 +64,7 @@ services:
     privileged: true
     depends_on: 
       - ${FILE}
-      - ${MAIL}
+      - ${MAILSERVER}
       - ${WEB}
       - ${BACKUP}
     networks:
@@ -80,7 +80,7 @@ services:
     privileged: true
     depends_on: 
       - ${FILE}
-      - ${MAIL}
+      - ${MAILSERVER}
       - ${WEB}
       - ${BACKUP}
     networks:
@@ -95,7 +95,7 @@ services:
     privileged: true
     depends_on: 
       - ${FILE}
-      - ${MAIL}
+      - ${MAILSERVER}
       - ${WEB}
       - ${BACKUP}
     networks:
