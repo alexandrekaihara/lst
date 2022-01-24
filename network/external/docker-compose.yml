@@ -1,0 +1,79 @@
+version: "3.7"
+
+
+# Define networks to use
+networks:
+  externalnet: 
+    name: ciddsext
+    external: true
+  
+
+# Define the machines on its subnet
+services:
+  ## Server Subnet
+  externalserver:
+    image: ${REPOSITORY}:${EXTERNALSERVER}
+    container_name: ${EXTERNALSERVER}
+    restart: always
+    network_mode: "host"
+  Eclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: E{LCLIENT}1
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${EXTERNALSERVER}
+    networks:
+      developernet:
+        ipv4_address: 192.168.56.201
+  Eclient2:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: E{LCLIENT}2
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${EXTERNALSERVER}
+    networks:
+      developernet:
+        ipv4_address: 192.168.56.202
+  Eclient3:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: E{LCLIENT}3
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${EXTERNALSERVER}
+    networks:
+      developernet:
+        ipv4_address: 192.168.56.203
+  Eclient4:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: E{LCLIENT}4
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${EXTERNALSERVER}
+    networks:
+      developernet:
+        ipv4_address: 192.168.56.204
+  Eclient5:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: E{LCLIENT}5
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${EXTERNALSERVER}
+    networks:
+      developernet:
+        ipv4_address: 192.168.56.205
+  Eclient6:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: E{LCLIENT}6
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${EXTERNALSERVER}
+    networks:
+      developernet:
+        ipv4_address: 192.168.56.206
+  

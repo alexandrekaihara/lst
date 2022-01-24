@@ -1,0 +1,281 @@
+version: "3.7"
+
+
+# Define the machines on its subnet
+services:
+  ## Server Subnet
+  mailserver:
+    image: ${REPOSITORY}:${MAIL}
+    container_name: ${MAIL}
+    restart: always
+    network_mode: bridge
+  fileserver:
+    image: ${REPOSITORY}:${FILE}
+    container_name: ${FILE}
+    restart: always
+    network_mode: bridge
+  webserver:
+    image: ${REPOSITORY}:${WEB}
+    container_name: ${WEB}
+    restart: always
+    network_mode: bridge
+  backupserver:
+    image: ${REPOSITORY}:${BACKUP}
+    container_name: ${BACKUP}
+    restart: always
+    network_mode: bridge
+
+
+  ## Management Subnet
+  Mprinter:
+    image: ${REPOSITORY}:${PRINTER}
+    container_name: M${PRINTER}
+    restart: always
+    network_mode: bridge
+  Mclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: M${LCLIENT}1
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Mprinter
+    network_mode: bridge
+  #client2:
+  Mclient2:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: M${LCLIENT}2
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Mprinter
+    network_mode: bridge
+  #client3:
+  Mclient3:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: M${LCLIENT}3
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Mprinter
+    network_mode: bridge
+  #client4:
+  Mclient4:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: M${LCLIENT}4
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Mprinter
+    network_mode: bridge
+
+
+  ## Office Subnet
+  Oprinter:
+    image: ${REPOSITORY}:${PRINTER}
+    container_name: O${PRINTER}
+    restart: always
+    network_mode: bridge
+  Oclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: O${LCLIENT}1
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Oprinter
+    network_mode: bridge
+  Oclient2:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: O${LCLIENT}2
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Mprinter
+    network_mode: bridge
+  
+
+  ## Developer Subnet
+  Dprinter:
+    image: ${REPOSITORY}:${PRINTER}
+    container_name: D${PRINTER}
+    restart: always
+    network_mode: bridge
+  Dclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}1
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient2:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}2
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient3:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}3
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient4:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}4
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient5:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}5
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient6:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}6
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient7:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}7
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient8:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}8
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient9:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}9
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient10:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}10
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient11:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}11
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient12:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}12
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge
+  Dclient13:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}13
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: bridge

@@ -25,7 +25,7 @@ class SimpleSwitch(app_manager.RyuApp):
         def __init__(self, *args, **kwargs):
                 super(SimpleSwitch, self).__init__(*args, **kwargs)
                 self.datapaths   = {}
-                self.mac_to_port = {}
+                self.mac_to_port = {}-
                 self.delays = pd.DataFrame(columns = ["Timestamp", "Delay"])
                 self.flows  = pd.DataFrame(columns = ['Date first seen', 'Duration', 'Proto', 'Src IP Addr', 
                                                      'Src Pt', 'Dst IP Addr', 'Dst Pt', 'Packets', 'Bytes', 

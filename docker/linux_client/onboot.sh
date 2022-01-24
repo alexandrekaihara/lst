@@ -51,4 +51,3 @@ rm -r /home/debian/cidds-main
 # Keep alive
 cd /home/debian/automation
 python3 readIni.py
-#/bin/bash
