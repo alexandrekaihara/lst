@@ -26,7 +26,7 @@ Then, clone this repository to your local machine via:
 
 ## 3.3 Execution
 To execute the script to setup the network topology, execute these commands:
-> cd cidds/docker
+> cd cidds/network/internal
 
 > chmod +x setup.sh && chmod +x config_network.sh
 
