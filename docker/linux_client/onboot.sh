@@ -1,4 +1,16 @@
 #!/bin/bash
+
+# Update the automation directory
+rm -r home/debian/automation
+until unzip -o main.zip -d /home/debian
+do
+  wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
+done
+rm main.zip 
+mv /home/debian/cidds-main/scripts/automation /home/debian/
+chmod -R 755 /home/debian/automation
+rm -r /home/debian/cidds-main
+
 # Generate dummy files for seafile
 mkdir -pv /home/debian/tmpseafiles
 i=0
@@ -36,17 +48,6 @@ seaf-cli config -k enable_http_sync -v true -c /home/debian/.ccnet
 seaf-cli stop -c /home/debian/.ccnet
 seaf-cli start -c /home/debian/.ccnet
 chown -R mininet:mininet /home/debian/sea/ /home/debian/seafile-client/ /home/debian/.ccnet
-
-# Update the automation directory
-rm -r home/debian/automation
-until unzip -o main.zip -d /home/debian
-do
-  wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
-done
-rm main.zip 
-mv /home/debian/cidds-main/scripts/automation /home/debian/
-chmod -R 755 /home/debian/automation
-rm -r /home/debian/cidds-main
 
 # Keep alive
 cd /home/debian/automation

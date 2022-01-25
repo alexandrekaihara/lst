@@ -1,53 +1,29 @@
 version: "3.7"
 
 
-networks:
-  servernet: 
-    name: cidds100
-    external: true
-  managementnet:
-    name: cidds200
-    external: true
-  officenet:
-    name: cidds210
-    external: true
-  developernet:
-    name: cidds220
-    external: true
-
-
 # Define the machines on its subnet
 services:
   ## Server Subnet
   mailserver:
-    image: ${REPOSITORY}:${MAIL}
-    container_name: ${MAIL}
+    image: ${REPOSITORY}:${MAILSERVER}
+    container_name: ${MAILSERVER}
     restart: always
-    networks:
-      servernet:
-        ipv4_address: 192.168.100.1
+    network_mode: bridge
   fileserver:
     image: ${REPOSITORY}:${FILE}
     container_name: ${FILE}
     restart: always
-    networks:
-      servernet:
-        ipv4_address: 192.168.100.2
+    network_mode: bridge
   webserver:
     image: ${REPOSITORY}:${WEB}
     container_name: ${WEB}
     restart: always
-    networks:
-      servernet:
-        ipv4_address: 192.168.100.3
+    network_mode: bridge
   backupserver:
     image: ${REPOSITORY}:${BACKUP}
     container_name: ${BACKUP}
     restart: always
-    networks:
-      servernet:
-        ipv4_address: 192.168.100.4
-
+    network_mode: bridge
 
 
   ## Management Subnet
@@ -58,13 +34,11 @@ services:
     privileged: true
     depends_on: 
       - ${FILE}
-      - ${MAIL}
+      - ${MAILSERVER}
       - ${WEB}
       - ${BACKUP}
-      - Mprinter
-    networks:
-      managementnet:
-        ipv4_address: 192.168.200.2
+    network_mode: bridge
+  ## Office Subnet
   Oclient1:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: O${LCLIENT}1
@@ -72,13 +46,11 @@ services:
     privileged: true
     depends_on: 
       - ${FILE}
-      - ${MAIL}
+      - ${MAILSERVER}
       - ${WEB}
       - ${BACKUP}
-      - Oprinter
-    networks:
-      officenet:
-        ipv4_address: 192.168.210.2
+    network_mode: bridge
+  ## Developer Subnet
   Dclient1:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}1
@@ -86,10 +58,7 @@ services:
     privileged: true
     depends_on: 
       - ${FILE}
-      - ${MAIL}
+      - ${MAILSERVER}
       - ${WEB}
       - ${BACKUP}
-      - Dprinter
-    networks:
-      developernet:
-        ipv4_address: 192.168.220.2
+    network_mode: bridge

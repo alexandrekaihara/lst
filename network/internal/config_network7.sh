@@ -1,17 +1,32 @@
 # Create bridges
 ## Create external bridge
-ovs-vsctl add-br br-ex
-ifconfig br-ex up
-iptables -t nat -I POSTROUTING -o br-ex -j MASQUERADE
-ovs-vsctl add-port br-ex eth0
-ifconfig eth0 0
-dhclient br-ex
-## Create internal bridge
 ovs-vsctl add-br br-int
 ifconfig br-int up
-## Set controler on bridges
-ovs-vsctl set-controller br-ex tcp:10.10.53.50:6633
-ovs-vsctl set-controller br-int tcp:127.0.0.1:6633
+iptables -t nat -I POSTROUTING -o br-int -j MASQUERADE
+ovs-vsctl add-port br-int eth0
+ifconfig eth0 0
+dhclient br-int
+## Connect to the controller
+#ovs-vsctl set-controller br-int tcp:127.0.0.1:6633
+
+# Create L2 Switches
+ovs-vsctl add-br br-100
+ovs-vsctl add-br br-200
+ifconfig br-100 up
+ifconfig br-200 up
+iptables -t nat -I POSTROUTING -o br-100 -j MASQUERADE
+iptables -t nat -I POSTROUTING -o br-200 -j MASQUERADE
+## Connect into the Router
+ip link add vethswitch100 type veth peer name vethrouter100
+ovs-vsctl add-port br-100 vethswitch100 
+ovs-vsctl add-port br-int vethrouter100
+ip link add vethswitch200 type veth peer name vethrouter200
+ovs-vsctl add-port br-200 vethswitch200 
+ovs-vsctl add-port br-int vethrouter200
+## Configure all flows 
+ovs-ofctl add-flow br-int priority=3,arp,nw_dst=192.168.100.0/24,actions=output:"vethrouter100"
+ovs-ofctl add-flow br-int priority=3,arp,nw_dst=192.168.200.0/24,actions=output:"vethrouter200"
+
 
 
 # Brief: Configure all network interfaces and connects them into the OVS bridges 
@@ -37,7 +52,7 @@ configure_host(){
     ## Connect interfaces into the container subspace to the bridge
     ip link set vethsubnet$2 netns $1
     ip -n $1 link set vethsubnet$2 up
-    ovs-vsctl add-port br-int veth$2.$3
+    ovs-vsctl add-port br-$2 veth$2.$3
 
     ## Add ip addressses and routes
     ip -n $1 addr add 192.168.$2.$3/32 dev vethsubnet$2
@@ -45,27 +60,13 @@ configure_host(){
     ip -n $1 route add 192.168.200.0/24 dev vethsubnet$2
     ip -n $1 route add 192.168.210.0/24 dev vethsubnet$2
     ip -n $1 route add 192.168.220.0/24 dev vethsubnet$2
-    
-    ## Configure flows into the switch
-    ovs-ofctl add-flow br-int priority=3,arp,nw_dst=192.168.$2.$3/32,actions=output:"veth$2.$3"
-    ovs-ofctl add-flow br-int priority=3,ip,nw_dst=192.168.$2.$3/32,actions=output:"veth$2.$3"
 }
 
-configure_host mailserver 100 1
-configure_host fileserver 100 2
-configure_host webserver 100 3
-configure_host backupserver 100 4
-configure_host Mlinuxclient1 200 2
-configure_host Olinuxclient1 210 2
-configure_host Dlinuxclient1 220 2
+configure_host vigilant_hopper 100 2
+configure_host happy_perlman 100 1
+configure_host goofy_bassi 200 1
 
 
-configure_host romantic_sutherland 100 1
-configure_host great_shtern 200 1
-
-
-ovs-ofctl add-flow br-int priority=3,arp,nw_dst=192.168.$2.$3/32,actions=output:"veth$2.$3"
-ip netns exec romantic_sutherland ip route add 192.168.1.1 dev vethsubnet100
-ip netns exec romantic_sutherland route add default gw 192.168.1.1
-ip netns exec great_shtern ip route add 192.168.1.1 dev vethsubnet200
-ip netns exec great_shtern route add default gw 192.168.1.1
+ip netns exec happy_perlman route del default
+ip netns exec happy_perlman ip route add 192.168.1.0/24 dev vethsubnet100
+ip netns exec happy_perlman route add default gw 192.168.1.1 
