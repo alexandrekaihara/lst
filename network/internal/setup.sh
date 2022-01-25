@@ -3,9 +3,9 @@
 # Start Ryu Controller
 ryu-manager controller.py &
 
+# Configure all networks
+chmod +x config_network.sh
+. config_network.sh
+
 # Set up all machines
 docker-compose --env-file=".env" up -d
-
-# Configure all networks
-chmod +x config_network6.sh
-. config_network6.sh
