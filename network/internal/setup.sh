@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Start Ryu Controller
-ryu-manager controller.py &
-
 # Configure all networks
 chmod +x config_network.sh
 . config_network.sh

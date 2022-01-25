@@ -3,13 +3,6 @@
 # Enable nat
 iptables -t nat -I POSTROUTING -o eth0 -j MASQUERADE
 
-# Create bridge for external acess
-#ovs-vsctl add-br br-int
-#ifconfig br-int up
-#ovs-vsctl add-port br-int eth0
-#ifconfig eth0 0
-#dhclient br-int
-
 # Functions
 ## Create a subnet and expects the first parameter as tag of the subnet to be created
 create_subnet(){
