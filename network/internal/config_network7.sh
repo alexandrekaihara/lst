@@ -7,26 +7,7 @@ ovs-vsctl add-port br-int eth0
 ifconfig eth0 0
 dhclient br-int
 ## Connect to the controller
-#ovs-vsctl set-controller br-int tcp:127.0.0.1:6633
-
-# Create L2 Switches
-ovs-vsctl add-br br-100
-ovs-vsctl add-br br-200
-ifconfig br-100 up
-ifconfig br-200 up
-iptables -t nat -I POSTROUTING -o br-100 -j MASQUERADE
-iptables -t nat -I POSTROUTING -o br-200 -j MASQUERADE
-## Connect into the Router
-ip link add vethswitch100 type veth peer name vethrouter100
-ovs-vsctl add-port br-100 vethswitch100 
-ovs-vsctl add-port br-int vethrouter100
-ip link add vethswitch200 type veth peer name vethrouter200
-ovs-vsctl add-port br-200 vethswitch200 
-ovs-vsctl add-port br-int vethrouter200
-## Configure all flows 
-ovs-ofctl add-flow br-int priority=3,arp,nw_dst=192.168.100.0/24,actions=output:"vethrouter100"
-ovs-ofctl add-flow br-int priority=3,arp,nw_dst=192.168.200.0/24,actions=output:"vethrouter200"
-
+ovs-vsctl set-controller br-int tcp:127.0.0.1:6633
 
 
 # Brief: Configure all network interfaces and connects them into the OVS bridges 
@@ -52,21 +33,13 @@ configure_host(){
     ## Connect interfaces into the container subspace to the bridge
     ip link set vethsubnet$2 netns $1
     ip -n $1 link set vethsubnet$2 up
-    ovs-vsctl add-port br-$2 veth$2.$3
+    ovs-vsctl add-port br-int veth$2.$3
 
     ## Add ip addressses and routes
     ip -n $1 addr add 192.168.$2.$3/32 dev vethsubnet$2
-    ip -n $1 route add 192.168.100.0/24 dev vethsubnet$2
-    ip -n $1 route add 192.168.200.0/24 dev vethsubnet$2
-    ip -n $1 route add 192.168.210.0/24 dev vethsubnet$2
-    ip -n $1 route add 192.168.220.0/24 dev vethsubnet$2
+    ip netns exec $1 route add default gw 192.168.$2.$3
 }
 
-configure_host vigilant_hopper 100 2
-configure_host happy_perlman 100 1
-configure_host goofy_bassi 200 1
+configure_host amazing_leakey 100 2
+configure_host focused_einstein 100 3
 
-
-ip netns exec happy_perlman route del default
-ip netns exec happy_perlman ip route add 192.168.1.0/24 dev vethsubnet100
-ip netns exec happy_perlman route add default gw 192.168.1.1 

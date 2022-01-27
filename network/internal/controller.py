@@ -6,6 +6,7 @@ from ryu.ofproto import ofproto_v1_3
 from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet, ethernet, ether_types, ipv4, icmp, tcp, udp, in_proto
 from ryu.lib import hub
+from ryu import utils
 from statistics import mean
 import pandas as pd
 import datetime as date
@@ -25,7 +26,7 @@ class SimpleSwitch(app_manager.RyuApp):
         def __init__(self, *args, **kwargs):
                 super(SimpleSwitch, self).__init__(*args, **kwargs)
                 self.datapaths   = {}
-                self.mac_to_port = {}-
+                self.mac_to_port = {}
                 self.delays = pd.DataFrame(columns = ["Timestamp", "Delay"])
                 self.flows  = pd.DataFrame(columns = ['Date first seen', 'Duration', 'Proto', 'Src IP Addr', 
                                                      'Src Pt', 'Dst IP Addr', 'Dst Pt', 'Packets', 'Bytes', 
@@ -55,7 +56,6 @@ class SimpleSwitch(app_manager.RyuApp):
                                                 instructions = inst, hard_timeout = hard_tout, 
                                                 idle_timeout = idle_tout, flags = ofproto.OFPFF_SEND_FLOW_REM)
                 datapath.send_msg(mod)
-
         
         @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
         def switch_features_handler(self, ev):
@@ -72,7 +72,7 @@ class SimpleSwitch(app_manager.RyuApp):
                 datapath = ev.datapath
                 if ev.state == MAIN_DISPATCHER:
                         if datapath.id not in self.datapaths:
-                                #self.logger.info("Register datapath: %016x", datapath.id)
+                                self.logger.info("Register datapath: %016x", datapath.id)
                                 self.datapaths[datapath.id] = datapath
 
                 elif ev.state == DEAD_DISPATCHER:
@@ -99,8 +99,9 @@ class SimpleSwitch(app_manager.RyuApp):
 
                 # Register the packet outport to learn the where it should be fowarded
                 self.mac_to_port.setdefault(dpid, {})
-                #self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
+                self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
                 self.mac_to_port[dpid][src] = in_port
+                print(self.mac_to_port)
 
                 # If the dst is known, just foward the package to the right outport
                 if dst in self.mac_to_port[dpid]:
