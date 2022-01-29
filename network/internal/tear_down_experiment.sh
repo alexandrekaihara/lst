@@ -10,5 +10,8 @@ dhclient eth0
 # Delete all namespaces created
 rm -r /var/run/netns
 
+# Stop controller
+PID=${'pgrep ryu'}
+kill $PID
 
 
