@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Remove OpenvSwitch configurations
 ovs-vsctl --if-exists del-br br-int
 dhclient eth0

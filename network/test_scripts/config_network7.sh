@@ -6,6 +6,10 @@ iptables -t nat -I POSTROUTING -o br-int -j MASQUERADE
 ovs-vsctl add-port br-int eth0
 ifconfig eth0 0
 dhclient br-int
+ip addr add 192.168.100.100/24 dev br-int
+ip addr add 192.168.200.100/24 dev br-int
+ip addr add 192.168.210.100/24 dev br-int
+ip addr add 192.168.220.100/24 dev br-int
 ## Connect to the controller
 ovs-vsctl set-controller br-int tcp:127.0.0.1:6633
 
@@ -36,10 +40,10 @@ configure_host(){
     ovs-vsctl add-port br-int veth$2.$3
 
     ## Add ip addressses and routes
-    ip -n $1 addr add 192.168.$2.$3/32 dev vethsubnet$2
-    ip netns exec $1 route add default gw 192.168.$2.$3
+    ip -n $1 addr add 192.168.$2.$3/16 dev vethsubnet$2
+    ip netns exec $1 route add default gw 192.168.$2.100
 }
 
-configure_host amazing_leakey 100 2
-configure_host focused_einstein 100 3
+configure_host funny_mestorf 100 2
+configure_host peaceful_sinoussi 200 3
 

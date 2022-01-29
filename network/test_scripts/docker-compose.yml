@@ -1,6 +1,21 @@
 version: "3.7"
 
 
+networks:
+  servernet: 
+    name: cidds100
+    external: true
+  managementnet:
+    name: cidds200
+    external: true
+  officenet:
+    name: cidds210
+    external: true
+  developernet:
+    name: cidds220
+    external: true
+
+
 # Define the machines on its subnet
 services:
   ## Server Subnet
@@ -8,22 +23,31 @@ services:
     image: ${REPOSITORY}:${MAILSERVER}
     container_name: ${MAILSERVER}
     restart: always
-    network_mode: none
+    networks:
+      servernet:
+        ipv4_address: 192.168.100.1
   fileserver:
     image: ${REPOSITORY}:${FILE}
     container_name: ${FILE}
     restart: always
-    network_mode: none
+    networks:
+      servernet:
+        ipv4_address: 192.168.100.2
   webserver:
     image: ${REPOSITORY}:${WEB}
     container_name: ${WEB}
     restart: always
-    network_mode: none
+    networks:
+      servernet:
+        ipv4_address: 192.168.100.3
   backupserver:
     image: ${REPOSITORY}:${BACKUP}
     container_name: ${BACKUP}
     restart: always
-    network_mode: none
+    networks:
+      servernet:
+        ipv4_address: 192.168.100.4
+
 
 
   ## Management Subnet
@@ -37,8 +61,9 @@ services:
       - ${MAILSERVER}
       - ${WEB}
       - ${BACKUP}
-    network_mode: none
-  ## Office Subnet
+    networks:
+      managementnet:
+        ipv4_address: 192.168.200.2
   Oclient1:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: O${LCLIENT}1
@@ -49,8 +74,9 @@ services:
       - ${MAILSERVER}
       - ${WEB}
       - ${BACKUP}
-    network_mode: none
-  ## Developer Subnet
+    networks:
+      officenet:
+        ipv4_address: 192.168.210.2
   Dclient1:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}1
@@ -61,4 +87,6 @@ services:
       - ${MAILSERVER}
       - ${WEB}
       - ${BACKUP}
-    network_mode: none
+    networks:
+      developernet:
+        ipv4_address: 192.168.220.2

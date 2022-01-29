@@ -1,40 +1,54 @@
-#!/bin/bash
+# Create bridges
+## Create external bridge
+ovs-vsctl add-br br-int
+ifconfig br-int up
+iptables -t nat -I POSTROUTING -o br-int -j MASQUERADE
+ovs-vsctl add-port br-int eth0
+ifconfig eth0 0
+dhclient br-int
+ip addr add 192.168.100.100/24 dev br-int
+ip addr add 192.168.200.100/24 dev br-int
+ip addr add 192.168.210.100/24 dev br-int
+ip addr add 192.168.220.100/24 dev br-int
+## Connect to the controller
+ovs-vsctl set-controller br-int tcp:127.0.0.1:6633
 
-# Enable nat
-iptables -t nat -I POSTROUTING -o eth0 -j MASQUERADE
 
-# Functions
-## Create a subnet and expects the first parameter as tag of the subnet to be created
-create_subnet(){
-    ## Create interface for subnet
-    ip link add eth$1 type bridge
-    #ovs-vsctl add-br eth$1
-    ip link set dev eth$1 up
-    ip addr add 192.168.$1.100/32 dev eth$1
-    #ip route add 192.168.$1.0/24 dev eth$1
+# Brief: Configure all network interfaces and connects them into the OVS bridges 
+# Params:
+#   - $1: name of the container
+#   - $2: Tag of the subnet
+#   - $3: Host ip part
+# Return:
+#   - None
+# Example:
+#   - configure_host [container name] [subnet] [host]
+#   - configure_host mailserver 100 1
+configure_host(){
+    ## Add container to namespace. Available on: https://www.thegeekdiary.com/how-to-access-docker-containers-network-namespace-from-host/
+    pid=$(docker inspect -f '{{.State.Pid}}' $1)
+    mkdir -p /var/run/netns/
+    ln -sfT /proc/$pid/ns/net /var/run/netns/$1
 
-    ## Create macvlan interface do enable host communication
-    ip link add veth-$1 link eth$1 type macvlan mode bridge
-    ip link set dev veth-$1 up
-    ip addr add 192.168.$1.30/32 dev veth-$1
-    ip route add 192.168.$1.0/27 dev veth-$1
+    ## Add interface on container and host
+    ip link add veth$2.$3 type veth peer name vethsubnet$2
+    ip link set veth$2.$3 up
+    
+    ## Connect interfaces into the container subspace to the bridge
+    ip link set vethsubnet$2 netns $1
+    ip -n $1 link set vethsubnet$2 up
+    ovs-vsctl add-port br-int veth$2.$3
 
-    # Connect bridge to a main bridge
-    #ovs-vsctl \
-    #-- add-port br-int patch0$1 \
-    #-- set interface patch0$1 type=patch options:peer=patch1$1 \
-    #-- add-port br-int patch1$1 \
-    #-- set interface patch1$1 type=patch options:peer=patch0$1
-
-    ## Create docker network
-    until docker network create -d macvlan --subnet=192.168.$1.0/24 --ip-range=192.168.$1.0/27 --gateway=192.168.$1.100 -o parent=eth$1 --aux-address="host=192.168.$1.30" cidds$1
-    do 
-    docker network rm cidds$1
-    done
+    ## Add ip addressses and routes
+    ip -n $1 addr add 192.168.$2.$3/16 dev vethsubnet$2
+    ip netns exec $1 route add default gw 192.168.$2.100
 }
 
-# Create all subnets
-create_subnet 100
-create_subnet 200
-create_subnet 210
-create_subnet 220
+configure_host mailserver 100 1
+configure_host fileserver 100 2
+configure_host webserver 100 3
+configure_host backupserver 100 4
+configure_host Mlinuxclient1 200 2
+configure_host Olinuxclient1 210 2
+configure_host Dlinuxclient1 220 2
+

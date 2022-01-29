@@ -1,0 +1,8 @@
+# Show ARP table
+ovs-appctl fdb/show br0
+# Show routing table
+ovs-appctl ovs/route/show
+# Show port numbers
+sudo ovs-vsctl -- --columns=name,ofport list Interface
+# Show MAC table
+ovs-appctl fdb/show br-int
