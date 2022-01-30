@@ -68,7 +68,7 @@ done
 
 # Definition of the Python-Libraries to install 
 python3 -m pip install --upgrade pip
-declare -a versionsPip=("==3.141.0" "==8.4.0" "==2.2" "==0.2.9" "==4.8.0" "==0.7.1" "==2.0.1")
+#declare -a versionsPip=("==3.141.0" "==8.4.0" "==2.2" "==0.2.9" "==4.8.0" "==0.7.1" "==2.0.1")
 declare -a packagesPip=("selenium" "pillow" "pyvirtualdisplay" "xvfbwrapper" "pexpect" "python-nmap" "pycups")
 count=${#packagesPip[@]}
 for i in `seq 1 $count`
@@ -77,7 +77,8 @@ for i in `seq 1 $count`
     until pip3 show ${packagesPip[$i-1]} | grep -q Location;
     do
         echo "${packagesPip[$i-1]} not found. Installing..."
-        pip3 install ${packagesPip[$i-1]}${versionsPip[$i-1]}
+        #pip3 install ${packagesPip[$i-1]}${versionsPip[$i-1]}
+        pip3 install ${packagesPip[$i-1]}
     done
     echo "${packagesPip[$i-1]} found."
 done
