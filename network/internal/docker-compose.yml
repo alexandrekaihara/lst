@@ -9,21 +9,33 @@ services:
     container_name: ${MAILSERVER}
     restart: always
     network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
   fileserver:
     image: ${REPOSITORY}:${FILE}
     container_name: ${FILE}
     restart: always
     network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
   webserver:
     image: ${REPOSITORY}:${WEB}
     container_name: ${WEB}
     restart: always
     network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
   backupserver:
     image: ${REPOSITORY}:${BACKUP}
     container_name: ${BACKUP}
     restart: always
     network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
 
 
   ## Management Subnet
@@ -38,6 +50,9 @@ services:
       - ${WEB}
       - ${BACKUP}
     network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
   ## Office Subnet
   Oclient1:
     image: ${REPOSITORY}:${LCLIENT}
@@ -50,6 +65,9 @@ services:
       - ${WEB}
       - ${BACKUP}
     network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
   ## Developer Subnet
   Dclient1:
     image: ${REPOSITORY}:${LCLIENT}
@@ -62,3 +80,6 @@ services:
       - ${WEB}
       - ${BACKUP}
     network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4

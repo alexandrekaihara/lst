@@ -31,9 +31,6 @@ configure_host(){
     ## Add ip addressses and routes
     ip -n $1 addr add 192.168.$2.$3/16 dev vethsubnet$2
     ip netns exec $1 route add default gw 192.168.$2.100
-
-    # Define DNS server
-    ip netns exec $1 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 }
 
 

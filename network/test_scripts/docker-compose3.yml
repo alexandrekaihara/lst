@@ -8,22 +8,34 @@ services:
     image: ${REPOSITORY}:${MAIL}
     container_name: ${MAIL}
     restart: always
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   fileserver:
     image: ${REPOSITORY}:${FILE}
     container_name: ${FILE}
     restart: always
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   webserver:
     image: ${REPOSITORY}:${WEB}
     container_name: ${WEB}
     restart: always
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   backupserver:
     image: ${REPOSITORY}:${BACKUP}
     container_name: ${BACKUP}
     restart: always
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
 
 
   ## Management Subnet
@@ -31,7 +43,10 @@ services:
     image: ${REPOSITORY}:${PRINTER}
     container_name: M${PRINTER}
     restart: always
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Mclient1:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: M${LCLIENT}1
@@ -43,7 +58,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Mprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   #client2:
   Mclient2:
     image: ${REPOSITORY}:${LCLIENT}
@@ -56,7 +74,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Mprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   #client3:
   Mclient3:
     image: ${REPOSITORY}:${LCLIENT}
@@ -69,7 +90,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Mprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   #client4:
   Mclient4:
     image: ${REPOSITORY}:${LCLIENT}
@@ -82,7 +106,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Mprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
 
 
   ## Office Subnet
@@ -90,7 +117,10 @@ services:
     image: ${REPOSITORY}:${PRINTER}
     container_name: O${PRINTER}
     restart: always
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Oclient1:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: O${LCLIENT}1
@@ -102,7 +132,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Oprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Oclient2:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: O${LCLIENT}2
@@ -114,7 +147,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Mprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   
 
   ## Developer Subnet
@@ -122,7 +158,10 @@ services:
     image: ${REPOSITORY}:${PRINTER}
     container_name: D${PRINTER}
     restart: always
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient1:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}1
@@ -134,7 +173,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient2:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}2
@@ -146,7 +188,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient3:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}3
@@ -158,7 +203,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient4:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}4
@@ -170,7 +218,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient5:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}5
@@ -182,7 +233,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient6:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}6
@@ -194,7 +248,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient7:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}7
@@ -206,7 +263,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient8:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}8
@@ -218,7 +278,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient9:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}9
@@ -230,7 +293,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient10:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}10
@@ -242,7 +308,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient11:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}11
@@ -254,7 +323,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient12:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}12
@@ -266,7 +338,10 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
   Dclient13:
     image: ${REPOSITORY}:${LCLIENT}
     container_name: D${LCLIENT}13
@@ -278,4 +353,7 @@ services:
       - ${WEB}
       - ${BACKUP}
       - Dprinter
-    network_mode: bridge
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
