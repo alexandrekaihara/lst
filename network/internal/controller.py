@@ -172,7 +172,7 @@ class SimpleSwitch(app_manager.RyuApp):
                         print("Datefirstseen =", now, "SrcIPAddr =", srcip, 
                                         "SrcPt =", srcpt, "DstIPAddr =", dstip, 
                                         "DstPt =", dstpt, "Proto =", proto, "Tos =", tos, 
-                                        "Flags =", flags, "Datapath =", dpid)
+                                        "Flags =", flags, "Datapath =", dpid, "Outport =", out_port)
                         
                 data = None
                 if msg.buffer_id == ofproto.OFP_NO_BUFFER:

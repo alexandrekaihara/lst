@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create seafile user 
-echo -e '123\n123' | passwd sudo
+echo -e '123\n123' | passwd root
 useradd -m -s /bin/bash seafile
 echo -e '123\n123' | passwd seafile
 # ERROR Username is not in the sudoers file https://unix.stackexchange.com/questions/179954/username-is-not-in-the-sudoers-file-this-incident-will-be-reported 

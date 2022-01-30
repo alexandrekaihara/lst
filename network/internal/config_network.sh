@@ -57,5 +57,5 @@ configure_host fileserver 100 2
 configure_host webserver 100 3
 configure_host backupserver 100 4
 configure_host Mlinuxclient1 200 2
-configure_host Olinuxclient1 210 2
+configure_host Olinuxclient21 210 2
 configure_host Dlinuxclient1 220 2
