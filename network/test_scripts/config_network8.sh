@@ -38,11 +38,11 @@ configure_host(){
 ## Create external bridge
 ovs-vsctl add-br br-int
 ifconfig br-int up
-## Enable NAT on the interface that has connection to the internet
-IFNAME=`route | grep '^default' | grep -o '[^ ]*$'`
-iptables -t nat -I POSTROUTING -o $IFNAME -j MASQUERADE
 iptables -t nat -I POSTROUTING -o br-int -j MASQUERADE
-## Add multiples IP to the bridge as a gateway for all containers and set routes from host to containers
+ovs-vsctl add-port br-int eth0
+ifconfig eth0 0
+dhclient br-int
+## Add routes from host to containers
 ip addr add 192.168.100.100/24 dev br-int
 ip addr add 192.168.200.100/24 dev br-int
 ip addr add 192.168.210.100/24 dev br-int
