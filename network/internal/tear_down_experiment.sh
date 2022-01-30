@@ -11,7 +11,7 @@ dhclient eth0
 rm -r /var/run/netns
 
 # Stop controller
-PID=${'pgrep ryu'}
+PID=`pgrep ryu`
 kill $PID
 
 

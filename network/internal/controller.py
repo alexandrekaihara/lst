@@ -101,7 +101,6 @@ class SimpleSwitch(app_manager.RyuApp):
                 self.mac_to_port.setdefault(dpid, {})
                 self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
                 self.mac_to_port[dpid][src] = in_port
-                print(self.mac_to_port)
 
                 # If the dst is known, just foward the package to the right outport
                 if dst in self.mac_to_port[dpid]:
