@@ -1,5 +1,13 @@
 #!/bin/bash
 
+
+# Wait for the internet connection
+until ping -c 1 google.com
+do
+echo "Waiting to stablish connection to setup machine"
+done 
+
+
 # Update the automation directory
 rm -r home/debian/automation
 until unzip -o main.zip -d /home/debian

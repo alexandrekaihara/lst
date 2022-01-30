@@ -1,4 +1,6 @@
 #!/bin/bash
+# NOTE: If your internet access adapter is not called eth0, then 
+# substitute all eth0 for the name of your adapter.
 
 
 # Brief: Configure all network interfaces and connects them into the OVS bridges 
@@ -30,10 +32,10 @@ ovs-vsctl add-port br-int veth$2.$3
 ip -n $1 addr add 192.168.$2.$3/16 dev vethsubnet$2
 ip netns exec $1 route add default gw 192.168.$2.100
 
+# Define DNS server
 cat > /etc/resolv.conf << EOF
 nameserver 8.8.8.8
 nameserver 8.8.4.4
-search lans
 EOF
 }
 
@@ -46,6 +48,7 @@ iptables -t nat -I POSTROUTING -o br-int -j MASQUERADE
 ovs-vsctl add-port br-int eth0
 ifconfig eth0 0
 dhclient br-int
+## Add routes from host to containers
 ip addr add 192.168.100.100/24 dev br-int
 ip addr add 192.168.200.100/24 dev br-int
 ip addr add 192.168.210.100/24 dev br-int
@@ -56,6 +59,7 @@ ovs-vsctl set-controller br-int tcp:127.0.0.1:6633
 
 # Configure all hosts
 configure_host mailserver 100 1
+configure_host compassionate_lamport 100 1
 configure_host fileserver 100 2
 configure_host webserver 100 3
 configure_host backupserver 100 4
