@@ -5,6 +5,7 @@
 until ping -c 1 google.com
 do
 echo "Waiting to stablish connection to setup machine"
+sleep 1
 done 
 
 

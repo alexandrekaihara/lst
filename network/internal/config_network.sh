@@ -3,6 +3,10 @@
 # substitute all eth0 for the name of your adapter.
 
 
+# Add all environment variables also used on docker-compose.yml file
+. .env
+
+
 # Brief: Configure all network interfaces and connects them into the OVS bridges 
 # Params:
 #   - $1: name of the container
@@ -29,8 +33,12 @@ configure_host(){
     ovs-vsctl add-port br-int veth$2.$3
 
     ## Add ip addressses and routes
-    ip -n $1 addr add 192.168.$2.$3/16 dev vethsubnet$2
+    ip -n $1 addr add 192.168.$2.$3/24 dev vethsubnet$2
     ip netns exec $1 route add default gw 192.168.$2.100
+    ip -n $1 route add 192.168.100.0/24 dev vethsubnet$2
+    ip -n $1 route add 192.168.200.0/24 dev vethsubnet$2
+    ip -n $1 route add 192.168.210.0/24 dev vethsubnet$2
+    ip -n $1 route add 192.168.220.0/24 dev vethsubnet$2
 }
 
 
@@ -52,10 +60,14 @@ ovs-vsctl set-controller br-int tcp:127.0.0.1:6633
 
 
 # Configure all hosts
-configure_host mailserver 100 1
-configure_host fileserver 100 2
-configure_host webserver 100 3
-configure_host backupserver 100 4
-configure_host Mlinuxclient21 200 2
-configure_host Olinuxclient21 210 2
-configure_host Dlinuxclient21 220 2
+## Server Subnet
+configure_host $MAILSERVER 100 1
+configure_host $FILE 100 2
+configure_host $WEB 100 3
+configure_host $BACKUP 100 4
+## Management Subnet
+configure_host "M"$LCLIENT"1" 200 2
+## Office Subnet
+configure_host "O"$LCLIENT"1" 210 2
+# Developer Subnet
+configure_host "D"$LCLIENT"1" 220 2
