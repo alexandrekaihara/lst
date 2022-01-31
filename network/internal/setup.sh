@@ -1,10 +1,8 @@
 #!/bin/bash
 
 # Remove all possible network configurations
-## Del bridge
-ovs-vsctl --if-exists del-br br-int
-## Delete all namespaces created
-rm -r /var/run/netns
+chmod +x tear_down_experiment.sh
+. tear_down_experiment.sh
 
 # Start Ryu Controller
 ryu-manager controller.py &
