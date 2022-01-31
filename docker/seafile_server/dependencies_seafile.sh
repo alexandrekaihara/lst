@@ -8,7 +8,7 @@ done
 apt upgrade -y
 
 # Download basic packages 
-declare -a packagesAptGet=("systemctl" "apt-utils" "sudo" "dialog" "cron" "software-properties-common" "aptitude" "ssh" "nano" "iptables" "net-tools" "iproute2" "iputils-ping" "python3" "python3-pip" "libpython3.8" "python3-setuptools" "python3-pil" "python3-ldap" "python3-urllib3" "ffmpeg" "python3-pip" "python3-mysqldb" "python3-memcache" "python3-requests" "libmemcached-dev" "mariadb-server" "nginx" "wget") #"python3-dev" "build-essential" "libssl-dev" "libffi-dev" "libxml2-dev" "libxslt1-dev" "zlib1g-dev")
+declare -a packagesAptGet=("systemctl" "apt-utils" "sudo" "dialog" "cron" "software-properties-common" "aptitude" "ssh" "nano" "iptables" "net-tools" "iproute2" "iputils-ping" "python3" "python3-pip" "libpython3.8" "python3-setuptools" "python3-pil" "python3-ldap" "python3-urllib3" "ffmpeg" "python3-pip" "python3-mysqldb" "python3-memcache" "python3-requests" "libmemcached-dev" "mariadb-server" "nginx" "wget" "python3-dev" "build-essential" "libpq-dev" "gcc") #"libssl-dev" "libffi-dev" "libxml2-dev" "libxslt1-dev" "zlib1g-dev")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do
