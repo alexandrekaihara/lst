@@ -10,11 +10,11 @@ docker-compose down
 ovs-vsctl --if-exists del-br br-int
 
 # Delete all namespaces created
-rm -r /var/run/netns || true
+rm -r -f /var/run/netns
 
 # Stop controller
 PID=`pgrep ryu`
-if [ ! -z "$PID" ]; then kill $PID; else echo "Ryu Controller is already down"; fi
+if [ ! -z "$PID" ]; then kill $PID; fi
 
 
 
