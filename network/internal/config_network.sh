@@ -33,12 +33,12 @@ configure_host(){
     ovs-vsctl add-port br-int veth$2.$3
 
     ## Add ip addressses and routes
-    ip -n $1 addr add 192.168.$2.$3/24 dev vethsubnet$2
-    ip netns exec $1 route add default gw 192.168.$2.100
     ip -n $1 route add 192.168.100.0/24 dev vethsubnet$2
     ip -n $1 route add 192.168.200.0/24 dev vethsubnet$2
     ip -n $1 route add 192.168.210.0/24 dev vethsubnet$2
     ip -n $1 route add 192.168.220.0/24 dev vethsubnet$2
+    ip -n $1 addr add 192.168.$2.$3/24 dev vethsubnet$2
+    ip netns exec $1 route add default gw 192.168.$2.100
 }
 
 
