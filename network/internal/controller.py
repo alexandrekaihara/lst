@@ -3,14 +3,10 @@ from ryu.base import app_manager
 from ryu.controller import ofp_event
 from ryu.controller.handler import DEAD_DISPATCHER, MAIN_DISPATCHER, CONFIG_DISPATCHER, HANDSHAKE_DISPATCHER, set_ev_cls
 from ryu.ofproto import ofproto_v1_3
-from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet, ethernet, ether_types, ipv4, icmp, tcp, udp, in_proto
-from ryu.lib import hub
 from ryu import utils
-from statistics import mean
 import pandas as pd
 import datetime as date
-from ryu.ofproto.ofproto_v1_0 import OFPFC_ADD
 
 
 # Variaveis para teste de sistema
