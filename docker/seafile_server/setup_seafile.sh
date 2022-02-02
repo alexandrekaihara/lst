@@ -11,13 +11,10 @@ chmod  0440  /etc/sudoers
 
 # Se der problema de protocol not supported https://techglimpse.com/nginx-error-address-family-solution/
 sed -i "s/listen \[\:\:\]\:80 default_server;/#listen \[\:\:\]\:80 default_server;/g" /etc/nginx/sites-enabled/default
-systemctl start nginx
-systemctl enable nginx
-
+service nginx start
 
 # DB Setup (mariadb)
-systemctl enable mariadb
-systemctl start mysql
+service mysql start
 echo -e '123\nn\nY\nY\nY\nY\n' | mysql_secure_installation
 mysql -u root --password=123 -e 'create database `ccnet-db` character set = 'utf8';'
 mysql -u root --password=123 -e 'create database `seafile-db` character set = 'utf8';'
@@ -28,7 +25,6 @@ mysql -u root --password=123 -e 'GRANT ALL PRIVILEGES ON `ccnet-db`.* to `seafil
 mysql -u root --password=123 -e 'GRANT ALL PRIVILEGES ON `seafile-db`.* to `seafile`@localhost;'
 mysql -u root --password=123 -e 'GRANT ALL PRIVILEGES ON `seahub-db`.* to `seafile`@localhost;'
 mysql -u root --password=123 -e 'FLUSH PRIVILEGES;'
-
 
 # Seafile Setup 
 wget O /var/eafile-server_7.1.5_x86-64.tar.gz https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_7.1.5_x86-64.tar.gz
@@ -50,7 +46,6 @@ mkdir /opt/logs
 chown -R seafile:seafile /opt/logs
 mkdir /opt/pids
 chown -R seafile:seafile /opt/pids
-
 
 # Change server name to the right ip address
 IP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
@@ -90,4 +85,4 @@ server {
 EOF
 sed -i 's/replacehere/'"$IP"'/g' /etc/nginx/conf.d/seafile.conf
 
-systemctl restart nginx
+service nginx restart

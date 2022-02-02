@@ -36,8 +36,8 @@ done
 # Use instead this command, needs to specify the host https://www.thegeekstuff.com/2015/01/lpadmin-examples/
 ## Returns the printer ip to be configured from serverconfig.ini file
 cd /home/debian/automation/packages/system
-printerip=`cat printerip` 
 python3 getprinterip.py
+printerip=`cat printerip` 
 if [ ! "$printerip" = "0.0.0.0" ]; then 
   lpadmin -p PDF -v socket://$printerip -E
   /etc/init.d/cups restart

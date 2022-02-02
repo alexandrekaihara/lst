@@ -1,0 +1,406 @@
+version: "3.7"
+
+
+# Define the machines on its subnet
+services:
+  ## Server Subnet
+  mailserver:
+    image: ${REPOSITORY}:${MAIL}
+    container_name: ${MAIL}
+    restart: always
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  fileserver:
+    image: ${REPOSITORY}:${FILE}
+    container_name: ${FILE}
+    restart: always
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  webserver:
+    image: ${REPOSITORY}:${WEB}
+    container_name: ${WEB}
+    restart: always
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  backupserver:
+    image: ${REPOSITORY}:${BACKUP}
+    container_name: ${BACKUP}
+    restart: always
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+
+
+  ## Management Subnet
+  Mprinter:
+    image: ${REPOSITORY}:${PRINTER}
+    container_name: M${PRINTER}
+    restart: always
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Mclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: M${LCLIENT}1
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Mprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  #client2:
+  Mclient2:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: M${LCLIENT}2
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Mprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  #client3:
+  Mclient3:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: M${LCLIENT}3
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Mprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  #client4:
+  Mclient4:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: M${LCLIENT}4
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Mprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+
+
+  ## Office Subnet
+  Oprinter:
+    image: ${REPOSITORY}:${PRINTER}
+    container_name: O${PRINTER}
+    restart: always
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Oclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: O${LCLIENT}1
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Oprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Oclient2:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: O${LCLIENT}2
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Mprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  
+
+  ## Developer Subnet
+  Dprinter:
+    image: ${REPOSITORY}:${PRINTER}
+    container_name: D${PRINTER}
+    restart: always
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}1
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient2:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}2
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient3:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}3
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient4:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}4
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient5:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}5
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient6:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}6
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient7:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}7
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient8:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}8
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient9:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}9
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient10:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}10
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient11:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}11
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient12:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}12
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  Dclient13:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}13
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAIL}
+      - ${WEB}
+      - ${BACKUP}
+      - Dprinter
+    network_mode: none
+    dns: 
+      - 8.8.8.8
+      - 8.8.4.4
+  ## External Server
+  seafileserver:
+    image: ${REPOSITORY}:${SEAFILE}
+    container_name: ${SEAFILE}
+    restart: always
+    privileged: true
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  external_webserver:
+    image: ${REPOSITORY}:${webserver}
+    container_name: external_${WEB}
+    restart: always
+    privileged: true
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  Eclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: E$LCLIENT"1
+    restart: always
+    privileged: true
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  Eclient2:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: E$LCLIENT2
+    restart: always
+    privileged: true
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  Eclient3:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: E$LCLIENT3
+    restart: always
+    privileged: true
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  

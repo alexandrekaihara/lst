@@ -1,0 +1,115 @@
+version: "3.7"
+
+
+# Define the machines on its subnet
+services:
+  ## Server Subnet
+  seafileserver:
+    image: ${REPOSITORY}:${SEAFILE}
+    container_name: ${SEAFILE}
+    restart: always
+    privileged: true
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  external_webserver:
+    image: ${REPOSITORY}:${webserver}
+    container_name: external_${WEB}
+    restart: always
+    privileged: true
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  mailserver:
+    image: ${REPOSITORY}:${MAILSERVER}
+    container_name: ${MAILSERVER}
+    restart: always
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  fileserver:
+    image: ${REPOSITORY}:${FILE}
+    container_name: ${FILE}
+    restart: always
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  webserver:
+    image: ${REPOSITORY}:${WEB}
+    container_name: ${WEB}
+    restart: always
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  backupserver:
+    image: ${REPOSITORY}:${BACKUP}
+    container_name: ${BACKUP}
+    restart: always
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  ## Management Subnet
+  Mclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: M${LCLIENT}1
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAILSERVER}
+      - ${WEB}
+      - ${BACKUP}
+      - ${SEAFILE}
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  ## Office Subnet
+  Oclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: O${LCLIENT}1
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAILSERVER}
+      - ${WEB}
+      - ${BACKUP}
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  ## Developer Subnet
+  Dclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: D${LCLIENT}1
+    restart: always
+    privileged: true
+    depends_on: 
+      - ${FILE}
+      - ${MAILSERVER}
+      - ${WEB}
+      - ${BACKUP}
+      - ${SEAFILE}
+    network_mode: none
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+  ## External Server
+  Eclient1:
+    image: ${REPOSITORY}:${LCLIENT}
+    container_name: E$LCLIENT"1
+    restart: always
+    privileged: true
+    network_mode: none
+    depends_on:
+      - external_${WEB}
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4

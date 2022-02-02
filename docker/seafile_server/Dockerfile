@@ -18,17 +18,6 @@ COPY setup_seafile.sh .
 RUN chmod +x setup_seafile.sh\
 && ./setup.sh
 
-# Install dependencies
-COPY dependencies_web.sh .
-RUN chmod +x dependencies_web.sh \
-&& ./dependencies_web.sh \
-&& sudo su
-
-# Start setup
-COPY setup_web.sh .
-RUN chmod +x setup_web.sh\
-&& ./setup.sh
-
 # Script to start needed programs
 COPY onboot.sh /home
 RUN chmod +x /home/onboot.sh
