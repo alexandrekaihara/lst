@@ -29,7 +29,11 @@ while (subnet == -1 and host == -1 and hostname == -1):
 # Get printer ip
 parser = ConfigParser()
 parser.read("serverconfig.ini")
-printIP = parser.get(subnet, "print")
+try:
+	printIP = parser.get(subnet, "print")
+except:
+	printIP = "0.0.0.0"
+
 with open("printerip", 'w') as f:
-    f.write(printIP)
-print("Success on getting printer ip addres for subnet", subnet)
+	f.write(printIP)
+print("Success on getting printer ip address for subnet", subnet)

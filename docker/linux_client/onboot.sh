@@ -36,12 +36,12 @@ done
 # Use instead this command, needs to specify the host https://www.thegeekstuff.com/2015/01/lpadmin-examples/
 ## Returns the printer ip to be configured from serverconfig.ini file
 cd /home/debian/automation/packages/system
-until printerip=`cat printerip`
-do
-    python3 getprinterip.py
-done
-lpadmin -p PDF -v socket://$printerip -E
-/etc/init.d/cups restart
+printerip=`cat printerip` 
+python3 getprinterip.py
+if [ ! "$printerip" = "0.0.0.0" ]; then 
+  lpadmin -p PDF -v socket://$printerip -E
+  /etc/init.d/cups restart
+fi
 
 # Configure Seafile
 mkdir -pv /home/debian/sea /home/debian/seafile-client
@@ -53,7 +53,7 @@ until seaf-cli config -k disable_verify_certificate -v true -c /home/debian/.ccn
 do
 seaf-cli start -c /home/debian/.ccnet
 done
-seaf-cli config -k enable_http_sync -v true -c /home/debian/.ccnet
+seaf-cli config -k enable_http_sync -v true -c /home/debian/.ccnet 
 seaf-cli stop -c /home/debian/.ccnet
 seaf-cli start -c /home/debian/.ccnet
 chown -R mininet:mininet /home/debian/sea/ /home/debian/seafile-client/ /home/debian/.ccnet

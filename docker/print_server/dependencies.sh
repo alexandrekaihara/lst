@@ -8,14 +8,15 @@ done
 apt upgrade -y
 
 # Download basic packages 
-declare -a versionsAptGet=("=1:8.2p1-4ubuntu0.4" "=2.0.6" "" "=1.3-20190808-1" "=3.0pl1-136ubuntu1" "=0.99.9.8" "=0.8.12-1ubuntu4" "" "" "" "" "" "") 
+#declare -a versionsAptGet=("=1:8.2p1-4ubuntu0.4" "=2.0.6" "" "=1.3-20190808-1" "=3.0pl1-136ubuntu1" "=0.99.9.8" "=0.8.12-1ubuntu4" "" "" "" "" "" "") 
 declare -a packagesAptGet=("ssh" "apt-utils" "sudo" "dialog"  "cron" "software-properties-common" "aptitude" "nano" "iptables" "net-tools" "iproute2" "iputils-ping" "wget")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do
   until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
   do
-    RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    #RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}
   done
   echo "${packagesAptGet[$i-1]} found."
 done
@@ -33,14 +34,15 @@ done
 apt-get update
 
 # Install all dependencies
-declare -a versionsAptGet=("=3.0.1-6" "=2:4.13.14+dfsg-0ubuntu0.20.04.4" "=1.1.1f-1ubuntu2.8" "" "" "" "" "" "")
+#declare -a versionsAptGet=("=3.0.1-6" "=2:4.13.14+dfsg-0ubuntu0.20.04.4" "=1.1.1f-1ubuntu2.8" "" "" "" "" "" "")
 declare -a packagesAptGet=("printer-driver-cups-pdf" "samba" "openssl" "cups" "cups-client" "ghostscript" "libc6" "libcups2" "libpaper-utils")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do
   until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
   do
-    RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    #RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}
   done
   echo "${packagesAptGet[$i-1]} found."
 done

@@ -8,14 +8,15 @@ done
 apt upgrade -y
 
 # Download basic packages 
-declare -a versionsAptGet=("=1:8.2p1-4ubuntu0.3" "=2.0.6" "" "=1.3-20190808-1" "=3.0pl1-136ubuntu1" "=0.99.9.8" "=0.8.12-1ubuntu4" "" "" "" "" "" "")
+#declare -a versionsAptGet=("=1:8.2p1-4ubuntu0.3" "=2.0.6" "" "=1.3-20190808-1" "=3.0pl1-136ubuntu1" "=0.99.9.8" "=0.8.12-1ubuntu4" "" "" "" "" "" "")
 declare -a packagesAptGet=("ssh" "apt-utils" "sudo" "dialog"  "cron" "software-properties-common" "aptitude" "nano" "iptables" "net-tools" "iproute2" "iputils-ping" "traceroute")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do
   until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
   do
-    RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    #RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}
   done
   echo "${packagesAptGet[$i-1]} found."
 done
@@ -33,14 +34,14 @@ done
 apt-get update
 
 # Install all predefined packages 
-declare -a versionsAptGet=("2.4.41-4ubuntu3.8" "6.0-25ubuntu1" "3.1.3-8")
+#declare -a versionsAptGet=("2.4.41-4ubuntu3.8" "6.0-25ubuntu1" "3.1.3-8")
 declare -a packagesAptGet=("apache2" "unzip" "rsync" "cron")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do
 until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
 do
-RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}=${versionsAptGet[$i-1]}
+RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}
 done
 done
 

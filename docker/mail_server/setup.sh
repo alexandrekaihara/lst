@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Global variables
-## Direcotry of all configuration files
+## Directory of all configuration files
 mailsetup="/tmp/mailsetup"
 
 # Set system time 

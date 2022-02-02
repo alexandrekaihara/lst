@@ -8,14 +8,15 @@ done
 apt upgrade -y
 
 # Download basic packages 
-declare -a versionsAptGet=("=1:8.2p1-4ubuntu0.3" "=2.0.6" "" "=1.3-20190808-1" "=3.0pl1-136ubuntu1" "=0.99.9.8" "=0.8.12-1ubuntu4" "" "" "" "" "")
+#declare -a versionsAptGet=("=1:8.2p1-4ubuntu0.3" "=2.0.6" "" "=1.3-20190808-1" "=3.0pl1-136ubuntu1" "=0.99.9.8" "=0.8.12-1ubuntu4" "" "" "" "" "")
 declare -a packagesAptGet=("ssh"   "apt-utils" "sudo" "dialog"  "cron" "software-properties-common" "aptitude" "nano" "iptables" "net-tools" "iproute2" "iputils-ping")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do
   until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
   do
-    RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    #RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    RUNLEVEL=1 apt install -y --no-install-recommends ${packagesAptGet[$i-1]}
   done
   echo "${packagesAptGet[$i-1]} found."
 done
@@ -47,14 +48,15 @@ mkdir /var/run/mysqld
 chmod 777 /var/run/mysqld
 
 # Define the packets to install with apt-get 
-declare -a versionsAptGet=("=8.0.27-0ubuntu0.20.04.1" "" "" "" "=2.4.41-4ubuntu3.8" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=3.4.13-0ubuntu1.2" "=3.4.13-0ubuntu1.2" "=7.68.0-1ubuntu2.7" "=5.5.6" "=7.4.0-2" "=1.20.3-1ubuntu1")
+#declare -a versionsAptGet=("=8.0.27-0ubuntu0.20.04.1" "" "" "" "=2.4.41-4ubuntu3.8" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=3.4.13-0ubuntu1.2" "=3.4.13-0ubuntu1.2" "=7.68.0-1ubuntu2.7" "=5.5.6" "=7.4.0-2" "=1.20.3-1ubuntu1")
 declare -a packagesAptGet=("mysql-server" "php5.6-mysql" "php5.6-imap" "php5.6-mbstring" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql" "curl" "whois" "dos2unix" "wget")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do
     until dpkg -s ${packagesAptGet[$i-1]} | grep -q Status;
   do
-    RUNLEVEL=1 apt-get --force-yes --yes --no-install-recommends install ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    #RUNLEVEL=1 apt-get --force-yes --yes --no-install-recommends install ${packagesAptGet[$i-1]}${versionsAptGet[$i-1]}
+    RUNLEVEL=1 apt-get --force-yes --yes --no-install-recommends install ${packagesAptGet[$i-1]}
   done
 done
 
