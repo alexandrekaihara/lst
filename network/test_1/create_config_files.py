@@ -86,7 +86,7 @@ class CreateConfigurationFiles():
         print(self.nonclientsIP)
         for subnet in self.subnets:
             try:
-                printerip = self.nonclientsIP[subnet][environ['REPOSITORY']:environ['PRINTER']]
+                printerip = self.nonclientsIP[subnet][environ['REPOSITORY']+':'+environ['PRINTER']]
             except:
                 printerip = "0.0.0.0"
             with open("printersip/"+str(subnet), 'w') as f:
