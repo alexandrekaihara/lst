@@ -54,7 +54,7 @@
         "dns":"8.8.8.8"
     },
     "O{LCLIENT}1": {
-        "image":"${REPOSITORY}:",
+        "image":"${REPOSITORY}:${LCLIENT}",
         "IP":"192.168.210.2",
         "bridge":"${INTERNAL}",
         "depends_on": [
@@ -65,7 +65,7 @@
         "dns":"8.8.8.8"
     },
     "D${LCLIENT}1": {
-        "image":"${REPOSITORY}:",
+        "image":"${REPOSITORY}:${LCLIENT}",
         "IP":"192.168.220.2",
         "bridge":"${INTERNAL}",
         "depends_on": [
@@ -77,14 +77,11 @@
         "dns":"8.8.8.8"
     },
     "E${LCLIENT}1": {
-        "image":"${REPOSITORY}:",
+        "image":"${REPOSITORY}:${LCLIENT}",
         "IP":"192.168.50.3",
         "bridge":"${INTERNAL}",
         "depends_on": [
-            "${MAILSERVER}",
-            "${FILE}",
-            "${WEB}",
-            "${BACKUP}",
+            "external_${WEB}",
             "${SEAFILE}"],
         "dns":"8.8.8.8"
     }
