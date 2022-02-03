@@ -41,6 +41,12 @@
         "depends_on": [],
         "dns":"8.8.8.8"
     },
+    "M${PRINTER}": {
+        "image":"${REPOSITORY}:${PRINTER}",
+        "IP":"192.168.200.1",
+        "bridge":"${INTERNAL}",
+        "dns":"8.8.8.8"
+    },
     "M${LCLIENT}1": {
         "image":"${REPOSITORY}:${LCLIENT}",
         "IP":"192.168.200.2",
@@ -53,6 +59,12 @@
             "${SEAFILE}"],
         "dns":"8.8.8.8"
     },
+    "O${PRINTER}": {
+        "image":"${REPOSITORY}:${PRINTER}",
+        "IP":"192.168.200.1",
+        "bridge":"${INTERNAL}",
+        "dns":"8.8.8.8"
+    },
     "O{LCLIENT}1": {
         "image":"${REPOSITORY}:${LCLIENT}",
         "IP":"192.168.210.2",
@@ -62,6 +74,12 @@
             "${FILE}",
             "${WEB}",
             "${BACKUP}"],
+        "dns":"8.8.8.8"
+    },
+    "D${PRINTER}": {
+        "image":"${REPOSITORY}:${PRINTER}",
+        "IP":"192.168.200.1",
+        "bridge":"${INTERNAL}",
         "dns":"8.8.8.8"
     },
     "D${LCLIENT}1": {

@@ -31,17 +31,6 @@ wget O /var/eafile-server_7.1.5_x86-64.tar.gz https://s3.eu-central-1.amazonaws.
 tar xzvf seafile-server_7.1.5_x86-64.tar.gz -C /opt
 rm -rf /opt/seafile-server_7.1.5_x86-64.tar.gz
 chown -R seafile:seafile /opt/seafile-server-7.1.5
-cd /opt/seafile-server-7.1.5/
-
-chown -R seafile:seafile /opt/seafile-server-latest
-chown -R seafile:seafile /opt/seafile-data
-chown -R seafile:seafile /opt/ccnet
-chown -R seafile:seafile /opt/seahub-data
-chown -R seafile:seafile /opt/conf
-mkdir /opt/logs
-chown -R seafile:seafile /opt/logs
-mkdir /opt/pids
-chown -R seafile:seafile /opt/pids
 
 # Change server name to the right ip address
 cat > /etc/nginx/conf.d/seafile.conf << \EOF
@@ -78,5 +67,3 @@ server {
         }
 }
 EOF
-
-service nginx restart

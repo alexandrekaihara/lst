@@ -14,10 +14,9 @@ chmod +x config_network.sh
 # Instantiate seafile server
 docker run -d --network=none --privileged --dns=8.8.8.8 ${REPOSITORY}:${SEAFILE}
 configure_host ${SEAFILE} 50 1 ${INTERNAL} 
-ip netns exec ${SEAFILE} mysql -uroot --password=Password123 -e "USE seafile-db; SELECT "
-## Wait until get seafile folder ID
-until 
-
+ip netns exec ${SEAFILE} mysql -uroot --password=Password123 -e "USE seafile-db; SELECT * FROM RepoOwner"
+## Set seafolder variable for create_config_files.py
+SEAFOLDER=01684009-63a2-4239-9326-acc6bb937cfa
 
 # Substitute all env variables on experiment_script.json
 chmod +x replace.sh
