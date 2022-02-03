@@ -45,6 +45,7 @@
         "image":"${REPOSITORY}:${PRINTER}",
         "IP":"192.168.200.1",
         "bridge":"${INTERNAL}",
+        "depends_on": [],
         "dns":"8.8.8.8"
     },
     "M${LCLIENT}1": {
@@ -63,6 +64,7 @@
         "image":"${REPOSITORY}:${PRINTER}",
         "IP":"192.168.200.1",
         "bridge":"${INTERNAL}",
+        "depends_on": [],
         "dns":"8.8.8.8"
     },
     "O{LCLIENT}1": {
@@ -80,6 +82,7 @@
         "image":"${REPOSITORY}:${PRINTER}",
         "IP":"192.168.200.1",
         "bridge":"${INTERNAL}",
+        "depends_on": [],
         "dns":"8.8.8.8"
     },
     "D${LCLIENT}1": {
