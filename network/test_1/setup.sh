@@ -8,12 +8,12 @@ chmod +x tear_down_experiment.sh
 . tear_down_experiment.sh
 
 # Configure bridges and define configure_host
-chmod +x config_network.sh
-. config_network.sh
+chmod +x confbridges.sh
+. confbridges.sh
 
-# Add bash script functions
-chmod +x functions.sh
-. functions.sh
+# Add configure hosts function
+chmod +x confhosts.sh
+. confhosts.sh
 
 # Instantiate seafile server
 docker run -d --network=none --privileged --dns=8.8.8.8 ${REPOSITORY}:${SEAFILE}
@@ -27,6 +27,10 @@ envsubst < experiment_script.json > experiment.json
 
 # Generate all configure files
 python3 create_config_files.py experiment.json
+
+# Copy all configuration files into the respective containers
+chmod +x config_all_hosts.sh
+. config_all_hosts.sh
 
 # Start Ryu Controller
 ryu-manager controller.py &

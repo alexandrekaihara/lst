@@ -12,7 +12,7 @@ class CreateConfigurationFiles():
         self.composefile = "version: \"3.7\"\n\nservices:\n"
         self.network_config = "#\\bin\\bash\n\n"
         self.serverconfig = ""
-        self.move_config_files = "#\\bin\\bash\n\n"
+        self.config_hosts_script = "#\\bin\\bash\n\n"
         self.nonclientsIP = {}
         self.subnets = set()
         self.experiment_script = self.read_json(configfile) 
@@ -45,18 +45,6 @@ class CreateConfigurationFiles():
         [self.create_container_script(name, params) for name, params in self.experiment_script.items() if name != environ["SEAFILE"]]
         with(open(filename, "w")) as f:
             f.write(self.composefile)  
-    
-    def create_network_config_script(self, name, params):
-        ip = params['IP'].split('.')
-        subnet = ip[2]
-        hostip = ip[3]
-        bridge = params['bridge']
-        self.network_config += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + self.endl        
-
-    def run_network_config(self, network_config_filename):
-        [self.create_network_config_script(name, params) for name, params in self.experiment_script.items()]
-        with(open(network_config_filename, "w")) as f:
-            f.write(self.network_config)  
 
     def create_serverconfig_script(self, filename):
         # Selecting IP by its subnet and its docker image
@@ -89,7 +77,7 @@ class CreateConfigurationFiles():
         with(open(filename, "w")) as f:
             f.write(self.serverconfig)  
     
-    def move_configurations_files_to_containers(self, filename):
+    def config_hosts(self, filename):
         # Create files with the printer's IP of the subnet
         try:
             mkdir('printersip')
@@ -105,14 +93,18 @@ class CreateConfigurationFiles():
 
         for name, params in self.experiment_script.items():
             # If is a Linuxclient image
+            subnet = params['IP'].split('.')[2]
+            hostip = params['IP'].split('.')[3]
+            bridge = params['bridge']   
             if params['image'] == environ['REPOSITORY']+':'+environ['LCLIENT']:
-                subnet = params['IP'].split('.')[2]
                 behaviour = params['client_behaviour']
-                self.move_config_files += "move_configs " + name + " " + subnet + " " + behaviour + self.endl
+                self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + " " + behaviour + self.endl
+            else:
+                self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + self.endl
 
         # Saving script
         with(open(filename, "w")) as f:
-            f.write(self.move_config_files)  
+            f.write(self.config_hosts_script)  
 
 
 def main():
@@ -123,9 +115,8 @@ def main():
     
     c = CreateConfigurationFiles(argv[1])
     c.run_compose("docker-compose.yml")
-    c.run_network_config("configure_hosts.sh")
     c.create_serverconfig_script("serverconfig.ini")
-    c.move_configurations_files_to_containers("move_all_config_files.sh")
+    c.config_hosts("config_all_hosts.sh")
 
 
 if __name__ == "__main__":
