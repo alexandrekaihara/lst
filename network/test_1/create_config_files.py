@@ -26,9 +26,9 @@ class CreateConfigurationFiles():
         script += 2*self.ident + "network_mode: none" + self.endl
         script += 2*self.ident + "dns:" + self.endl
         script += 3*self.ident + "- " + param['dns'] + self.endl
-        script += 2*self.ident + "depends_on:" + self.endl
         dep = param['depends_on']
         if len(dep) > 0:
+            script += 2*self.ident + "depends_on:" + self.endl
             for i in range(len(dep)):
                 script += 3*self.ident + "- " + dep[i] + self.endl
         self.composefile += script
