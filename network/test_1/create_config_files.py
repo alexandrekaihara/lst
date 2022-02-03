@@ -32,6 +32,11 @@ class CreateConfigurationFiles():
             for i in range(len(dep)):
                 script += 3*self.ident + "- " + dep[i] + self.endl
         self.composefile += script
+
+    def run_compose(self, compose_filename):
+        [self.create_container_script(name, params) for name, params in self.experiment_script.items() if name != environ["SEAFILE"]]
+        with(open(compose_filename, "w")) as f:
+            f.write(self.composefile)  
     
     def create_network_config_script(self, name, params):
         ip = params['IP'].split('.')
@@ -40,9 +45,15 @@ class CreateConfigurationFiles():
         bridge = params['bridge']
         self.network_config += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + self.endl        
 
+    def run_network_config(self, network_config_filename):
+        [self.create_network_config_script(name, params) for name, params in self.experiment_script.items()]
+        with(open(network_config_filename, "w")) as f:
+            f.write(self.network_config)  
+
     def create_serverconfig_script(self, serverconfig_filename):
         d = {}
         subnets = set()
+        # Selecting IP by its subnet and its docker image
         for _, params in self.experiment_script.items():
             # If is a Linuxclient image
             if params['image'] == environ['REPOSITORY']+':'+environ['LCLIENT']:
@@ -54,6 +65,7 @@ class CreateConfigurationFiles():
                     d[subnet] = {}
                 d[subnet][params['image']] = params['IP']
 
+        # Generating all script
         self.serverconfig = "[backup]\nip = " + d["100"][environ['REPOSITORY']+':'+environ["BACKUP"]] + 2*self.endl
         for subnet in subnets:
             self.serverconfig += '[' + subnet + ']' + self.endl
@@ -67,19 +79,12 @@ class CreateConfigurationFiles():
             self.serverconfig += 'seafile = ' + d["50"  ][environ['REPOSITORY']+':'+environ["SEAFILE"]] + self.endl
             self.serverconfig += 'seafolder = '  + environ['SEAFOLDER'] + 2*self.endl
         
+        # Saving script
         with(open(serverconfig_filename, "w")) as f:
             f.write(self.serverconfig)  
 
-    def run_compose(self, compose_filename):
-        [self.create_container_script(name, params) for name, params in self.experiment_script.items() if name != environ["SEAFILE"]]
-        with(open(compose_filename, "w")) as f:
-            f.write(self.composefile)  
-
-    def run_network_config(self, network_config_filename):
-        [self.create_network_config_script(name, params) for name, params in self.experiment_script.items()]
-        with(open(network_config_filename, "w")) as f:
-            f.write(self.network_config)  
-
+    def create_client_behaviour_script(self):
+        
 
 def main():
     try:

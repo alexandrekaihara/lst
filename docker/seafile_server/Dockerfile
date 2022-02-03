@@ -8,14 +8,14 @@
 FROM ubuntu:20.04
 
 # Install dependencies
-COPY dependencies_seafile.sh .
-RUN chmod +x dependencies_seafile.sh \
-&& ./dependencies_seafile.sh \
+COPY dependencies.sh .
+RUN chmod +x dependencies.sh \
+&& ./dependencies.sh \
 && sudo su
 
 # Start setup
-COPY setup_seafile.sh .
-RUN chmod +x setup_seafile.sh\
+COPY setup.sh .
+RUN chmod +x setup.sh\
 && ./setup.sh
 
 # Script to start needed programs

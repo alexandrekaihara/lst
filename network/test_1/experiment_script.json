@@ -58,7 +58,8 @@
             "${WEB}",
             "${BACKUP}",
             "${SEAFILE}"],
-        "dns":"8.8.8.8"
+        "dns":"8.8.8.8",
+        "client_behaviour: ":"management"
     },
     "O${PRINTER}": {
         "image":"${REPOSITORY}:${PRINTER}",
@@ -76,7 +77,8 @@
             "${FILE}",
             "${WEB}",
             "${BACKUP}"],
-        "dns":"8.8.8.8"
+        "dns":"8.8.8.8",
+        "client_behaviour: ":"office"
     },
     "D${PRINTER}": {
         "image":"${REPOSITORY}:${PRINTER}",
@@ -95,7 +97,21 @@
             "${WEB}",
             "${BACKUP}",
             "${SEAFILE}"],
-        "dns":"8.8.8.8"
+        "dns":"8.8.8.8",
+        "client_behaviour: ":"developer"
+    },
+    "D${LCLIENT}2": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.220.2",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}",
+            "${SEAFILE}"],
+        "dns":"8.8.8.8",
+        "client_behaviour: ":"administrator"
     },
     "E${LCLIENT}1": {
         "image":"${REPOSITORY}:${LCLIENT}",
@@ -104,6 +120,7 @@
         "depends_on": [
             "external_${WEB}",
             "${SEAFILE}"],
-        "dns":"8.8.8.8"
+        "dns":"8.8.8.8",
+        "client_behaviour:":"external_attacker"
     }
 }
