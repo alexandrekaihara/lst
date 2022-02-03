@@ -19,11 +19,10 @@ ip netns exec ${SEAFILE} mysql -uroot --password=Password123 -e "USE seafile-db;
 SEAFOLDER=01684009-63a2-4239-9326-acc6bb937cfa
 
 # Substitute all env variables on experiment_script.json
-chmod +x replace.sh
-. replace.sh
+envsubst < experiment_script.json > experiment.json
 
 # Generate all configure files
-python3 create_config_files.py
+python3 create_config_files.py experiment.sh
 
 # Start Ryu Controller
 ryu-manager controller.py &

@@ -18,15 +18,15 @@ class CreateConfigurationFiles():
             exit("[create_config_files.py] ERROR: Error on opening ", configfile, "\n Check if file exists or for any error on .json formatting\n\n")
 
     def create_container_script(self, name, param):
-        script = 2*self.ident + name + ":" + self.endl
-        script += 3*self.ident + "image: " + param['image'] + self.endl
-        script += 3*self.ident + "container_name: " + name + self.endl
-        script += 3*self.ident + "restart: always" + self.endl
-        script += 3*self.ident + "privileged: true" + self.endl
-        script += 3*self.ident + "network_mode: none" + self.endl
-        script += 3*self.ident + "dns:" + self.endl
-        script += 4*self.ident + "- " + param['dns'] + self.endl
-        script += 3*self.ident + "depends_on:" + self.endl
+        script = 1*self.ident + name + ":" + self.endl
+        script += 2*self.ident + "image: " + param['image'] + self.endl
+        script += 2*self.ident + "container_name: " + name + self.endl
+        script += 2*self.ident + "restart: always" + self.endl
+        script += 2*self.ident + "privileged: true" + self.endl
+        script += 2*self.ident + "network_mode: none" + self.endl
+        script += 2*self.ident + "dns:" + self.endl
+        script += 3*self.ident + "- " + param['dns'] + self.endl
+        script += 2*self.ident + "depends_on:" + self.endl
         dep = param['depends_on']
         if len(dep) > 0:
             for i in range(len(dep)):
