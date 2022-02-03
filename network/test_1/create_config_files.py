@@ -1,15 +1,71 @@
 from sys import argv
+from json import load
+from sys import exit
+
 
 # Brief: Class responsible for configuring all experiment setup, create docker-compose file to setup containers,
-class CreateDockerCompose():
+class CreateConfigurationFiles():
     def __init__(self, configfile) -> None:
+        self.serverconfig = ""
+        self.network_config = "#\\bin\\bash\n\n"
+        self.composefile = "version: \"3.7\"\n\nservices:\n"
+        try:
+            with open(configfile, "r") as f:
+                self.experiment_script = load(f)
+        except:
+            exit("[create_config_files.py] ERROR: Error on opening ", configfile, "\n Check if file exists or for any error on .json formatting\n\n")
+
+    def create_container_script(self, name, param):
+        ident = "\t"
+        endl = "\n"
+        script = 2*ident + name + ":" + endl
+        script += 3*ident + "image: " + param['image'] + endl
+        script += 3*ident + "container_name: " + name + endl
+        script += 3*ident + "restart: always" + endl
+        script += 3*ident + "privileged: true" + endl
+        script += 3*ident + "network_mode: none" + endl
+        script += 3*ident + "dns:" + endl
+        script += 4*ident + "- " + param['dns'] + endl
+        script += 3*ident + "depends_on:" + endl
+        dep = param['depends_on']
+        if len(dep) > 0:
+            for i in range(len(dep)):
+                script += 4*ident + "- " + dep[i] + endl
+        self.composefile += script
+    
+    def create_network_config_script(self, name, params):
+        endl = "\n"
+        ip = params['IP'].split('.')
+        subnet = ip[2]
+        hostip = ip[3]
+        bridge = params['bridge']
+        self.network_config += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + endl        
+
+    def create_serverconfig_script(self, name, params):
+        pass
+
+    def run_compose(self, compose_filename):
+        [self.create_container_script(name, params) for name, params in self.experiment_script.items()]
+        with(open(compose_filename, "w")) as f:
+            f.write(self.composefile)  
+
+    def run_network_config(self, network_config_filename):
+        [self.create_network_config_script(name, params) for name, params in self.experiment_script.items()]
+        with(open(network_config_filename, "w")) as f:
+            f.write(self.network_config)  
 
 
 def main():
     try:
-        CreateDockerCompose(argv[1])
+        argv[1]
     except:
-        print("Syntax")
+        exit("[create_config_files.py] ERROR: Expected command line argument. Must provide the file path to the .json for experiment")
+    
+    c = CreateConfigurationFiles()
+    c.run_compose("docker-compose.yml")
+    c.run_network_config("configure_hosts.sh")
+
+
 
 if __name__ == "__main__":
     main()

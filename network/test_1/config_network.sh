@@ -41,46 +41,27 @@ configure_host(){
 
 # Create bridges
 ## Create Internal bridge
-ovs-vsctl add-br br-int
-ifconfig br-int up
+ovs-vsctl add-br $INTERNAL
+ifconfig $INTERNAL up
 ### Enable NAT on the interface that has connection to the internet
 IFNAME=`route | grep '^default' | grep -o '[^ ]*$'`
 iptables -t nat -I POSTROUTING -o $IFNAME -j MASQUERADE
-iptables -t nat -I POSTROUTING -o br-int -j MASQUERADE
+iptables -t nat -I POSTROUTING -o $INTERNAL -j MASQUERADE
 ### Add multiples IP to the bridge as a gateway for all containers and set routes from host to containers
-ip addr add 192.168.100.100/24 dev br-int
-ip addr add 192.168.200.100/24 dev br-int
-ip addr add 192.168.210.100/24 dev br-int
-ip addr add 192.168.220.100/24 dev br-int
+ip addr add 192.168.100.100/24 dev $INTERNAL
+ip addr add 192.168.200.100/24 dev $INTERNAL
+ip addr add 192.168.210.100/24 dev $INTERNAL
+ip addr add 192.168.220.100/24 dev $INTERNAL
 ### Connect bridge to the controller
-ovs-vsctl set-controller br-int tcp:127.0.0.1:6633
+ovs-vsctl set-controller $INTERNAL tcp:127.0.0.1:6633
 
 ## Create External bridge
-ovs-vsctl add-br br-ex
-ifconfig br-ex up
-iptables -t nat -I POSTROUTING -o br-ex -j MASQUERADE
+ovs-vsctl add-br $EXTERNAL
+ifconfig $EXTERNAL up
+iptables -t nat -I POSTROUTING -o $EXTERNAL -j MASQUERADE
 ### Add IP to the bridge and route to the 
-ip addr add 192.168.50.100/24 dev br-ex
+ip addr add 192.168.50.100/24 dev $EXTERNAL
 ### Connect bridge to the controller
-ovs-vsctl set-controller br-ex tcp:127.0.0.1:6633
+ovs-vsctl set-controller $EXTERNAL tcp:127.0.0.1:6633
 
-
-# Configure all hosts
-## Server Subnet
-configure_host $MAILSERVER 100 1 br-int
-configure_host $FILE 100 2 br-int
-configure_host $WEB 100 3 br-int
-configure_host $BACKUP 100 4 br-int
-## Management Subnet
-configure_host "M"$LCLIENT"1" 200 2 br-int
-## Office Subnet
-configure_host "O"$LCLIENT"1" 210 2 br-int
-## Developer Subnet
-configure_host "D"$LCLIENT"1" 220 2 br-int
-## External server
-configure_host $SEAFILE 50 1 br-ex
-configure_host "external_"$WEB 50 2 br-ex
-configure_host "E"$LCLIENT"1" 50 3 br-ex
-#configure_host "E"$LCLIENT"2" 50 4 br-ex
-#configure_host "E"$LCLIENT"3" 50 5 br-ex
 
