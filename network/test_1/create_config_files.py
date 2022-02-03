@@ -1,21 +1,29 @@
 from sys import argv
 from json import load
 from sys import exit
-from os import environ
+from os import environ, mkdir
+
 
 # Brief: Class responsible for configuring all experiment setup, create docker-compose file to setup containers,
 class CreateConfigurationFiles():
     def __init__(self, configfile) -> None:
         self.endl = "\n"
         self.ident = "  "
-        self.serverconfig = ""
-        self.network_config = "#\\bin\\bash\n\n"
         self.composefile = "version: \"3.7\"\n\nservices:\n"
+        self.network_config = "#\\bin\\bash\n\n"
+        self.serverconfig = ""
+        self.move_config_files = "#\\bin\\bash\n\n"
+        self.nonclientsIP = {}
+        self.subnets = set()
+        self.experiment_script = self.read_json(configfile) 
+
+    # Try open .json with all experiment configurations
+    def read_json(self, filename):
         try:
-            with open(configfile, "r") as f:
-                self.experiment_script = load(f)
+            with open(filename, "r") as f:
+                return load(f)
         except:
-            exit("[create_config_files.py] ERROR: Error on opening ", configfile, "\n Check if file exists or for any error on .json formatting\n\n")
+            exit("[create_config_files.py] ERROR: Error on opening ", filename, "\n Check if file exists or for any error on .json formatting\n\n")
 
     def create_container_script(self, name, param):
         script = 1*self.ident + name + ":" + self.endl
@@ -33,9 +41,9 @@ class CreateConfigurationFiles():
                 script += 3*self.ident + "- " + dep[i] + self.endl
         self.composefile += script
 
-    def run_compose(self, compose_filename):
+    def run_compose(self, filename):
         [self.create_container_script(name, params) for name, params in self.experiment_script.items() if name != environ["SEAFILE"]]
-        with(open(compose_filename, "w")) as f:
+        with(open(filename, "w")) as f:
             f.write(self.composefile)  
     
     def create_network_config_script(self, name, params):
@@ -50,41 +58,59 @@ class CreateConfigurationFiles():
         with(open(network_config_filename, "w")) as f:
             f.write(self.network_config)  
 
-    def create_serverconfig_script(self, serverconfig_filename):
-        d = {}
-        subnets = set()
+    def create_serverconfig_script(self, filename):
         # Selecting IP by its subnet and its docker image
         for _, params in self.experiment_script.items():
             # If is a Linuxclient image
             if params['image'] == environ['REPOSITORY']+':'+environ['LCLIENT']:
-                subnets.add(params['IP'].split('.')[2])
+                self.subnets.add(params['IP'].split('.')[2])
             # If is not a Linuxclient image
             else:
                 subnet = params['IP'].split('.')[2]
-                if subnet not in d.keys():
-                    d[subnet] = {}
-                d[subnet][params['image']] = params['IP']
+                if subnet not in self.nonclientsIP.keys():
+                    self.nonclientsIP[subnet] = {}
+                self.nonclientsIP[subnet][params['image']] = params['IP']
 
         # Generating all script
-        self.serverconfig = "[backup]\nip = " + d["100"][environ['REPOSITORY']+':'+environ["BACKUP"]] + 2*self.endl
-        for subnet in subnets:
+        self.serverconfig = "[backup]\nip = " + self.nonclientsIP["100"][environ['REPOSITORY']+':'+environ["BACKUP"]] + 2*self.endl
+        for subnet in self.subnets:
             self.serverconfig += '[' + subnet + ']' + self.endl
             if subnet != "50":
-                self.serverconfig += 'print = '   + d[subnet][environ['REPOSITORY']+':'+environ["PRINTER"]] + self.endl
-                self.serverconfig += 'mail = '    + d["100" ][environ['REPOSITORY']+':'+environ["MAILSERVER"]] + self.endl
-                self.serverconfig += 'file = '    + d["100" ][environ['REPOSITORY']+':'+environ["FILE"]] + self.endl
-                self.serverconfig += 'web = '     + d["100" ][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
+                self.serverconfig += 'print = '   + self.nonclientsIP[subnet][environ['REPOSITORY']+':'+environ["PRINTER"]] + self.endl
+                self.serverconfig += 'mail = '    + self.nonclientsIP["100" ][environ['REPOSITORY']+':'+environ["MAILSERVER"]] + self.endl
+                self.serverconfig += 'file = '    + self.nonclientsIP["100" ][environ['REPOSITORY']+':'+environ["FILE"]] + self.endl
+                self.serverconfig += 'web = '     + self.nonclientsIP["100" ][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
             else:
-                self.serverconfig += 'web = '     + d["50" ][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
-            self.serverconfig += 'seafile = ' + d["50"  ][environ['REPOSITORY']+':'+environ["SEAFILE"]] + self.endl
+                self.serverconfig += 'web = '     + self.nonclientsIP["50" ][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
+            self.serverconfig += 'seafile = ' + self.nonclientsIP["50"  ][environ['REPOSITORY']+':'+environ["SEAFILE"]] + self.endl
             self.serverconfig += 'seafolder = '  + environ['SEAFOLDER'] + 2*self.endl
         
         # Saving script
-        with(open(serverconfig_filename, "w")) as f:
+        with(open(filename, "w")) as f:
+            f.write(self.serverconfig)  
+    
+    def move_configurations_files_to_containers(self, filename):
+        # Create files with the printer's IP of the subnet
+        mkdir('printersip')
+        for subnet in self.subnets:
+            try:
+                printerip = self.nonclientsIP[subnet][environ['REPOSITORY']:environ['PRINTER']]
+            except:
+                printerip = "0.0.0.0"
+            with open(str(subnet), 'w') as f:
+                f.write("printersip/" + printerip)
+
+        for name, params in self.experiment_script.items():
+            # If is a Linuxclient image
+            if params['image'] == environ['REPOSITORY']+':'+environ['LCLIENT']:
+                subnet = params['IP'].split('.')[2]
+                behaviour = params['client_behaviour']
+                self.move_config_files += "move_configs " + name + " " + subnet + " " + behaviour + self.endl
+
+        # Saving script
+        with(open(filename, "w")) as f:
             f.write(self.serverconfig)  
 
-    def create_client_behaviour_script(self):
-        
 
 def main():
     try:
@@ -96,6 +122,7 @@ def main():
     c.run_compose("docker-compose.yml")
     c.run_network_config("configure_hosts.sh")
     c.create_serverconfig_script("serverconfig.ini")
+    c.move_configurations_files_to_containers("move_all_config_files.sh")
 
 
 if __name__ == "__main__":

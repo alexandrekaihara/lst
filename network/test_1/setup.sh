@@ -7,9 +7,13 @@
 chmod +x tear_down_experiment.sh
 . tear_down_experiment.sh
 
-# Configure all networks
+# Configure bridges and define configure_host
 chmod +x config_network.sh
 . config_network.sh
+
+# Add bash script functions
+chmod +x functions.sh
+. functions.sh
 
 # Instantiate seafile server
 docker run -d --network=none --privileged --dns=8.8.8.8 ${REPOSITORY}:${SEAFILE}

@@ -52,6 +52,7 @@ ip addr add 192.168.100.100/24 dev br-int
 ip addr add 192.168.200.100/24 dev br-int
 ip addr add 192.168.210.100/24 dev br-int
 ip addr add 192.168.220.100/24 dev br-int
+ip addr add 192.168.50.100/24 dev br-int
 ### Connect bridge to the controller
 ovs-vsctl set-controller br-int tcp:127.0.0.1:6633
 
