@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load all environment variables
-. .env
+. variables
 
 # Remove all possible network configurations
 chmod +x tear_down_experiment.sh
