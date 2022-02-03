@@ -32,6 +32,10 @@ tar xzvf seafile-server_7.1.5_x86-64.tar.gz -C /opt
 rm -rf /opt/seafile-server_7.1.5_x86-64.tar.gz
 chown -R seafile:seafile /opt/seafile-server-7.1.5
 cd /opt/seafile-server-7.1.5/
+IP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
+## Gambiarra para fazer com que o input da senha nao interrompa a configuração do docker
+sed -i 's/password = Utils.ask_question(question, key=key, password=True)/password = \"Password123\"/1' setup-seafile-mysql.py
+echo -e '\nseafileserver\n'"$IP"'\n8082\n2\nlocalhost\n3306\nseafile\nccnet-db\nseafile-db\nseahub-db\n' | . setup-seafile-mysql.sh
 
 chown -R seafile:seafile /opt/seafile-server-latest
 chown -R seafile:seafile /opt/seafile-data
@@ -44,6 +48,7 @@ mkdir /opt/pids
 chown -R seafile:seafile /opt/pids
 
 # Change server name to the right ip address
+IP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 cat > /etc/nginx/conf.d/seafile.conf << \EOF
 server {
     #listen [::]:80;
@@ -78,5 +83,6 @@ server {
         }
 }
 EOF
+sed -i 's/replacehere/'"$IP"'/g' /etc/nginx/conf.d/seafile.conf
 
 service nginx restart
