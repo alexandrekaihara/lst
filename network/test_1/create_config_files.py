@@ -61,7 +61,7 @@ class CreateConfigurationFiles():
             self.serverconfig += 'mail = '    + d["100" ][environ['REPOSITORY']+':'+environ["MAILSERVER"]] + self.endl
             self.serverconfig += 'file = '    + d["100" ][environ['REPOSITORY']+':'+environ["FILE"]] + self.endl
             self.serverconfig += 'web = '     + d["100" ][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
-            self.serverconfig += 'seafile = ' + d["100" ][environ['REPOSITORY']+':'+environ["SEAFILE"]] + self.endl
+            self.serverconfig += 'seafile = ' + d["50"  ][environ['REPOSITORY']+':'+environ["SEAFILE"]] + self.endl
             self.serverconfig += 'seafolder = '  + environ['SEAFOLDER'] + 2*self.endl
         with(open(serverconfig_filename, "w")) as f:
             f.write(self.serverconfig)  
