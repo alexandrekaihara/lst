@@ -30,7 +30,7 @@ class CreateConfigurationFiles():
         dep = param['depends_on']
         if len(dep) > 0:
             for i in range(len(dep)):
-                script += 4*self.ident + "- " + dep[i] + self.endl
+                script += 3*self.ident + "- " + dep[i] + self.endl
         self.composefile += script
     
     def create_network_config_script(self, name, params):
