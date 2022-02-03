@@ -43,6 +43,7 @@ class CreateConfigurationFiles():
     def create_serverconfig_script(self, serverconfig_filename):
         d = {}
         subnets = set()
+        print(self.experiment_script + "\n\n")
         for _, params in self.experiment_script.items():
             # If is a Linuxclient image
             if params['image'] == environ['REPOSITORY']+':'+environ['LCLIENT']:
@@ -53,7 +54,7 @@ class CreateConfigurationFiles():
                 if subnet not in d.keys():
                     d[subnet] = {}
                 d[subnet][params['image']] = params['IP']
-        print(d)
+        print(d + "\n\n")
         self.serverconfig = "[backup]\nip = " + d["100"][environ['REPOSITORY']+':'+environ["BACKUP"]] + 2*self.endl
         for subnet in subnets:
             self.serverconfig += '[' + subnet + ']' + self.endl
