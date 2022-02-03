@@ -67,7 +67,7 @@ class CreateConfigurationFiles():
             f.write(self.serverconfig)  
 
     def run_compose(self, compose_filename):
-        [self.create_container_script(name, params) for name, params in self.experiment_script.items()]
+        [self.create_container_script(name, params) for name, params in self.experiment_script.items() if name != environ["SEAFILE"]]
         with(open(compose_filename, "w")) as f:
             f.write(self.composefile)  
 
