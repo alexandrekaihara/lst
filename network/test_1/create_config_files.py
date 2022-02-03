@@ -58,7 +58,7 @@ class CreateConfigurationFiles():
         for subnet in subnets:
             self.serverconfig += '[' + subnet + ']' + self.endl
             self.serverconfig += 'print = '   + d[subnet][environ['REPOSITORY']+':'+environ["PRINTER"]] + self.endl
-            self.serverconfig += 'mail = '    + d["100" ][environ['REPOSITORY']+':'+environ["MAIL"]] + self.endl
+            self.serverconfig += 'mail = '    + d["100" ][environ['REPOSITORY']+':'+environ["MAILSERVER"]] + self.endl
             self.serverconfig += 'file = '    + d["100" ][environ['REPOSITORY']+':'+environ["FILE"]] + self.endl
             self.serverconfig += 'web = '     + d["100" ][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
             self.serverconfig += 'seafile = ' + d["100" ][environ['REPOSITORY']+':'+environ["SEAFILE"]] + self.endl
