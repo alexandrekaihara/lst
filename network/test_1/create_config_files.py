@@ -45,7 +45,7 @@ class CreateConfigurationFiles():
         subnets = set()
         for _, params in self.experiment_script.items():
             # If is a Linuxclient image
-            if params['image'] != environ['REPOSITORY']+':'+environ['LCLIENT']:
+            if params['image'] == environ['REPOSITORY']+':'+environ['LCLIENT']:
                 subnets.add(params['IP'].split('.')[2])
             # If is not a Linuxclient image
             else:
