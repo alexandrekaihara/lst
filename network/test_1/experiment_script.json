@@ -100,7 +100,7 @@
     "E${LCLIENT}1": {
         "image":"${REPOSITORY}:${LCLIENT}",
         "IP":"192.168.50.3",
-        "bridge":"${INTERNAL}",
+        "bridge":"${EXTERNAL}",
         "depends_on": [
             "external_${WEB}",
             "${SEAFILE}"],
