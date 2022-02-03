@@ -112,7 +112,7 @@ class CreateConfigurationFiles():
 
         # Saving script
         with(open(filename, "w")) as f:
-            f.write(self.serverconfig)  
+            f.write(self.move_config_files)  
 
 
 def main():
