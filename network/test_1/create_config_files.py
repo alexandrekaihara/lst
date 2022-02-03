@@ -91,14 +91,17 @@ class CreateConfigurationFiles():
     
     def move_configurations_files_to_containers(self, filename):
         # Create files with the printer's IP of the subnet
-        mkdir('printersip')
+        try:
+            mkdir('printersip')
+        except:
+            pass
         for subnet in self.subnets:
             try:
                 printerip = self.nonclientsIP[subnet][environ['REPOSITORY']:environ['PRINTER']]
             except:
                 printerip = "0.0.0.0"
-            with open(str(subnet), 'w') as f:
-                f.write("printersip/" + printerip)
+            with open("printersip/"+str(subnet), 'w') as f:
+                f.write(printerip)
 
         for name, params in self.experiment_script.items():
             # If is a Linuxclient image
