@@ -83,7 +83,7 @@ def main():
     except:
         exit("[create_config_files.py] ERROR: Expected command line argument. Must provide the file path to the .json for experiment")
     
-    c = CreateConfigurationFiles()
+    c = CreateConfigurationFiles(argv[1])
     c.run_compose("docker-compose.yml")
     c.run_network_config("configure_hosts.sh")
     c.create_serverconfig_script("serverconfig.ini")
