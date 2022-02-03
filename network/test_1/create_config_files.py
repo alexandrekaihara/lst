@@ -52,7 +52,7 @@ class CreateConfigurationFiles():
                 subnet = params['IP'].split('.')[2]
                 d[subnet][params['image']] = params['IP']
         
-        self.serverconfig = "[backup]\nip = " + d['backup'] + 2*self.endl
+        self.serverconfig = "[backup]\nip = " + d["100"][environ['REPOSITORY']+':'+environ["BACKUP"]] + 2*self.endl
         for subnet in subnets:
             self.serverconfig += '[' + subnet + ']' + self.endl
             self.serverconfig += 'print = '   + d[subnet][environ['REPOSITORY']+':'+environ["PRINTER"]] + self.endl

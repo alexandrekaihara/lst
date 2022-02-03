@@ -22,7 +22,7 @@ SEAFOLDER=01684009-63a2-4239-9326-acc6bb937cfa
 envsubst < experiment_script.json > experiment.json
 
 # Generate all configure files
-python3 create_config_files.py experiment.sh
+python3 create_config_files.py experiment.json
 
 # Start Ryu Controller
 ryu-manager controller.py &
