@@ -7,7 +7,7 @@ from os import environ
 class CreateConfigurationFiles():
     def __init__(self, configfile) -> None:
         self.endl = "\n"
-        self.ident = "\t"
+        self.ident = "  "
         self.serverconfig = ""
         self.network_config = "#\\bin\\bash\n\n"
         self.composefile = "version: \"3.7\"\n\nservices:\n"
