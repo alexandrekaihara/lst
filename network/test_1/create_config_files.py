@@ -43,7 +43,7 @@ class CreateConfigurationFiles():
     def create_serverconfig_script(self, serverconfig_filename):
         d = {}
         subnets = set()
-        for _, params in self.experiment_script:
+        for _, params in self.experiment_script.items():
             # If is a Linuxclient image
             if params['image'] != environ['LCLIENT']:
                 subnets.add(params['IP'].split('.')[2])
