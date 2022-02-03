@@ -59,7 +59,7 @@
             "${BACKUP}",
             "${SEAFILE}"],
         "dns":"8.8.8.8",
-        "client_behaviour: ":"management"
+        "client_behaviour":"management"
     },
     "O${PRINTER}": {
         "image":"${REPOSITORY}:${PRINTER}",
@@ -78,7 +78,7 @@
             "${WEB}",
             "${BACKUP}"],
         "dns":"8.8.8.8",
-        "client_behaviour: ":"office"
+        "client_behaviour":"office"
     },
     "D${PRINTER}": {
         "image":"${REPOSITORY}:${PRINTER}",
@@ -98,7 +98,7 @@
             "${BACKUP}",
             "${SEAFILE}"],
         "dns":"8.8.8.8",
-        "client_behaviour: ":"developer"
+        "client_behaviour":"developer"
     },
     "D${LCLIENT}2": {
         "image":"${REPOSITORY}:${LCLIENT}",
@@ -111,7 +111,7 @@
             "${BACKUP}",
             "${SEAFILE}"],
         "dns":"8.8.8.8",
-        "client_behaviour: ":"administrator"
+        "client_behaviour":"administrator"
     },
     "E${LCLIENT}1": {
         "image":"${REPOSITORY}:${LCLIENT}",
@@ -121,6 +121,6 @@
             "external_${WEB}",
             "${SEAFILE}"],
         "dns":"8.8.8.8",
-        "client_behaviour:":"external_attacker"
+        "client_behaviour":"external_attacker"
     }
 }
