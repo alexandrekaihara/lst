@@ -43,8 +43,6 @@ class CreateConfigurationFiles():
     def create_serverconfig_script(self, serverconfig_filename):
         d = {}
         subnets = set()
-        d[environ['PRINTER']] = {}
-        d[environ['WEB']] = {}
         for _, params in self.experiment_script:
             # If is a Linuxclient image
             if params['image'] != environ['LCLIENT']:
