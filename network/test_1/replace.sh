@@ -1,6 +1,6 @@
 #!/bin/bash
 
 # Load all environment variables
-. env
+. .env
 
-REPOSITORY=$REPOSITORY envsubst < experiment.json
+envsubst < experiment.json > aux.json
