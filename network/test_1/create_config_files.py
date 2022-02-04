@@ -83,7 +83,6 @@ class CreateConfigurationFiles():
             mkdir('printersip')
         except:
             pass
-        print(self.nonclientsIP)
         for subnet in self.subnets:
             try:
                 printerip = self.nonclientsIP[subnet][environ['REPOSITORY']+':'+environ['PRINTER']]
