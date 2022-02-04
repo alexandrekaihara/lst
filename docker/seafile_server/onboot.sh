@@ -13,14 +13,15 @@ sleep 1
 done 
 
 # Finish seafile configuration
-## Gambiarra para fazer com que o input da senha nao interrompa a configuração do docker
 cd /opt/seafile-server-7.1.5/
+## Correction on python script to avoid stopping container execution when asking for password
 sed -i 's/password = Utils.ask_question(question, key=key, password=True)/password = \"Password123\"/1' setup-seafile-mysql.py
 ## Config Seafile
 IP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 echo 'Found host IP '"$IP"
 chmod +x setup-seafile-mysql.sh
-echo -e '\nseafileserver\n'"$IP"'\n8082\n2\nlocalhost\n3306\nseafile\nccnet-db\nseafile-db\nseahub-db\n' | . setup-seafile-mysql.sh
+#echo -e '\nseafileserver\n'"$IP"'\n8082\n2\nlocalhost\n3306\nseafile\nccnet-db\nseafile-db\nseahub-db\n' | . setup-seafile-mysql.sh
+. setup-seafile-mysql.sh
 chown -R seafile:seafile /opt/seafile-server-latest
 chown -R seafile:seafile /opt/seafile-data
 chown -R seafile:seafile /opt/ccnet
