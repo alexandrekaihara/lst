@@ -21,21 +21,21 @@ IP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 echo 'Found host IP '"$IP"
 chmod +x setup-seafile-mysql.sh
 echo -e '\nseafileserver\n'"$IP"'\n8082\n2\nlocalhost\n3306\nseafile\nccnet-db\nseafile-db\nseahub-db\n' | ./setup-seafile-mysql.sh
-chown -R seafile:seafile /opt/seafile-server-latest
-chown -R seafile:seafile /opt/seafile-data
-chown -R seafile:seafile /opt/ccnet
-chown -R seafile:seafile /opt/seahub-data
-chown -R seafile:seafile /opt/conf
+#chown -R seafile:seafile /opt/seafile-server-latest
+#chown -R seafile:seafile /opt/seafile-data
+#chown -R seafile:seafile /opt/ccnet
+#chown -R seafile:seafile /opt/seahub-data
+#chown -R seafile:seafile /opt/conf
 mkdir /opt/logs
-chown -R seafile:seafile /opt/logs
+#chown -R seafile:seafile /opt/logs
 mkdir /opt/pids
-chown -R seafile:seafile /opt/pids
+#chown -R seafile:seafile /opt/pids
 ## Config nginx
 sed -i 's/replacehere/'"$IP"'/g' /etc/nginx/conf.d/seafile.conf
 service nginx restart
 
 # Seafile start
-sudo su - seafile
+#sudo su - seafile
 cd /opt/seafile-server-latest
 ./seafile.sh start
 echo -e 'alexandreamk1@gmail.com\nPassword123\nPassword123\n' | ./seahub.sh start
