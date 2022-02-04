@@ -39,7 +39,7 @@ service nginx restart
 cd /opt/seafile-server-latest
 ./seafile.sh start
 ## Correction on python script to avoid stopping container execution when asking for password
-sed -i "s/key = 'admin password'/return Password123/1" check_init_admin.py
+sed -i "s/key = 'admin password'/return 'Password123'/1" check_init_admin.py
 echo -e 'alexandreamk1@gmail.com' | ./seahub.sh start
 
 # Keep alive
