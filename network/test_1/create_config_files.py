@@ -60,17 +60,17 @@ class CreateConfigurationFiles():
                 self.nonclientsIP[subnet][params['image']] = params['IP']
 
         # Generating all script
-        self.serverconfig = "[backup]\nip = " + self.nonclientsIP["100"][environ['REPOSITORY']+':'+environ["BACKUP"]] + 2*self.endl
+        self.serverconfig = "[backup]\nip = " + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ["BACKUP"]] + 2*self.endl
         for subnet in self.subnets:
             self.serverconfig += '[' + subnet + ']' + self.endl
             if subnet != "50":
                 self.serverconfig += 'print = '   + self.nonclientsIP[subnet][environ['REPOSITORY']+':'+environ["PRINTER"]] + self.endl
-                self.serverconfig += 'mail = '    + self.nonclientsIP["100" ][environ['REPOSITORY']+':'+environ["MAILSERVER"]] + self.endl
-                self.serverconfig += 'file = '    + self.nonclientsIP["100" ][environ['REPOSITORY']+':'+environ["FILE"]] + self.endl
-                self.serverconfig += 'web = '     + self.nonclientsIP["100" ][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
+                self.serverconfig += 'mail = '    + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ["MAILSERVER"]] + self.endl
+                self.serverconfig += 'file = '    + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ["FILE"]] + self.endl
+                self.serverconfig += 'web = '     + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
             else:
-                self.serverconfig += 'web = '     + self.nonclientsIP["50" ][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
-            self.serverconfig += 'seafile = ' + self.nonclientsIP["50"  ][environ['REPOSITORY']+':'+environ["SEAFILE"]] + self.endl
+                self.serverconfig += 'web = '     + self.nonclientsIP[environ['ESUBNET']][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
+            self.serverconfig += 'seafile = ' + self.nonclientsIP[environ['ESUBNET'] ][environ['REPOSITORY']+':'+environ["SEAFILE"]] + self.endl
             self.serverconfig += 'seafolder = '  + environ['SEAFOLDER'] + 2*self.endl
         
         # Saving script
