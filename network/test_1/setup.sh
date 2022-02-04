@@ -3,11 +3,11 @@
 # Load all environment variables
 . variables
 
-# Remove all possible network configurations
+# Remove all possible network configurations of previous experiments
 chmod +x tear_down_experiment.sh
 . tear_down_experiment.sh
 
-# Configure bridges and define configure_host
+# Configure bridges
 chmod +x confbridges.sh
 . confbridges.sh
 

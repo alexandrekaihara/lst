@@ -20,7 +20,7 @@ configure_host(){
     # If %5 is not NULL, then execute the commands below
     if [ ! -z $5 ]; then
     docker cp printersip/$2 $1:/home/debian/automation/packages/system/printerip
-    docker cp client_behaviour/$3 $1:/home/debian/automation/packages/system/config.ini
+    docker cp client_behaviour/$5 $1:/home/debian/automation/packages/system/config.ini
     docker cp serverconfig.ini $1:/home/debian/automation/packages/system/serverconfig.ini
     fi
 
@@ -34,10 +34,10 @@ configure_host(){
     ovs-vsctl add-port $4 veth$2.$3
 
     ## Add ip addressses and routes
-    ip -n $1 route add 192.168.100.0/24 dev vethsubnet$2
-    ip -n $1 route add 192.168.200.0/24 dev vethsubnet$2
-    ip -n $1 route add 192.168.210.0/24 dev vethsubnet$2
-    ip -n $1 route add 192.168.220.0/24 dev vethsubnet$2
+    ip -n $1 route add 192.168.$SSUBNET.0/24 dev vethsubnet$2
+    ip -n $1 route add 192.168.$MSUBNET.0/24 dev vethsubnet$2
+    ip -n $1 route add 192.168.$OSUBNET.0/24 dev vethsubnet$2
+    ip -n $1 route add 192.168.$DSUBNET.0/24 dev vethsubnet$2
     ip -n $1 addr add 192.168.$2.$3/24 dev vethsubnet$2
     ip netns exec $1 route add default gw 192.168.$2.100
 }
