@@ -9,6 +9,7 @@ IFNAME=`route | grep '^default' | grep -o '[^ ]*$'`
 iptables -t nat -I POSTROUTING -o $IFNAME -j MASQUERADE
 iptables -t nat -I POSTROUTING -o $INTERNAL -j MASQUERADE
 ### Add multiples IP to the bridge as a gateway for all containers and set routes from host to containers
+ip addr add 192.168.$ESUBNET.100/24 dev $INTERNAL
 ip addr add 192.168.$SSUBNET.100/24 dev $INTERNAL
 ip addr add 192.168.$MSUBNET.100/24 dev $INTERNAL
 ip addr add 192.168.$OSUBNET.100/24 dev $INTERNAL
