@@ -19,18 +19,21 @@ print("Connecting to the seafile login page")
 browser.get('http://192.168.50.1:80')
 
 # Fill Usersname field
-print("Filling the username filde with " + username )
+print("Filling the username field with " + username )
 search = browser.find_element(By.NAME, "login")
 search.send_keys(username)
 search.send_keys(Keys.RETURN)
 
 # Fill password field
+print("Filling the password field with " + password )
 search = browser.find_element(By.NAME, "password")
 search.send_keys(password)
 search.send_keys(Keys.RETURN)
 
 # Submit
+print("Logging in ...")
 search = browser.find_element(By.CLASS_NAME, "submit.btn.btn-primary.btn-block").click()
 
 # Close Browser
+print("Closing Browser\n\n")
 browser.quit()
