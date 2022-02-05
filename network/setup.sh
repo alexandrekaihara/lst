@@ -41,4 +41,4 @@ docker-compose up -d
 
 ## Copy all client configuration files into the respective containers
 chmod +x config_all_hosts.sh
-./config_all_hosts.sh
+. config_all_hosts.sh
