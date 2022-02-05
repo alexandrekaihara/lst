@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # Function to be used when exiting the setup script
-cleanup(){
-    echo "[CIDDS] Executing teardown experiment"
+function cleanup(){
+    echo "[CIDDS] EXITING NOW. Executing teardown experiment"
     . tear_down_experiment.sh
+    trap - SIGINT
 }
 
-trap cleanup()
+trap cleanup INT
 
 # Load all environment variables
 echo "[CIDDS] Setting up all environment variables"
