@@ -33,4 +33,3 @@ do
   tar -xzf "geckodriver-v0.30.0-linux64.tar.gz"
 done
 rm geckodriver-v0.30.0-linux64.tar.gz
-export PATH="$PATH:/opt/"

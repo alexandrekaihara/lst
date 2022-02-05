@@ -13,6 +13,19 @@ chmod  0440  /etc/sudoers
 sed -i "s/listen \[\:\:\]\:80 default_server;/#listen \[\:\:\]\:80 default_server;/g" /etc/nginx/sites-enabled/default
 service nginx start
 
+# DB Setup (mariadb)
+service mysql start
+echo -e 'rootpassword\nn\nY\nY\nY\nY\n' | mysql_secure_installation
+mysql -u root --password=123 -e 'create database `ccnet-db` character set = 'utf8';'
+mysql -u root --password=123 -e 'create database `seafile-db` character set = 'utf8';'
+mysql -u root --password=123 -e 'create database `seahub-db` character set = 'utf8';'
+mysql -u root --password=123 -e 'create user 'seafile'@'localhost';'
+mysql -u root --password=123 -e 'set password for 'seafile'@'localhost' = password("Password123");'
+mysql -u root --password=123 -e 'GRANT ALL PRIVILEGES ON `ccnet-db`.* to `seafile`@localhost;'
+mysql -u root --password=123 -e 'GRANT ALL PRIVILEGES ON `seafile-db`.* to `seafile`@localhost;'
+mysql -u root --password=123 -e 'GRANT ALL PRIVILEGES ON `seahub-db`.* to `seafile`@localhost;'
+mysql -u root --password=123 -e 'FLUSH PRIVILEGES;'
+
 # Seafile Setup 
 wget O /var/eafile-server_7.1.5_x86-64.tar.gz https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_7.1.5_x86-64.tar.gz
 tar xzvf seafile-server_7.1.5_x86-64.tar.gz -C /opt
