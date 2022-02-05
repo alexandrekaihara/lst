@@ -23,9 +23,9 @@ configure_host(){
 
     # If %5 is not NULL, then execute the commands below
     if [ ! -z $5 ]; then
-    docker cp printersip/$2 $1:/home/debian/automation/packages/system/printerip
-    docker cp client_behaviour/$5.ini $1:/home/debian/automation/packages/system/config.ini
-    docker cp serverconfig.ini $1:/home/debian/automation/packages/system/serverconfig.ini
+    docker cp printersip/$2 $1:/home/debian/printerip
+    docker cp client_behaviour/$5.ini $1:/home/debian/config.ini
+    docker cp serverconfig.ini $1:/home/debian/serverconfig.ini
     fi
 
     ## Add interface on container and host

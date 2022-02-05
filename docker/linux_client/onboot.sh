@@ -18,6 +18,11 @@ mv /home/debian/cidds-main/scripts/automation /home/debian/
 chmod -R 755 /home/debian/automation
 rm -r /home/debian/cidds-main
 
+# Move all configure files received
+mv /home/debian/printerip        /home/debian/automation/packages/system/printerip   
+mv /home/debian/config.ini       /home/debian/automation/packages/system/config.ini
+mv /home/debian/serverconfig.ini /home/debian/automation/packages/system/serverconfig.ini
+    
 # Generate dummy files for seafile
 mkdir -pv /home/debian/tmpseafiles
 i=0
