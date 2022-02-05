@@ -24,7 +24,7 @@ ryu-manager controller.py > logs/controller.log 2>&1 &
 docker run -d --network=none --privileged --dns=8.8.8.8 --name=${SEAFILE} ${REPOSITORY}:${SEAFILE} 
 configure_host ${SEAFILE} 50 1 ${EXTERNAL} 
 ## Set seafolder variable for create_config_files.py
-until docker cp $SEAFILE:/home/seafolder /home/seafolder; do
+until docker cp $SEAFILE:/home/seafolder /home/seafolder 2>&1; do
 echo "Waiting for Seafile Server configurate and generates the seafolder file"
 sleep 1
 done
@@ -41,4 +41,4 @@ docker-compose up -d
 
 ## Copy all client configuration files into the respective containers
 chmod +x config_all_hosts.sh
-. config_all_hosts.sh
+./config_all_hosts.sh
