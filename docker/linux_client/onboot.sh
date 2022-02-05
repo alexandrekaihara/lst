@@ -1,16 +1,14 @@
 #!/bin/bash
 
-
-# Wait for the internet connection
-until ping -c 1 google.com
-do
-echo "Waiting to stablish connection to setup machine"
+# Waiting for network configuration
+IP=$(hostname -I)
+until [ ! -z $IP ]; do
+IP=$(hostname -I)
+echo "Waiting for network configuration"
 sleep 1
 done 
 
-
 # Update the automation directory
-rm -r home/debian/automation
 until unzip -o main.zip -d /home/debian
 do
   wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
@@ -33,10 +31,6 @@ done
 
 # Configure printer 
 /etc/init.d/cups start
-# Use instead this command, needs to specify the host https://www.thegeekstuff.com/2015/01/lpadmin-examples/
-## Returns the printer ip to be configured from serverconfig.ini file
-cd /home/debian/automation/packages/system
-python3 getprinterip.py
 printerip=`cat printerip` 
 if [ ! "$printerip" = "0.0.0.0" ]; then 
   lpadmin -p PDF -v socket://$printerip -E

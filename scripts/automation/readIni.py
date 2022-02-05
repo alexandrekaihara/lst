@@ -76,16 +76,6 @@ def getAndSetSubnetHostAndHostname(parser):
 		parser.write(config)
 	return subnet, host, hostname
 
-# Get the right config file 
-def gethostconfig(parser, subnet, host):
-	config = parser.get("config", "192.168.{}.{}".format(subnet, host))
-	copyfile("packages/system/configs/{}.ini".format(config), "packages/system/config.ini")
-
-# Downlaod recent server config 
-def getCurrentServerConfig():
-	newConfigFile = URLopener()
-	newConfigFile.retrieve("192.168.56.123/scripts/automation/packages/system/serverconfig.ini", "packages/system/serverconfig.ini")
-	
 # Configure different server services 
 def configServers(parser, subnet, host):
 	# Determine the server ips using the subnet information 
@@ -246,13 +236,6 @@ def main():
 		intMac = int(hexMacNoDash, 16)
 		myID = str(intMac)
 	
-	# Fetch recent server config 
-	#getCurrentServerConfig()
-	
-	# Get host configuration according to its ip address
-	parser.read("packages/system/configs/iplistconfig.conf")
-	gethostconfig(parser, subnet, host)
-
 	# Configure the servers using the IPs in the ServerConfig file
 	parser.read("packages/system/serverconfig.ini")
 	configServers(parser, subnet, host)

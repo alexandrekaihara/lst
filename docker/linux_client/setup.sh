@@ -13,17 +13,6 @@ useradd -m -s /bin/bash mininet
 echo "mininet:mininet" | chpasswd
 usermod -a -G sudo mininet
 
-# Get automation script from github
-mkdir /home/debian
-until unzip -o main.zip -d /home/debian
-do
-  wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
-done
-rm main.zip 
-mv /home/debian/cidds-main/scripts/automation /home/debian/
-chmod -R 755 /home/debian/automation
-rm -r /home/debian/cidds-main
-
 # Create directory for Netstorage 
 mkdir -pv /home/debian/netstorage
 

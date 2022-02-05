@@ -45,14 +45,14 @@ echo deb http://dl.bintray.com/seafile-org/deb strech main | sudo tee /etc/apt/s
 apt-get -y update
 apt-get -y upgrade
 
-# Install Geckodriver
+# Install Geckodriver for Selenium
 until mv geckodriver /opt/
 do
-  wget "https://github.com/mozilla/geckodriver/releases/download/v0.29.1/geckodriver-v0.29.1-linux64.tar.gz"
-  tar -xzf "geckodriver-v0.29.1-linux64.tar.gz"
+  wget "https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz"
+  tar -xzf "geckodriver-v0.30.0-linux64.tar.gz"
 done
-rm geckodriver-v0.29.1-linux64.tar.gz
-export PATH="$PATH:/opt/geckodriver"
+rm geckodriver-v0.30.0-linux64.tar.gz
+export PATH="$PATH:/opt/"
 
 # Install all predefined packages
 declare -a packagesAptGet=("aptitude"         "python3"         "python3-xlib"  "python3-pip"        "firefox"                         "xvfb"                        "unzip"         "cups"              "cups-client"       "cups-bsd"          "cifs-utils"        "cmake"            "sqlite3"            "python3-setuptools" "python3-simplejson" "autoconf"   "automake"          "libtool"    "libevent-dev"     "libcurl4-openssl-dev" "libgtk2.0-dev"     "uuid-dev"           "intltool"         "libsqlite3-dev"     "valac"            "libjansson-dev" "libfuse2" "seafile-cli" "grub2"              "nmap"                "python3.8-dev"            "libcups2-dev"      "gcc"               "firefox-geckodriver"           ) 
