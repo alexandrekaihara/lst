@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Function to be used when exiting the setup script
+cleanup(){
+    echo "[CIDDS] Executing teardown experiment"
+    . tear_down_experiment.sh
+}
+
+trap cleanup()
+
 # Load all environment variables
 echo "[CIDDS] Setting up all environment variables"
 . variables
@@ -15,13 +23,13 @@ chmod +x confhosts.sh
 
 # Start Ryu Controller
 echo "[CIDDS] Setting up controller on ${CONTROLLERIP}:${CONTROLLERPORT}"
-mkdir logs
+mkdir logs > /dev/null 2>&1
 ryu-manager controller.py > logs/controller.log 2>&1 & 
 
 # Instantiate seafile server
 ## OBS: It is necessary because all linuxclients uses the seafolder ID, which is unique and can be stored only after creating container
 echo "[CIDDS] Creating Seafile server"
-docker run -d --network=none --privileged --dns=8.8.8.8 --name=${SEAFILE} ${REPOSITORY}:${SEAFILE} 
+docker run -d --network=none --privileged --dns=8.8.8.8 --name=${SEAFILE} ${REPOSITORY}:${SEAFILE} > /dev/null 2>&1
 configure_host ${SEAFILE} 50 1 ${EXTERNAL} 
 ## Set seafolder variable for create_config_files.py
 until docker cp $SEAFILE:/home/seafolder /home/seafolder > /dev/null 2>&1; do
@@ -51,6 +59,6 @@ chmod +x config_all_hosts.sh
 # Finished setting up experiment
 echo "[CIDDS] Experiment all set up."
 echo "[CIDDS] To end this experiment, press Crtl + C."
-( trap exit SIGINT ; read -r -d '' _ </dev/tty ) 
-. tear_down_experiment.sh
+tail -f /dev/null
+
 
