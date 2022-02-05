@@ -98,17 +98,18 @@ class CreateConfigurationFiles():
 
         # For each container described on the .json file
         for name, params in self.experiment_script.items():
-            # If is a Linuxclient image
-            subnet = params['IP'].split('.')[2]
-            hostip = params['IP'].split('.')[3]
-            bridge = params['bridge']   
-            # If the container is a Linuxclient, then add the filename behaviour parameter
-            if params['image'] == environ['REPOSITORY']+':'+environ['LCLIENT']:
-                behaviour = params['client_behaviour']
-                self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + " " + behaviour + self.endl
-            # Do not insert the behaviour parameter
-            else:
-                self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + self.endl
+            if params['image'] != environ['RESPOSITORY']+':'+environ['SEAFILE']:
+                # If is a Linuxclient image
+                subnet = params['IP'].split('.')[2]
+                hostip = params['IP'].split('.')[3]
+                bridge = params['bridge']   
+                # If the container is a Linuxclient, then add the filename behaviour parameter
+                if params['image'] == environ['REPOSITORY']+':'+environ['LCLIENT']:
+                    behaviour = params['client_behaviour']
+                    self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + " " + behaviour + self.endl
+                # Do not insert the behaviour parameter
+                else:
+                    self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + self.endl
 
         # Saving script
         with(open(filename, "w")) as f:

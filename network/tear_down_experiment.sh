@@ -2,6 +2,7 @@
 
 # Destroy all containers
 docker-compose down
+docker kill ${SEAFILE}
 docker rm ${SEAFILE}
 
 # Remove OpenvSwitch configurations
