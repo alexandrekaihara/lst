@@ -4,11 +4,6 @@
 echo "[CIDDS] Setting up all environment variables"
 . variables
 
-# Remove all possible network configurations from previous experiments
-echo "[CIDDS] Removing all residual network configurations of previous experiments"
-chmod +x tear_down_experiment.sh
-. tear_down_experiment.sh
-
 # Configure bridges
 echo "[CIDDS] Creating bridges ${INTERNAL} e ${EXTERNAL}"
 chmod +x confbridges.sh
@@ -54,4 +49,8 @@ chmod +x config_all_hosts.sh
 . config_all_hosts.sh
 
 # Finished setting up experiment
-echo "[CIDDS] Experiment all set up"
+echo "[CIDDS] Experiment all set up."
+echo "[CIDDS] To end this experiment, press Crtl + C."
+( trap exit SIGINT ; read -r -d '' _ </dev/tty ) 
+. tear_down_experiment.sh
+
