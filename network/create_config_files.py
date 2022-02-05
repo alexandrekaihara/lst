@@ -110,6 +110,7 @@ class CreateConfigurationFiles():
                 # Do not insert the behaviour parameter
                 else:
                     self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + self.endl
+                self.config_hosts_script += "echo \"Configuring " + name + self.endl 
 
         # Saving script
         with(open(filename, "w")) as f:
