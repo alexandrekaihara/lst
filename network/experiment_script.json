@@ -56,8 +56,7 @@
             "${MAILSERVER}",
             "${FILE}",
             "${WEB}",
-            "${BACKUP}",
-            "${SEAFILE}"],
+            "${BACKUP}"],
         "dns":"8.8.8.8",
         "client_behaviour":"management"
     },
@@ -95,8 +94,7 @@
             "${MAILSERVER}",
             "${FILE}",
             "${WEB}",
-            "${BACKUP}",
-            "${SEAFILE}"],
+            "${BACKUP}"],
         "dns":"8.8.8.8",
         "client_behaviour":"developer"
     },
@@ -108,8 +106,7 @@
             "${MAILSERVER}",
             "${FILE}",
             "${WEB}",
-            "${BACKUP}",
-            "${SEAFILE}"],
+            "${BACKUP}"],
         "dns":"8.8.8.8",
         "client_behaviour":"administrator"
     },
@@ -118,8 +115,7 @@
         "IP":"192.168.${ESUBNET}.3",
         "bridge":"${EXTERNAL}",
         "depends_on": [
-            "external_${WEB}",
-            "${SEAFILE}"],
+            "external_${WEB}"],
         "dns":"8.8.8.8",
         "client_behaviour":"external_attacker"
     }
