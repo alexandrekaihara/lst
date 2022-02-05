@@ -41,7 +41,7 @@ def create_driver():
 			# Geckodriver is required because FirefoxDriver is deprecated
 			opts = FirefoxOptions()
 			opts.add_argument("--headless")
-			driver = webdriver.Firefox(options=opts)
+			driver = webdriver.Firefox(executable_path="/opt/geckodriver", firefox_binary='/usr/bin/firefox', options=opts)
 		elif platform.system() == "Windows":
 			# On Windows, you can work without a Geckodriver because the Windows VMs have an old version of Firefox
 			driver = webdriver.Firefox()			
@@ -64,7 +64,7 @@ def open_url(driver, url):
 # Close Pop-Up
 def close_popup(driver, var):
 	try:
-		driver.find_element(By.CSS_SELECTOR, var).click()
+		driver.find_element_by_css_selector(var).click()
 		time.sleep(5)
 	except Exception as e:
 		echoC(myName, "close_popup() error: " + str(e))
@@ -79,7 +79,7 @@ def start_search(driver, keywords, var):
 		rand = random.randint(1, nb)
 		search = linecache.getline(keywords, rand)
 		# Determine search field and enter search term
-		elem = driver.find_element(By.NAME, var)
+		elem = driver.find_element_by_name(var)
 		elem.send_keys(search)
 		elem.send_keys(Keys.RETURN)
 		echoC(myName, "Searched: " + search)
@@ -92,7 +92,7 @@ def start_search(driver, keywords, var):
 # Click on a link based on the HTML tag name
 def click_on_stuff(driver, tagname):
 	# Determine all elements for the tag name
-	links = driver.find_elements(By.TAG_NAME, tagname)
+	links = driver.find_elements_by_tag_name(tagname)
 	# Check whether elements could be determined (empty list)
 	if not links:
 		echoC(myName, "click_on_stuff() error: No links found")
