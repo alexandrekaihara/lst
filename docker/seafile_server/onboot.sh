@@ -44,12 +44,16 @@ echo -e 'alexandreamk1@gmail.com' | ./seahub.sh start
 
 # Must login on seafile server in order to create a user folder to enable synchronizing with clients
 export PATH="$PATH:/opt/"
+until [ ! -z $SEAFOLDER ]; do
 python3 /home/login_seafile_page.py
 mysql -uroot --password=Password123 -e "USE seafile-db; SELECT * FROM RepoOwner" | grep alexandreamk1@gmail.com > /home/seafolder
 sed -i "s/2\t//1" /home/seafolder
 sed -i "s/\talexandreamk1@gmail.com//1" /home/seafolder
 SEAFOLDER=$(cat /home/seafolder)
-if [ ! -z $SEAFOLDER ]; then echo "Seafolder successfully created with ID "$SEAFOLDER; fi
+if [ ! -z $SEAFOLDER ]; then 
+echo "Seafolder successfully created with ID "$SEAFOLDER; else
+echo "Login failed, restarting process..."; fi
+done
 
 # Keep alive
 tail -f /dev/null
