@@ -18,17 +18,19 @@ chmod +x confhosts.sh
 # Instantiate seafile server
 docker run -d --network=none --privileged --dns=8.8.8.8 ${REPOSITORY}:${SEAFILE}
 configure_host ${SEAFILE} 50 1 ${INTERNAL} 
-ip netns exec ${SEAFILE} mysql -uroot --password=Password123 -e "USE seafile-db; SELECT * FROM RepoOwner"
 ## Set seafolder variable for create_config_files.py
-export SEAFOLDER=01684009-63a2-4239-9326-acc6bb937cfa
+export SEAFOLDER=$(cat /home/seafolder)
+until [ ! -z $SEAFOLDER ]; do
+docker cp $SEAFILE:/home/seafolder /home/seafolder
+echo "Waiting for Seafile Server configurate and generates the seafolder file"
+done
 
-# Substitute all env variables on experiment_script.json
+# Generate all client configuration files
+## Substitute all env variables on experiment_script.json
 envsubst < experiment_script.json > experiment.json
-
-# Generate all configure files
+## Execute script
 python3 create_config_files.py experiment.json
-
-# Copy all configuration files into the respective containers
+## Copy all client configuration files into the respective containers
 chmod +x config_all_hosts.sh
 . config_all_hosts.sh
 
