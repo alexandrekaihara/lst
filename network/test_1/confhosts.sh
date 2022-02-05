@@ -8,7 +8,7 @@
 #   - $2: Tag of the subnet
 #   - $3: Host ip part
 #   - $4: Name of the bridge to connect to the containers 
-#   - $5: IF current conteiner is a linux cliente, then  $5 represents name of the client behaviour file
+#   - $5: IF current conteiner is a linux client, then $5 represents name of the behaviour file (can be found on "client_behaviour" folder)
 # Example:
 #   - configure_host mailserver 100 1 br-int 
 configure_host(){

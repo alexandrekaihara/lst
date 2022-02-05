@@ -13,6 +13,19 @@ echo "Waiting for network configuration"
 sleep 1
 done 
 
+# DB Setup (mariadb)
+service mysql start
+echo -e 'rootpassword\nn\nY\nY\nY\nY\n' | mysql_secure_installation
+mysql -u root --password=123 -e 'create database `ccnet-db` character set = 'utf8';'
+mysql -u root --password=123 -e 'create database `seafile-db` character set = 'utf8';'
+mysql -u root --password=123 -e 'create database `seahub-db` character set = 'utf8';'
+mysql -u root --password=123 -e 'create user 'seafile'@'localhost';'
+mysql -u root --password=123 -e 'set password for 'seafile'@'localhost' = password("Password123");'
+mysql -u root --password=123 -e 'GRANT ALL PRIVILEGES ON `ccnet-db`.* to `seafile`@localhost;'
+mysql -u root --password=123 -e 'GRANT ALL PRIVILEGES ON `seafile-db`.* to `seafile`@localhost;'
+mysql -u root --password=123 -e 'GRANT ALL PRIVILEGES ON `seahub-db`.* to `seafile`@localhost;'
+mysql -u root --password=123 -e 'FLUSH PRIVILEGES;'
+
 # Finish seafile configuration
 cd /opt/seafile-server-7.1.5/
 ## Correction on python script to avoid stopping container execution when asking for password

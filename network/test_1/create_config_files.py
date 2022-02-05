@@ -25,6 +25,7 @@ class CreateConfigurationFiles():
         except:
             exit("[create_config_files.py] ERROR: Error on opening ", filename, "\n Check if file exists or for any error on .json formatting\n\n")
 
+    # Create docker-compose.yml file from .json
     def create_container_script(self, name, param):
         script = 1*self.ident + name + ":" + self.endl
         script += 2*self.ident + "image: " + param['image'] + self.endl
@@ -35,17 +36,20 @@ class CreateConfigurationFiles():
         script += 2*self.ident + "dns:" + self.endl
         script += 3*self.ident + "- " + param['dns'] + self.endl
         dep = param['depends_on']
+        # If it has a dependency, add all of them
         if len(dep) > 0:
             script += 2*self.ident + "depends_on:" + self.endl
             for i in range(len(dep)):
                 script += 3*self.ident + "- " + dep[i] + self.endl
         self.composefile += script
 
+    # Iterates over dictionaries on .json file to create a docker-compose
     def run_compose(self, filename):
         [self.create_container_script(name, params) for name, params in self.experiment_script.items() if name != environ["SEAFILE"]]
         with(open(filename, "w")) as f:
             f.write(self.composefile)  
 
+    # Create the config file containing all the server IPs
     def create_serverconfig_script(self, filename):
         # Selecting IP by its subnet and its docker image
         for _, params in self.experiment_script.items():
@@ -77,6 +81,7 @@ class CreateConfigurationFiles():
         with(open(filename, "w")) as f:
             f.write(self.serverconfig)  
     
+    # Generate the file that calls configure_host (on confghosts.sh) with its all configurations
     def config_hosts(self, filename):
         # Create files with the printer's IP of the subnet
         try:
@@ -91,14 +96,17 @@ class CreateConfigurationFiles():
             with open("printersip/"+str(subnet), 'w') as f:
                 f.write(printerip)
 
+        # For each container described on the .json file
         for name, params in self.experiment_script.items():
             # If is a Linuxclient image
             subnet = params['IP'].split('.')[2]
             hostip = params['IP'].split('.')[3]
             bridge = params['bridge']   
+            # If the container is a Linuxclient, then add the filename behaviour parameter
             if params['image'] == environ['REPOSITORY']+':'+environ['LCLIENT']:
                 behaviour = params['client_behaviour']
                 self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + " " + behaviour + self.endl
+            # Do not insert the behaviour parameter
             else:
                 self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + self.endl
 

@@ -3,7 +3,7 @@
 # Load all environment variables
 . variables
 
-# Remove all possible network configurations of previous experiments
+# Remove all possible network configurations from previous experiments
 chmod +x tear_down_experiment.sh
 . tear_down_experiment.sh
 
@@ -16,7 +16,8 @@ chmod +x confhosts.sh
 . confhosts.sh
 
 # Instantiate seafile server
-docker run -d --network=none --privileged --dns=8.8.8.8 ${REPOSITORY}:${SEAFILE}
+## OBS: It is necessary because all linuxclients uses the seafolder ID, which is unique and can be stored only after creating container
+docker run -d --network=none --privileged --dns=8.8.8.8 --name=${SEAFILE} ${REPOSITORY}:${SEAFILE} 
 configure_host ${SEAFILE} 50 1 ${INTERNAL} 
 ## Set seafolder variable for create_config_files.py
 export SEAFOLDER=$(cat /home/seafolder)

@@ -2,7 +2,7 @@
 
 # Destroy all containers
 docker-compose down
-#echo -e "y\n" | docker system prune
+docker rm ${SEAFILE}
 
 # Remove OpenvSwitch configurations
 ovs-vsctl --if-exists del-br ${INTERNAL}
