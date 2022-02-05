@@ -98,7 +98,7 @@ class CreateConfigurationFiles():
 
         # For each container described on the .json file
         for name, params in self.experiment_script.items():
-            if params['image'] != environ['RESPOSITORY']+':'+environ['SEAFILE']:
+            if params['image'] != environ['REPOSITORY']+':'+environ['SEAFILE']:
                 # If is a Linuxclient image
                 subnet = params['IP'].split('.')[2]
                 hostip = params['IP'].split('.')[3]
@@ -110,7 +110,7 @@ class CreateConfigurationFiles():
                 # Do not insert the behaviour parameter
                 else:
                     self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + self.endl
-                self.config_hosts_script += "echo \"Configuring " + name + self.endl 
+                self.config_hosts_script += "echo \"Configuring " + name + "\"" + self.endl 
 
         # Saving script
         with(open(filename, "w")) as f:

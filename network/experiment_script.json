@@ -100,7 +100,7 @@
     },
     "D${LCLIENT}2": {
         "image":"${REPOSITORY}:${LCLIENT}",
-        "IP":"192.168.${DSUBNET}.2",
+        "IP":"192.168.${DSUBNET}.3",
         "bridge":"${INTERNAL}",
         "depends_on": [
             "${MAILSERVER}",
