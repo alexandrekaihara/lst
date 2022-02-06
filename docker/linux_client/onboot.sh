@@ -7,7 +7,7 @@ IP=$(hostname -I)
 echo "Waiting for network configuration"
 sleep 1
 done 
-$ONBOOTLOG="${IP}_onboot.log"
+ONBOOTLOG="${IP}_onboot.log"
 
 # Open Brackets to send all outputs into a log file
 {
