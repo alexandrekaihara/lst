@@ -4,7 +4,7 @@
 function cleanup(){
     echo "[CIDDS] EXITING NOW. Executing tear_down_experiment.sh (this may take few seconds)"
     . tear_down_experiment.sh
-    trap - SIGNIT
+    trap - SIGINT
     exit 0
 }
 trap cleanup INT
@@ -37,7 +37,8 @@ echo "[CIDDS] Creating Seafile server"
 docker run -d --network=none --privileged --dns=8.8.8.8 --name=${SEAFILE} ${REPOSITORY}:${SEAFILE} > /dev/null 2>&1
 configure_host ${SEAFILE} 50 1 ${EXTERNAL} 
 ## Set seafolder variable for create_config_files.py
-until docker cp $SEAFILE:/home/seafolder /home/seafolder > /dev/null 2>&1; do
+until [ ! -z /home/seafolder ] do
+docker cp $SEAFILE:/home/seafolder /home/seafolder > /dev/null 2>&1;
 echo "[CIDDS] Waiting for Seafile Server configurate and generates the seafolder file"
 sleep 3
 done
