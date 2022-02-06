@@ -8,9 +8,6 @@ echo "Waiting for network configuration"
 sleep 1
 done 
 
-# Open Brackets to send all outputs into a log file
-
-
 # Update the automation directory
 until unzip -o main.zip -d /home/debian
 do
@@ -39,7 +36,7 @@ done
 
 # Configure printer 
 /etc/init.d/cups start
-printerip=`cat /home/debian/automation/packages/system/printerip` 
+printerip=`cat printerip` 
 if [ ! "$printerip" = "0.0.0.0" ]; then 
   lpadmin -p PDF -v socket://$printerip -E
   /etc/init.d/cups restart
@@ -60,10 +57,9 @@ seaf-cli stop -c /home/debian/.ccnet
 seaf-cli start -c /home/debian/.ccnet
 chown -R mininet:mininet /home/debian/sea/ /home/debian/seafile-client/ /home/debian/.ccnet
 
-
 # add PATH to geckodriver for browsing.py to use Selenium
 export PATH="$PATH:/opt/"
 
 # Keep alive
 cd /home/debian/automation
-python3 readIni.py >> '/home/debian/log/'"$IP"'_onboot.log'
+python3 readIni.py
