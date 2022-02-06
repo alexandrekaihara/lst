@@ -9,7 +9,7 @@ sleep 1
 done 
 
 # Open Brackets to send all outputs into a log file
-{
+#{
 
 # Update the automation directory
 until unzip -o main.zip -d /home/debian
@@ -60,7 +60,7 @@ seaf-cli stop -c /home/debian/.ccnet
 seaf-cli start -c /home/debian/.ccnet
 chown -R mininet:mininet /home/debian/sea/ /home/debian/seafile-client/ /home/debian/.ccnet
 
-} > '/home/debian/log/'"$IP"'_onboot.log'
+#} > '/home/debian/log/'"$IP"'_onboot.log'
 
 # add PATH to geckodriver for browsing.py to use Selenium
 export PATH="$PATH:/opt/"
