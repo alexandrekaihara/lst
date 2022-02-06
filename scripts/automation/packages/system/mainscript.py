@@ -330,14 +330,7 @@ def init(browsing, mailing, printing, copyfiles, copysea, ssh, meeting, offline,
 		subnet, host, hostname = getSubnetHostAndHostname()
 	global myID
 	
-	if platform.system() == "Linux":
-		myID = str(getnode())
-	else:
-		# For Windows, something must be trickled, since getnode () returns an incorrect value
-		hexMac = check_output(["getmac"])[162:180]
-		hexMacNoDash = hexMac.replace("-", "")
-		intMac = int(hexMacNoDash, 16)
-		myID = str(intMac)
+	myID = "192.168." + subnet +'.'+ host
 		
 	global pathForLog
 	if platform.system() == "Linux":
