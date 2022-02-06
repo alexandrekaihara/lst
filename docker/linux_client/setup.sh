@@ -2,6 +2,10 @@
 
 #https://manual.seafile.com/deploy/using_mysql/ para instalar o seafile server
 
+# Create directory for mount to host
+mkdir /home/debian
+mkdir /home/debian/log
+
 # Set system time 
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime

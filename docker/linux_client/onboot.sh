@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Open Brackets to send all outputs into a log file
+{
+
 # Waiting for network configuration
 IP=$(hostname -I)
 until [ ! -z $IP ]; do
@@ -63,3 +66,5 @@ export PATH="$PATH:/opt/"
 # Keep alive
 cd /home/debian/automation
 python3 readIni.py
+
+} > "/home/debian/log"$IP"_onboot.log"
