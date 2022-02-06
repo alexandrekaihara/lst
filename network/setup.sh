@@ -4,10 +4,14 @@
 function cleanup(){
     echo "[CIDDS] EXITING NOW. Executing teardown experiment"
     . tear_down_experiment.sh
-    trap - SIGINT
+    trap - SIGNIT
+    exit 0
 }
-
 trap cleanup INT
+
+# Remove all remaining network configuration from previous experiments
+echo "[CIDDS] Remove all remaining network configuration from previous experiments"
+. tear_down_experiment.sh
 
 # Load all environment variables
 echo "[CIDDS] Setting up all environment variables"
@@ -40,10 +44,9 @@ done
 export SEAFOLDER=$(cat /home/seafolder)
 echo "[CIDDS] Finished Seafile configuration. Seafolder ID is ${SEAFOLDER}"
 
-
 # Generate all client configuration files
-## Substitute all env variables on experiment_script.json
 echo "[CIDDS] Creating all configuration files of ${LCLIENT} from experiment_script.json"
+## Substitute all env variables on experiment_script.json
 envsubst < experiment_script.json > experiment.json
 ## Execute script
 python3 create_config_files.py experiment.json
@@ -58,8 +61,8 @@ chmod +x config_all_hosts.sh
 . config_all_hosts.sh
 
 # Finished setting up experiment
-echo "[CIDDS] Experiment all set up."
-echo "[CIDDS] To end this experiment, press Crtl + C."
+echo "[CIDDS] EXPERIMENT ALL SET UP!"
+echo "(To end this experiment, press Crtl + C)"
 tail -f /dev/null
 
 

@@ -12,7 +12,7 @@ class CreateConfigurationFiles():
         self.composefile = "version: \"3.7\"\n\nservices:\n"
         self.network_config = "#\\bin\\bash\n\n"
         self.serverconfig = ""
-        self.config_hosts_script = "#\\bin\\bash\n\necho \"Starting network configuration of containers:\"\n"
+        self.config_hosts_script = "#\\bin\\bash\n\n"
         self.nonclientsIP = {}
         self.subnets = set()
         self.experiment_script = self.read_json(configfile) 
