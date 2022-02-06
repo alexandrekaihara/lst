@@ -44,7 +44,7 @@ class RunCmd(threading.Thread):
 					return
 			
 				echoC(__name__, "Starting browsing process while attacking")
-				self.p = Popen(["python", "-m", "packages.browsing.browsing", self.mode])
+				self.p = Popen(["python3", "-m", "packages.browsing.browsing", self.mode])
 				time.sleep(300)
 				
 				# Regulatory exit of the virtual display and Firefox
