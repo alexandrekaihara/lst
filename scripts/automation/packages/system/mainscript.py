@@ -328,8 +328,8 @@ def init(browsing, mailing, printing, copyfiles, copysea, ssh, meeting, offline,
 	subnet = host = hostname = -1
 	while (subnet == -1 and host == -1 and hostname == -1):
 		subnet, host, hostname = getSubnetHostAndHostname()
-	global myID
 	
+	global myID
 	myID = "192.168." + subnet +'.'+ host
 		
 	global pathForLog

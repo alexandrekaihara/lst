@@ -159,33 +159,6 @@ def configServers(parser, subnet, host):
 				cntErrors += 1
 				echoC(__name__, "Setting up Seafile error (" + str(cntErrors) + "): " + str(e))
 
-# Set up a mount with the OpenStack server (to save the logs)
-def configMountWithOpenStackServer():
-	if platform.system() == "Linux":
-		try:
-			cmd = "mount -t cifs -o username=mininet,password=mininet //192.168.56.123/instancelogs /home/debian/log"
-			subprocess.check_call(cmd, shell=True)
-		except Exception as e:
-			echoC(__name__, "Mount log server error: " + str(e))
-	elif platform.system() == "Windows":
-		try:			
-			cmd = "net use M: /delete"
-			subprocess.check_call(cmd, shell=True)
-		except Exception as e:
-			echoC(__name__, "Unmount error: " + str(e))
-		try:
-			cmd = "net use M: \\\\192.168.56.123\\instancelogs"
-			subprocess.check_call(cmd, shell=True)
-		except Exception as e:
-			echoC(__name__, "Mount log  server error: " + str(e))
-
-def saveConfigToServer():
-	if platform.system() == "Linux":
-		path = "/home/debian/log/"
-	else:
-		path = "M:\\"
-	copyfile("packages/system/config.ini", path + myID + ".conf")
-
 # Init scripts 
 def main():
 
@@ -227,24 +200,11 @@ def main():
 	
 	# Determine ID of the instance (MAC-Address as Integer)
 	global myID
-	if platform.system() == "Linux":
-		myID = str(getnode())
-	else:
-		# For Windows, something must be trickled, since getnode () returns an incorrect value
-		hexMac = check_output(["getmac"])[162:180]
-		hexMacNoDash = hexMac.replace("-", "")
-		intMac = int(hexMacNoDash, 16)
-		myID = str(intMac)
-	
+	myID = "192.168." + subnet +'.'+ host
+
 	# Configure the servers using the IPs in the ServerConfig file
 	parser.read("packages/system/serverconfig.ini")
 	configServers(parser, subnet, host)
-	
-	# Set up a mount with the OpenStack server (to save the logs)
-	#configMountWithOpenStackServer()
-	
-	# Save the config.ini to the network drive
-	saveConfigToServer()
 	
 	#echoC(__name__, "Call mainscript with %d, %d, %d, %d, %d, %d" %(actLvl, busLvl, act1, act2, act3, act4, t))
 	mainscript.init(browsing, mailing, printing, copyfiles, copysea, ssh, meeting, offline, private, breaks, attacking, t)
