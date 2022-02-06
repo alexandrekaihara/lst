@@ -9,13 +9,13 @@ function cleanup(){
 }
 trap cleanup INT
 
-# Remove all remaining network configuration from previous experiments
-echo "[CIDDS] Remove all remaining network configuration from previous experiments"
-. tear_down_experiment.sh
-
 # Load all environment variables
 echo "[CIDDS] Setting up all environment variables"
 . variables
+
+# Remove all remaining network configuration from previous experiments
+echo "[CIDDS] Remove all remaining network configuration from previous experiments"
+. tear_down_experiment.sh
 
 # Configure bridges
 echo "[CIDDS] Creating bridges ${INTERNAL} e ${EXTERNAL}"
