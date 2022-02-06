@@ -9,7 +9,7 @@ sleep 1
 done 
 
 # Open Brackets to send all outputs into a log file
-#{
+
 
 # Update the automation directory
 until unzip -o main.zip -d /home/debian
