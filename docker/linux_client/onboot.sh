@@ -7,6 +7,7 @@ IP=$(hostname -I)
 echo "Waiting for network configuration"
 sleep 1
 done 
+$ONBOOTLOG="${IP}_onboot.log"
 
 # Open Brackets to send all outputs into a log file
 {
@@ -60,11 +61,11 @@ seaf-cli stop -c /home/debian/.ccnet
 seaf-cli start -c /home/debian/.ccnet
 chown -R mininet:mininet /home/debian/sea/ /home/debian/seafile-client/ /home/debian/.ccnet
 
-} > "/home/debian/log/${IP}_onboot.log"
+} > "/home/debian/log/${ONBOOTLOG}"
 
 # add PATH to geckodriver for browsing.py to use Selenium
 export PATH="$PATH:/opt/"
 
 # Keep alive
 cd /home/debian/automation
-python3 readIni.py >> "/home/debian/log/${IP}_onboot.log"
+python3 readIni.py >> "/home/debian/log/${ONBOOTLOG}"
