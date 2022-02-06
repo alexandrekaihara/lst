@@ -39,7 +39,7 @@ done
 
 # Configure printer 
 /etc/init.d/cups start
-printerip=`cat printerip` 
+printerip=`cat /home/debian/automation/packages/system/printerip` 
 if [ ! "$printerip" = "0.0.0.0" ]; then 
   lpadmin -p PDF -v socket://$printerip -E
   /etc/init.d/cups restart
