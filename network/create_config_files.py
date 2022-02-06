@@ -1,7 +1,7 @@
 from sys import argv
 from json import load
 from sys import exit
-from os import environ, mkdir
+from os import environ, mkdir, getcwdb
 
 
 # Brief: Class responsible for configuring all experiment setup, create docker-compose file to setup containers,
@@ -41,6 +41,8 @@ class CreateConfigurationFiles():
             script += 2*self.ident + "depends_on:" + self.endl
             for i in range(len(dep)):
                 script += 3*self.ident + "- " + dep[i] + self.endl
+        script += 2*self.ident + "volumes:" + self.endl
+        script += 3*self.ident + "- " + getcwdb().decode('utf-8') + "/logs:/home/debian/log" + self.endl
         self.composefile += script
 
     # Iterates over dictionaries on .json file to create a docker-compose
