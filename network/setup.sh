@@ -2,7 +2,7 @@
 
 # Function to be used when exiting the setup script
 function cleanup(){
-    echo "[CIDDS] EXITING NOW. Executing teardown experiment"
+    echo "[CIDDS] EXITING NOW. Executing tear_down_experiment.sh (this may take few seconds)"
     . tear_down_experiment.sh
     trap - SIGNIT
     exit 0
@@ -63,6 +63,6 @@ chmod +x config_all_hosts.sh
 # Finished setting up experiment
 echo "[CIDDS] EXPERIMENT ALL SET UP!"
 echo "(To end this experiment, press Crtl + C)"
-tail -f /dev/null
+tail -f logs/controller.log
 
 
