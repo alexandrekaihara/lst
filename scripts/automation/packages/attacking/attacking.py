@@ -14,7 +14,10 @@ import time
 attackList = 'packages/attacking/attackList.txt'
 
 pathToLog = "/home/debian/log/"
-logFile = pathToLog + str(getnode()) + ".log"
+parser = ConfigParser('../system/config.ini')
+host = parser.get('network', 'host')
+subnet = parser.get('network', 'subnet')
+logFile = pathToLog + '192.168.' + subnet +'.'+ host + ".log"
 
 # Class which creates a thread for a given program call
 class RunCmd(threading.Thread):
