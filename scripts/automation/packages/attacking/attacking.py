@@ -14,7 +14,7 @@ import time
 attackList = 'packages/attacking/attackList.txt'
 pathToLog = "/home/debian/log/"
 parser = ConfigParser()
-parser.read('../system/config.ini')
+parser.read('packages/system/config.ini')
 host = parser.get('network', 'host')
 subnet = parser.get('network', 'subnet')
 logFile = pathToLog + '192.168.' + subnet +'.'+ host + ".log"
