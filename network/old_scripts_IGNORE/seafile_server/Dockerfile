@@ -18,9 +18,6 @@ COPY setup.sh .
 RUN chmod +x setup.sh\
 && ./setup.sh
 
-# Copy the Python script to login into the seafile server and create a user folder
-COPY login_seafile_page.py /home
-
 # Script to start needed programs
 COPY onboot.sh /home
 RUN chmod +x /home/onboot.sh

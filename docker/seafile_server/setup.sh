@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# Create user on machine for seafile-cli
-useradd -m -s /bin/bash mininet
-echo "mininet:mininet" | chpasswd
-usermod -a -G sudo mininet
-
 # Create seafile user 
 echo -e 'rootpassword\nrootpassword' | passwd root
 useradd -m -s /bin/bash seafile
