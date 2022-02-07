@@ -149,8 +149,8 @@ class CreateConfigurationFiles():
                     listen_port_80_internal.append(IP)
 
         # Change the subnet string to a complete ip range format
-        subnet_internal = ["192.168." + subnet + ".0./24" for subnet in subnet_internal]
-        subnet_external = ["192.168." + subnet + ".0./24" for subnet in subnet_external]
+        subnet_internal = ["192.168." + subnet + ".0/24" for subnet in subnet_internal]
+        subnet_external = ["192.168." + subnet + ".0/24" for subnet in subnet_external]
             
         def create_ip_list(filename, iplist):
             script = ''
