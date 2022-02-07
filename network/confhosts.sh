@@ -21,13 +21,27 @@ configure_host(){
     mkdir -p /var/run/netns/
     ln -sfT /proc/$pid/ns/net /var/run/netns/$1
 
-    # If %5 is not NULL, then execute the commands below
+    # If $5 is not NULL, then execute the commands below
     if [ ! -z $5 ]; then
-    docker cp printersip/$2 $1:/home/debian/printerip
-    docker cp client_behaviour/$5.ini $1:/home/debian/config.ini
-    docker cp serverconfig.ini $1:/home/debian/serverconfig.ini
-    fi
+        docker cp printersip/$2 $1:/home/debian/printerip
+        docker cp client_behaviour/$5.ini $1:/home/debian/config.ini
+        docker cp serverconfig.ini $1:/home/debian/serverconfig.ini
 
+        # If $5 is attacker type, then copy the attacker config files
+        if [ $5 = 'attacker' ]; then
+            # If the subnet is external
+            if [ $2 = $ESUBNET ]; then
+            docker cp attack/external_ipListPort80.txt $1:/home/debian/automation/packages/attacking/ipListPort80.txt
+            docker cp attack/external_ipList.txt $1:/home/debian/automation/packages/attacking/ipList.txt
+            docker cp attack/external_iprange.txt $1:/home/debian/automation/packages/attacking/iprange.txt
+            # If the subnet is internal
+            else
+            docker cp attack/internal_ipListPort80.txt $1:/home/debian/automation/packages/attacking/ipListPort80.txt
+            docker cp attack/internal_ipList.txt $1:/home/debian/automation/packages/attacking/ipList.txt
+            docker cp attack/internal_iprange.txt $1:/home/debian/automation/packages/attacking/iprange.txt
+        fi
+    fi
+    
     ## Add interface on container and host
     ip link add veth$2.$3 type veth peer name vethsubnet$2
     ip link set veth$2.$3 up
