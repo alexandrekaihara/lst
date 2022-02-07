@@ -31,14 +31,15 @@ configure_host(){
         if [ $5 = 'attacker' ]; then
             # If the subnet is external
             if [ $2 = $ESUBNET ]; then
-            docker cp attack/external_ipListPort80.txt $1:/home/debian/automation/packages/attacking/ipListPort80.txt
-            docker cp attack/external_ipList.txt $1:/home/debian/automation/packages/attacking/ipList.txt
-            docker cp attack/external_iprange.txt $1:/home/debian/automation/packages/attacking/iprange.txt
+            docker cp attack/external_ipListPort80.txt $1:/home/debian/ipListPort80.txt
+            docker cp attack/external_ipList.txt $1:/home/debian/ipList.txt
+            docker cp attack/external_iprange.txt $1:/home/debian/iprange.txt
             # If the subnet is internal
             else
-            docker cp attack/internal_ipListPort80.txt $1:/home/debian/automation/packages/attacking/ipListPort80.txt
-            docker cp attack/internal_ipList.txt $1:/home/debian/automation/packages/attacking/ipList.txt
-            docker cp attack/internal_iprange.txt $1:/home/debian/automation/packages/attacking/iprange.txt
+            docker cp attack/internal_ipListPort80.txt $1:/home/debian/ipListPort80.txt
+            docker cp attack/internal_ipList.txt $1:/home/debian/ipList.txt
+            docker cp attack/internal_iprange.txt $1:/home/debian/iprange.txt
+            fi
         fi
     fi
     
