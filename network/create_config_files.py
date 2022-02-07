@@ -150,6 +150,10 @@ class CreateConfigurationFiles():
             with open(path+filename, 'w') as f:
                 f.write(script)    
 
+        print(external)
+        print(internal)
+        print(listen_port_80_external)
+        print(listen_port_80_internal)
         create_ip_list("internal_ipList.txt", internal)
         create_ip_list("external_ipList.txt", external)
         create_ip_list("internal_ipListPort80.txt", listen_port_80_internal)
