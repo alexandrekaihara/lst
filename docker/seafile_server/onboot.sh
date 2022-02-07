@@ -43,17 +43,25 @@ sed -i "s/key = 'admin password'/return 'Password123'/1" check_init_admin.py
 echo -e 'alexandreamk1@gmail.com' | ./seahub.sh start
 
 # Must login on seafile server in order to create a user folder to enable synchronizing with clients
-export PATH="$PATH:/opt/"
-until [ ! -z $SEAFOLDER ]; do
-python3 /home/login_seafile_page.py
-mysql -uroot --password=Password123 -e "USE seafile-db; SELECT * FROM RepoOwner" | grep alexandreamk1@gmail.com > /home/seafolder
-sed -i "s/2\t//1" /home/seafolder
-sed -i "s/\talexandreamk1@gmail.com//1" /home/seafolder
+cd /root
+mkdir -pv /root/sea /root/seafile-client
+until test -e /root/.ccnet
+do
+seaf-cli init -d /root/seafile-client -c /root/.ccnet
+done
+until seaf-cli config -k disable_verify_certificate -v true -c /root/.ccnet
+do
+seaf-cli start -c /root/.ccnet
+done
+seaf-cli config -k enable_http_sync -v true -c /root/.ccnet 
+seaf-cli stop -c /root/.ccnet
+seaf-cli start -c /root/.ccnet
+chown -R mininet:mininet /root/sea/ /root/seafile-client/ /root/.ccnet
+seaf-cli create -n cidds -e Password123 -s http://192.168.50.1 -u alexandreamk1@gmail.com -p Password123 > /home/seafolder
 SEAFOLDER=$(cat /home/seafolder)
 if [ ! -z $SEAFOLDER ]; then 
-echo "Seafolder successfully created with ID "$SEAFOLDER; else
-echo "Login failed, restarting process..."; fi
-done
+echo "Seafolder successfully created with ID "$SEAFOLDER;
+fi
 
 # Keep alive
 tail -f /dev/null
