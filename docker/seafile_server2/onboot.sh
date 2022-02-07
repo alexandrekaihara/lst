@@ -60,7 +60,7 @@ chown -R mininet:mininet /root/sea/ /root/seafile-client/ /root/.ccnet
 seaf-cli create -n cidds -e Password123 -s http://192.168.50.1 -u alexandreamk1@gmail.com -p Password123 > /home/seafolder
 SEAFOLDER=$(cat /home/seafolder)
 if [ ! -z $SEAFOLDER ]; then 
-echo "Seafolder successfully created with ID "$SEAFOLDER; else
+echo "Seafolder successfully created with ID "$SEAFOLDER;
 fi
 
 # Keep alive
