@@ -125,7 +125,10 @@ class CreateConfigurationFiles():
 
     def create_attack_configs(self):
         path = 'attack/'
-        external = internal = listen_port_80_internal = listen_port_80_external = []
+        external = []
+        internal = []
+        listen_port_80_internal = []
+        listen_port_80_external = []
         subnet_internal = subnet_external = set()
         # Separate IPs by external and internal and find all servers that listens to port 80
         for _, params in self.experiment_script.items():
@@ -150,10 +153,6 @@ class CreateConfigurationFiles():
             with open(path+filename, 'w') as f:
                 f.write(script)    
 
-        print(external)
-        print(internal)
-        print(listen_port_80_external)
-        print(listen_port_80_internal)
         create_ip_list("internal_ipList.txt", internal)
         create_ip_list("external_ipList.txt", external)
         create_ip_list("internal_ipListPort80.txt", listen_port_80_internal)
