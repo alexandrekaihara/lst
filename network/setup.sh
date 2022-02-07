@@ -42,7 +42,7 @@ configure_host ${SEAFILE} 50 1 ${EXTERNAL}
 ## Set seafolder variable for create_config_files.py
 until [ -s /home/seafolder ]; do
 docker cp $SEAFILE:/home/seafolder /home/seafolder > /dev/null 2>&1;
-echo "[CIDDS] Waiting for Seafile Server configurate and generates the seafolder file (it may take some minutes)"
+echo "[CIDDS] Waiting for Seafile Server configuration (it may take some seconds)"
 sleep 3
 done
 export SEAFOLDER=$(cat /home/seafolder)
