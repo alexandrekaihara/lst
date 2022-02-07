@@ -60,6 +60,42 @@
         "dns":"8.8.8.8",
         "client_behaviour":"management"
     },
+    "M${LCLIENT}2": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${MSUBNET}.3",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"management"
+    },
+    "M${LCLIENT}3": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${MSUBNET}.4",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"management"
+    },
+    "M${LCLIENT}4": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${MSUBNET}.5",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"management"
+    },
     "O${PRINTER}": {
         "image":"${REPOSITORY}:${PRINTER}",
         "IP":"192.168.${OSUBNET}.1",
@@ -70,6 +106,18 @@
     "O${LCLIENT}1": {
         "image":"${REPOSITORY}:${LCLIENT}",
         "IP":"192.168.${OSUBNET}.2",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"office"
+    },
+    "O${LCLIENT}2": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${OSUBNET}.3",
         "bridge":"${INTERNAL}",
         "depends_on": [
             "${MAILSERVER}",
@@ -96,7 +144,7 @@
             "${WEB}",
             "${BACKUP}"],
         "dns":"8.8.8.8",
-        "client_behaviour":"developer"
+        "client_behaviour":"administrator"
     },
     "D${LCLIENT}2": {
         "image":"${REPOSITORY}:${LCLIENT}",
@@ -110,6 +158,138 @@
         "dns":"8.8.8.8",
         "client_behaviour":"administrator"
     },
+    "D${LCLIENT}3": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${DSUBNET}.4",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"developer"
+    },
+    "D${LCLIENT}4": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${DSUBNET}.5",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"developer"
+    },
+    "D${LCLIENT}5": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${DSUBNET}.6",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"developer"
+    },
+    "D${LCLIENT}6": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${DSUBNET}.7",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"developer"
+    },
+    "D${LCLIENT}7": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${DSUBNET}.8",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"developer"
+    },
+    "D${LCLIENT}8": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${DSUBNET}.9",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"developer"
+    },
+    "D${LCLIENT}9": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${DSUBNET}.10",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"developer"
+    },
+    "D${LCLIENT}10": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${DSUBNET}.11",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"developer"
+    },
+    "D${LCLIENT}11": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${DSUBNET}.12",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"developer"
+    },
+    "D${LCLIENT}12": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${DSUBNET}.13",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"attacker"
+    },
+    "D${LCLIENT}13": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${DSUBNET}.14",
+        "bridge":"${INTERNAL}",
+        "depends_on": [
+            "${MAILSERVER}",
+            "${FILE}",
+            "${WEB}",
+            "${BACKUP}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"attacker"
+    },
     "E${LCLIENT}1": {
         "image":"${REPOSITORY}:${LCLIENT}",
         "IP":"192.168.${ESUBNET}.3",
@@ -118,5 +298,23 @@
             "external_${WEB}"],
         "dns":"8.8.8.8",
         "client_behaviour":"external_attacker"
-    }
+    },
+    "E${LCLIENT}2": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${ESUBNET}.4",
+        "bridge":"${EXTERNAL}",
+        "depends_on": [
+            "external_${WEB}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"external_attacker"
+    },
+    "E${LCLIENT}3": {
+        "image":"${REPOSITORY}:${LCLIENT}",
+        "IP":"192.168.${ESUBNET}.5",
+        "bridge":"${EXTERNAL}",
+        "depends_on": [
+            "external_${WEB}"],
+        "dns":"8.8.8.8",
+        "client_behaviour":"external_attacker"
+    }  
 }
