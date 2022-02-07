@@ -31,7 +31,7 @@ chmod +x confhosts.sh
 . confhosts.sh
 
 # Start Ryu Controller
-echo "[CIDDS] Setting up controller on ${CONTROLLERIP}:${CONTROLLERPORT}"S
+echo "[CIDDS] Setting up controller on ${CONTROLLERIP}:${CONTROLLERPORT}"
 ryu-manager controller.py > logs/controller.log 2>&1 & 
 
 # Instantiate seafile server
@@ -49,9 +49,9 @@ export SEAFOLDER=$(cat /home/seafolder)
 echo "[CIDDS] Finished Seafile configuration. Seafolder ID is ${SEAFOLDER}"
 
 # Generate all client configuration files
-echo "[CIDDS] Creating all configuration files of ${LCLIENT} from experiment_script.json"
+echo "[CIDDS] Creating all configuration files of ${LCLIENT} from $1"
 ## Substitute all env variables on experiment_script.json
-envsubst < experiment_script.json > experiment.json
+envsubst < $1 > experiment.json
 ## Execute script
 python3 create_config_files.py experiment.json
 
