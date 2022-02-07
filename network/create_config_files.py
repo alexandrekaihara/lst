@@ -129,7 +129,8 @@ class CreateConfigurationFiles():
         internal = []
         listen_port_80_internal = []
         listen_port_80_external = []
-        subnet_internal = subnet_external = set()
+        subnet_internal = set()
+        subnet_external = set()
         # Separate IPs by external and internal and find all servers that listens to port 80
         for _, params in self.experiment_script.items():
             IP = params['IP']
@@ -146,6 +147,10 @@ class CreateConfigurationFiles():
                 subnet_internal.add(sub)
                 if params['image'] in (webserver, seafileserver):
                     listen_port_80_internal.append(IP)
+
+        # Change the subnet string to a complete ip range format
+        subnet_internal = ["192.168." + subnet + "0./24" for subnet in subnet_internal]
+        subnet_external = ["192.168." + subnet + "0./24" for subnet in subnet_external]
             
         def create_ip_list(filename, iplist):
             script = ''
