@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ -z $1 ]; then
+echo "[ERROR] The first argument of this program must not be NULL."
+echo "Provide the name of the input file like ./setup.sh experiment_script.json"
+exit -1
+fi
+
 # Function to be used when exiting the setup script
 function cleanup(){
     echo "[CIDDS] EXITING NOW. Executing tear_down_experiment.sh (this may take few seconds)"
