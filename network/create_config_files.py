@@ -1,7 +1,10 @@
+from logging.config import listen
 from sys import argv
 from json import load
 from sys import exit
 from os import environ, mkdir, getcwdb
+from threading import local
+from venv import create
 
 
 # Brief: Class responsible for configuring all experiment setup, create docker-compose file to setup containers,
@@ -27,22 +30,24 @@ class CreateConfigurationFiles():
 
     # Create docker-compose.yml file from .json
     def create_container_script(self, name, param):
-        script = 1*self.ident + name + ":" + self.endl
-        script += 2*self.ident + "image: " + param['image'] + self.endl
-        script += 2*self.ident + "container_name: " + name + self.endl
-        script += 2*self.ident + "restart: always" + self.endl
-        script += 2*self.ident + "privileged: true" + self.endl
-        script += 2*self.ident + "network_mode: none" + self.endl
-        script += 2*self.ident + "dns:" + self.endl
-        script += 3*self.ident + "- " + param['dns'] + self.endl
+        def add_line(ident_level, string):
+            return ident_level*self.ident + string + self.endl
+        script = add_line(1, name + ":")
+        script += add_line(2, "image: " + param['image'])
+        script += add_line(2, "container_name: " + name)
+        script += add_line(2, "restart: always")
+        script += add_line(2, "privileged: true")
+        script += add_line(2, "network_mode: none")
+        script += add_line(2, "dns:")
+        script += add_line(3, "- " + param['dns'])
         dep = param['depends_on']
         # If it has a dependency, add all of them
         if len(dep) > 0:
-            script += 2*self.ident + "depends_on:" + self.endl
+            script += add_line(2, "depends_on:")
             for i in range(len(dep)):
-                script += 3*self.ident + "- " + dep[i] + self.endl
-        script += 2*self.ident + "volumes:" + self.endl
-        script += 3*self.ident + "- " + getcwdb().decode('utf-8') + "/logs:/home/debian/log" + self.endl
+                script += add_line(3, "- " + dep[i])
+        script += add_line(2, "volumes:")
+        script += add_line(3, "- " + getcwdb().decode('utf-8') + "/logs:/home/debian/log")
         self.composefile += script
 
     # Iterates over dictionaries on .json file to create a docker-compose
@@ -118,6 +123,40 @@ class CreateConfigurationFiles():
         with(open(filename, "w")) as f:
             f.write(self.config_hosts_script)  
 
+    def create_attack_configs(self):
+        path = 'attack/'
+        external = internal = listen_port_80_internal = listen_port_80_external = []
+        subnet_internal = subnet_external = set()
+        # Separate IPs by external and internal and find all servers that listens to port 80
+        for _, params in self.experiment_script.items():
+            IP = params['IP']
+            sub = IP.split('.')[2]
+            webserver = environ['REPOSITORY']+':'+environ['WEB']
+            seafileserver = environ['REPOSITORY']+':'+environ['SEAFILE']
+            if sub == environ['ESUBNET']: 
+                external.append(IP)
+                subnet_external.add(sub)
+                if params['image'] in (webserver, seafileserver):
+                    listen_port_80_external.append(IP)
+            else: 
+                internal.append(IP)            
+                subnet_internal.add(sub)
+                if params['image'] in (webserver, seafileserver):
+                    listen_port_80_internal.append(IP)
+            
+        def create_ip_list(filename, iplist):
+            script = ''
+            [script:= script + ip + self.endl for ip in iplist]
+            with open(path+filename, 'w') as f:
+                f.write(script)    
+
+        create_ip_list("internal_ipList.txt", internal)
+        create_ip_list("external_ipList.txt", external)
+        create_ip_list("internal_ipListPort80.txt", listen_port_80_internal)
+        create_ip_list("external_ipListPort80.txt", listen_port_80_external)
+        create_ip_list('internal_iprange.txt', list(subnet_internal))
+        create_ip_list('external_iprange.txt', list(subnet_external))
+        
 
 def main():
     try:
@@ -129,7 +168,7 @@ def main():
     c.run_compose("docker-compose.yml")
     c.create_serverconfig_script("serverconfig.ini")
     c.config_hosts("config_all_hosts.sh")
-
+    c.create_attack_configs()
 
 if __name__ == "__main__":
     main()

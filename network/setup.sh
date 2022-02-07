@@ -9,6 +9,10 @@ function cleanup(){
 }
 trap cleanup INT
 
+# Creating directories
+mkdir logs > /dev/null 2>&1
+mkdir attack > /dev/null 2>&1
+
 # Load all environment variables
 echo "[CIDDS] Setting up all environment variables"
 . variables
@@ -27,8 +31,7 @@ chmod +x confhosts.sh
 . confhosts.sh
 
 # Start Ryu Controller
-echo "[CIDDS] Setting up controller on ${CONTROLLERIP}:${CONTROLLERPORT}"
-mkdir logs > /dev/null 2>&1
+echo "[CIDDS] Setting up controller on ${CONTROLLERIP}:${CONTROLLERPORT}"S
 ryu-manager controller.py > logs/controller.log 2>&1 & 
 
 # Instantiate seafile server
