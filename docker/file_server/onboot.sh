@@ -24,6 +24,7 @@ dd if=/dev/zero of=/media/storage/file700MB.dat bs=1M count=700
 # Start services
 service smbd start
 service ssh start
+service cron start
 
 # Keep alive
 tail -f /dev/null

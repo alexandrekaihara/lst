@@ -41,6 +41,10 @@ configure_host(){
             docker cp attack/internal_iprange.txt $1:/home/debian/iprange.txt
             fi
         fi
+    else
+        # All other images receive the backup.py e serverconfig.ini (only backup and seafile server doesn't use)
+        docker cp backup.py $1:/home/debian/backup.py
+        docker cp serverconfig.ini $1:/home/debian/serverconfig.ini
     fi
     
     ## Add interface on container and host

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Start smbd
+# Start services
 service smbd start
 service ssh start
+service cron start
 
 # Keep alive
 tail -f /dev/null
-#/bin/bash

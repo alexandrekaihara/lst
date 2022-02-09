@@ -13,10 +13,6 @@ RUN chmod +x dependencies.sh \
 && ./dependencies.sh \
 && sudo su
 
-# Copy the backup file
-RUN mkdir /home/debian
-COPY backup.py /home/debian/
-
 # Start setup
 COPY setup.sh .
 RUN chmod +x setup.sh\
