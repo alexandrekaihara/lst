@@ -36,6 +36,6 @@ apt-get update
 # Install all dependencies
 until dpkg -s samba | grep -q Status;
 do
-  RUNLEVEL=1 apt install -y --no-install-recommends samba=2:4.13.14+dfsg-0ubuntu0.20.04.2
+  RUNLEVEL=1 apt install -y --no-install-recommends samba
 done
 
