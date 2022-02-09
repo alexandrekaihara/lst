@@ -35,16 +35,7 @@ echo -e "0 1 * * * apt-get update && apt-get upgrade >> /var/log/cron.log 2>&1" 
 crontab mycron
 rm mycron
 
-
-# Create auto login 
-mkdir /etc/systemd/system/getty@tty1.service.d
-cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin debian --noclear %I 38400 linux
-EOF
-
-# Prepare for ssh user login (create user with appropriate password)
+# Create user login for SSH (create user with appropriate password)
 useradd -m -s /bin/bash mininet
 echo "mininet:mininet" | chpasswd
 usermod -a -G sudo mininet
