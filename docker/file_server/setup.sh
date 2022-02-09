@@ -31,18 +31,10 @@ create mask = 777
 force create mode = 777
 EOF
 
-# Configure auto login 
-cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin debian --noclear %I 38400 linux
-EOF
-
 # Mount the mount point for backup
 mkdir /home/debian
 mkdir /home/debian/backup/
 chmod 777 /home/debian/backup
-
 
 # Create log for cron
 echo -e "" > /var/log/cron.log
