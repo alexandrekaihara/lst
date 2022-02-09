@@ -4,27 +4,16 @@
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
-# Configure auto login 
-mkdir /etc/systemd/system/getty@tty1.service.d
-cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin debian --noclear %I 38400 linux
-EOF
-
-# Mount the mount point for backup
-#mkdir /home/debian
+# Mount the mount point to the backupserver
+mkdir /home/debian
 mkdir /home/debian/backup
 
-# Download the script to set up the backup server
-#wget -O /home/debian/backup.py 192.168.56.101/scripts/requirements/server/web/backup.py
-
+# Delete the folders regularly to save memory 
+echo -e "" > /var/log/cron.log
 # Run the script to set up the backup server on a regular basis
-echo -e "55 21 * * * sudo bash -c 'python /home/debian/backup.py'" >> mycron
-
+echo -e "55 21 * * * python3 /home/debian/backup.py >> /var/log/cron.log 2>&1" >> mycron
 # Run backup service periodically
-echo -e "0 22 * * * sudo bash -c 'tar -czf /home/debian/backup/backup.tar.gz /var/www/'\n" >> mycron
-
+echo -e "0 22 * * * tar -czf /home/debian/backup/backup_webserver.tar.gz /var/www/  >> /var/log/cron.log 2>&1" >> mycron
 crontab mycron
 rm mycron
 
