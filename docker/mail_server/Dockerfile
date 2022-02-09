@@ -16,7 +16,6 @@ RUN chmod +x dependencies.sh \
 # Copy the backup file, genDomain e genUser
 RUN mkdir /home/debian \
 && mkdir /tmp/mailsetup
-COPY mailscripts/backup.py         /home/debian
 COPY mailscripts/genUser.sh        /tmp/mailsetup
 COPY mailscripts/genDomain.sh      /tmp/mailsetup
 COPY mailscripts/mysql_conf.sh     /tmp/mailsetup

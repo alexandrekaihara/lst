@@ -49,7 +49,7 @@ chmod 777 /var/run/mysqld
 
 # Define the packets to install with apt-get 
 #declare -a versionsAptGet=("=8.0.27-0ubuntu0.20.04.1" "" "" "" "=2.4.41-4ubuntu3.8" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=1:2.3.7.2-1ubuntu3.5" "=3.4.13-0ubuntu1.2" "=3.4.13-0ubuntu1.2" "=7.68.0-1ubuntu2.7" "=5.5.6" "=7.4.0-2" "=1.20.3-1ubuntu1")
-declare -a packagesAptGet=("mysql-server" "php5.6-mysql" "php5.6-imap" "php5.6-mbstring" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql" "curl" "whois" "dos2unix" "wget")
+declare -a packagesAptGet=("mysql-server" "php5.6-mysql" "php5.6-imap" "php5.6-mbstring" "apache2" "dovecot-core" "dovecot-mysql" "dovecot-imapd" "dovecot-pop3d" "postfix" "postfix-mysql" "curl" "whois" "dos2unix" "wget" "samba")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do

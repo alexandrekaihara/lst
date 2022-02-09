@@ -121,39 +121,24 @@ done
 ## Save database configuration, because the docker reset all mysql after build
 mysqldump -uroot --password=PWfMS2015 postfixdb > $mailsetup/postfixdb.sql 
 
-# Configure auto login 
-cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin debian --noclear %I 38400 linux
-EOF
-
-# Necessary for finding the NetBIOS name 
-declare -a versionsAptGet=("=2:4.13.14+dfsg-0ubuntu0.20.04.1")
-declare -a packagesAptGet=("samba")
-count=${#packagesAptGet[@]}
-for i in `seq 1 $count` 
-do
-  SafeAptInstall ${packagesAptGet[$i-1]} ${versionsAptGet[$i-1]}
-done
-
-
-# Cron daemon set up to make every night at 01:00 clock updates
-echo -e "0 1 * * * sudo bash -c 'apt-get update && apt-get upgrade' >> /var/log/apt/myupdates.log" >> mycron
-
 # Mount the mount point for backup
 mkdir /home/debian/backup/
 
+# Create log for cron
+echo -e "" > /var/log/cron.log
+# Cron daemon set up to make every night at 01:00 clock updates
+#echo -e "0 1 * * * apt-get update && apt-get upgrade >> /var/log/cron.log 2>&1" >> mycron
+echo -e "*/1 * * * * apt-get update && apt-get upgrade >> /var/log/cron.log 2>&1" >> mycron
 # Run the script to set up the backup server on a regular basis
-echo -e "55 21 * * * sudo bash -c 'python /home/debian/backup.py'" >> mycron
-
+#echo -e "55 21 * * * python3 /home/debian/backup.py  >> /var/log/cron.log 2>&1" >> mycron
+echo -e "*/1 * * * * python3 /home/debian/backup.py  >> /var/log/cron.log 2>&1" >> mycron
 # Run backup service periodically
-echo -e "0 22 * * * sudo bash -c 'tar -cf /home/debian/backup/backup.tar /var/vmail/'\n" >> mycron
-
+#echo -e "0 22 * * * tar -cf /home/debian/backup/backup.tar /var/vmail/ >> /var/log/cron.log 2>&1" >> mycron
+echo -e "*/1 * * * * tar -cf /home/debian/backup/backup_mailserver.tar /var/vmail/ >> /var/log/cron.log 2>&1" >> mycron
 crontab mycron
 rm mycron
 
-# User for ssh script 
+# Create user to permit ssh access
 useradd -m -s /bin/bash mininet
 echo "mininet:mininet" | chpasswd
 usermod -a -G sudo mininet

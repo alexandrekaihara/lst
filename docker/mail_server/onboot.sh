@@ -1,10 +1,12 @@
 #!/bin/bash
-# Start smbd
+
+# Start services
 service mysql start
 service postfix start
 service apache2 start
 service dovecot start
 service ssh start
+service cron start
 
 # Restore postfix database configuration and data
 #mysql -uroot --password=PWfMS2015 -e "create database postfixdb;"
