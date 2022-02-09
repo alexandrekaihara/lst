@@ -32,7 +32,6 @@ echo -e "" > /var/log/cron.log
 echo -e "0 20 * * * rm -r /media/backup/* >> /var/log/cron.log 2>&1" >> mycron
 ## Create Cron-Daemon which deletes every night at 01:00 the backup folders 
 echo -e "0 1 * * * apt-get update && apt-get upgrade >> /var/log/cron.log 2>&1" >> mycron
-chmod 0644 mycron
 crontab mycron
 rm mycron
 
