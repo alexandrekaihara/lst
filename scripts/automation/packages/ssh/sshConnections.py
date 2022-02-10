@@ -36,7 +36,7 @@ def main():
 	
 	# Config file which contains all the IPs of the server
 	parser = ConfigParser()
-	parser.read('packages/system/serverconfig.ini')
+	parser.read('packages/system/sshiplist.ini')
 	
 	# Randomly select a subnet
 	# Except the first, this is the backup server

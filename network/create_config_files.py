@@ -19,6 +19,7 @@ class CreateConfigurationFiles():
         self.nonclientsIP = {}
         self.subnets = set()
         self.experiment_script = self.read_json(configfile) 
+        self.ssh_config = "[ssh]\n"
 
     # Try open .json with all experiment configurations
     def read_json(self, filename):
@@ -165,6 +166,12 @@ class CreateConfigurationFiles():
         create_ip_list('internal_iprange.txt', list(subnet_internal))
         create_ip_list('external_iprange.txt', list(subnet_external))
         
+    def create_ssh_configs(self):
+        self.ssh_config += "web = " + self.nonclientsIP[environ['SUBNET']][environ['REPOSITORY']+':'+environ['WEB']] + self.endl
+        self.ssh_config += "mail = " + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ['MAILSERVER']] + self.endl
+        self.ssh_config += "file = " + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ['FILE']] + self.endl
+        self.ssh_config += "backup = " + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ['BACKUP']] + self.endl
+
 
 def main():
     try:
