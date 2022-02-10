@@ -45,7 +45,7 @@ echo -e "0 22 * * * tar -cf /home/debian/backup/backup.tar /media/storage/ >> /v
 # Cron daemon set up every night at 12:00 clock to delete all files from the inbox 
 echo -e "0 0 * * * rm -r /media/storage/inbox/* >> /var/log/cron.log 2>&1" >> mycron
 # Cron daemon set up to make every night at 01:00 clock updates
-echo -e "0 1 * * * apt-get update && apt-get upgrade >> /var/log/cron.log 2>&1" >> mycron
+echo -e "0 1 * * * apt-get update -y && apt-get upgrade -y >> /var/log/cron.log 2>&1" >> mycron
 crontab mycron
 rm mycron
 

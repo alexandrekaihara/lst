@@ -127,14 +127,11 @@ mkdir /home/debian/backup/
 # Create log for cron
 echo -e "" > /var/log/cron.log
 # Cron daemon set up to make every night at 01:00 clock updates
-#echo -e "0 1 * * * apt-get update && apt-get upgrade >> /var/log/cron.log 2>&1" >> mycron
-echo -e "*/1 * * * * apt-get update && apt-get upgrade >> /var/log/cron.log 2>&1" >> mycron
+echo -e "0 1 * * * apt-get update -y && apt-get upgrade -y >> /var/log/cron.log 2>&1" >> mycron
 # Run the script to set up the backup server on a regular basis
-#echo -e "55 21 * * * python3 /home/debian/backup.py  >> /var/log/cron.log 2>&1" >> mycron
-echo -e "*/1 * * * * python3 /home/debian/backup.py  >> /var/log/cron.log 2>&1" >> mycron
+echo -e "55 21 * * * python3 /home/debian/backup.py  >> /var/log/cron.log 2>&1" >> mycron
 # Run backup service periodically
-#echo -e "0 22 * * * tar -cf /home/debian/backup/backup.tar /var/vmail/ >> /var/log/cron.log 2>&1" >> mycron
-echo -e "*/1 * * * * tar -cf /home/debian/backup/backup_mailserver.tar /var/vmail/ >> /var/log/cron.log 2>&1" >> mycron
+echo -e "0 22 * * * tar -cf /home/debian/backup/backup.tar /var/vmail/ >> /var/log/cron.log 2>&1" >> mycron
 crontab mycron
 rm mycron
 

@@ -14,6 +14,8 @@ echo -e "" > /var/log/cron.log
 echo -e "55 21 * * * python3 /home/debian/backup.py >> /var/log/cron.log 2>&1" >> mycron
 # Run backup service periodically
 echo -e "0 22 * * * tar -czf /home/debian/backup/backup_webserver.tar.gz /var/www/  >> /var/log/cron.log 2>&1" >> mycron
+# Update frequently
+echo -e "0 1 * * * apt-get update -y && apt-get upgrade -y >> /var/log/cron.log 2>&1" >> mycron
 crontab mycron
 rm mycron
 
