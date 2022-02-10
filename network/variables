@@ -1,12 +1,12 @@
 export REPOSITORY=mdewinged/cidds
-export MAILSERVER=mailserver
+export MAILSERVER=mailserver2
 export WEB=webserver
 export FILE=fileserver
 export BACKUP=backupserver
 export PRINTER=printerserver
 export LCLIENT=linuxclient
 export WCLIENT=windowsclient
-export SEAFILE=seafileserver
+export SEAFILE=seafileserver2
 export INTERNAL=br-int
 export EXTERNAL=br-ex
 export MSUBNET=200
