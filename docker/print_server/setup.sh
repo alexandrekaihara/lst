@@ -4,6 +4,9 @@
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
+# Every mahcine needs to have this folder
+mkdir home/debian
+
 # Configure Cups
 service cups restart
 
@@ -17,15 +20,10 @@ do
 done
 
 # Cron daemon set up to make every night at 01:00 clock updates
-echo -e "0 1 * * * sudo bash -c 'apt-get update && apt-get upgrade' >> /var/log/apt/myupdates.log\n" | crontab -
-
-# Configure auto login 
-mkdir /etc/systemd/system/getty@tty1.service.d/
-cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf <<EOF
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin debian --noclear %I 38400 linux
-EOF
+echo -e "" > /var/log/cron.log
+echo -e "0 1 * * * apt-get update -y && apt-get upgrade -y >> /var/log/cron.log 2>&1" >> mycron
+crontab mycron
+rm mycron
 
 # Add user for ssh script 
 useradd -m -s /bin/bash mininet
