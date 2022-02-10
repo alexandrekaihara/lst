@@ -18,7 +18,7 @@ if platform.system() == "Linux":
 user = 'mininet'
 secret = 'mininet'
 ssh_cmdList = 'packages/ssh/sshOrders.txt'
-ipList = ['mail', 'file', 'web', 'seafile']
+ipList = ['mail', 'file', 'web', 'backup']
 
 # Find the number of lines of the transferred file
 def file_len(myfile):
@@ -40,7 +40,7 @@ def main():
 	
 	# Randomly select a subnet
 	# Except the first, this is the backup server
-	rand_subnet = random.choice(parser.sections()[1:])
+	rand_subnet = 'ssh'
 	
 	# Randomly select an IP
 	ip = parser.get(rand_subnet, random.choice(ipList))
