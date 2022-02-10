@@ -110,11 +110,10 @@ do
   while [ $host -le 255 ]
   do
     user=`printf "user.%03d.%03d" $subnet $host`
-    sh $mailsetup/genUser.sh $user mailserver.example
+    sh $mailsetup/genUser.sh $user mailserver.example > /dev/null 2>&1
     host=$((host+1))
-    echo $host
-    echo $subnet
   done
+  echo $subnet
   subnet=$((subnet+1))
   host=0
 done
