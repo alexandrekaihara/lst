@@ -26,6 +26,7 @@ rm -r /home/debian/cidds-main
 mv /home/debian/printerip        /home/debian/automation/packages/system/printerip   
 mv /home/debian/config.ini       /home/debian/automation/packages/system/config.ini
 mv /home/debian/serverconfig.ini /home/debian/automation/packages/system/serverconfig.ini
+mv /home/debian/sshiplist.ini    /home/debian/automation/packages/system/sshiplist.ini > /dev/null 2>&1
 mv /home/debian/ipList.txt       /home/debian/automation/packages/attacking/ipList.txt > /dev/null 2>&1
 mv /home/debian/ipListPort80.txt /home/debian/automation/packages/attacking/ipListPort80.txt > /dev/null 2>&1
 mv /home/debian/iprange.txt      /home/debian/automation/packages/attacking/iprange.txt > /dev/null 2>&1

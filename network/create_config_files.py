@@ -166,12 +166,13 @@ class CreateConfigurationFiles():
         create_ip_list('internal_iprange.txt', list(subnet_internal))
         create_ip_list('external_iprange.txt', list(subnet_external))
         
-    def create_ssh_configs(self):
-        self.ssh_config += "web = " + self.nonclientsIP[environ['SUBNET']][environ['REPOSITORY']+':'+environ['WEB']] + self.endl
-        self.ssh_config += "mail = " + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ['MAILSERVER']] + self.endl
-        self.ssh_config += "file = " + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ['FILE']] + self.endl
-        self.ssh_config += "backup = " + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ['BACKUP']] + self.endl
-
+    def create_ssh_configs(self, filename):
+        self.ssh_config += "web = " + self.experiment_script[environ['WEB']]['IP'] + self.endl
+        self.ssh_config += "mail = " + self.experiment_script[environ['MAILSERVER']]['IP'] + self.endl
+        self.ssh_config += "file = " + self.experiment_script[environ['FILE']]['IP'] + self.endl
+        self.ssh_config += "backup = " + self.experiment_script[environ['BACKUP']]['IP'] + self.endl
+        with open(filename, 'w') as f:
+            f.write(self.ssh_config)    
 
 def main():
     try:
@@ -184,6 +185,7 @@ def main():
     c.create_serverconfig_script("serverconfig.ini")
     c.config_hosts("config_all_hosts.sh")
     c.create_attack_configs()
+    c.create_ssh_configs("sshiplist.ini")
 
 if __name__ == "__main__":
     main()

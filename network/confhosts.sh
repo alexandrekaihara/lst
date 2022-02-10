@@ -26,6 +26,7 @@ configure_host(){
         docker cp printersip/$2 $1:/home/debian/printerip
         docker cp client_behaviour/$5.ini $1:/home/debian/config.ini
         docker cp serverconfig.ini $1:/home/debian/serverconfig.ini
+        docker cp sshiplist.ini $1:/home/debian/sshiplist.ini
 
         # If $5 is attacker type, then copy the attacker config files
         if [ $5 = 'attacker' ]; then
