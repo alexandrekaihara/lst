@@ -96,7 +96,7 @@
             "${WEB}",
             "${BACKUP}"],
         "dns":"8.8.8.8",
-        "client_behaviour":"developer"
+        "client_behaviour":"attacker"
     },
     "D${LCLIENT}2": {
         "image":"${REPOSITORY}:${LCLIENT}",
