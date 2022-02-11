@@ -70,7 +70,7 @@ docker-compose up -d
 # Copy all client configuration files into the respective containers
 echo "[CIDDS] Starting network configuration of all containers"
 chmod +x config_all_hosts.sh
-. config_all_hosts.sh
+. config_all_hosts.sh 
 
 # Finished setting up experiment
 echo "[CIDDS] EXPERIMENT ALL SET UP!"
