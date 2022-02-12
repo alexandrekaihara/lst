@@ -46,9 +46,15 @@ echo "[CIDDS] Creating Seafile server"
 docker run -d --network=none --privileged --dns=8.8.8.8 --name=${SEAFILE} ${REPOSITORY}:${SEAFILE} > /dev/null 2>&1
 configure_host ${SEAFILE} 50 1 ${EXTERNAL} 
 ## Set seafolder variable for create_config_files.py
-docker cp $SEAFILE:/home/seafolder /home/seafolder
+START_TIME=$SECONDS
+ELAPSED_TIME=0
+until [ -s /home/seafolder ]; do
+docker cp $SEAFILE:/home/seafolder /home/seafolder > /dev/null 2>&1;
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+echo -ne "[CIDDS] Waiting for Seafile Server configuration - it may take a minute (${ELAPSED_TIME}s)"\\r
+done
 export SEAFOLDER=$(cat /home/seafolder)
-echo "[CIDDS] Seafolder ID is ${SEAFOLDER}"
+echo "[CIDDS] Finished Seafile configuration. Seafolder ID is ${SEAFOLDER}"
 
 # Generate all client configuration files
 echo "[CIDDS] Creating all configuration files of ${LCLIENT} from $1"
