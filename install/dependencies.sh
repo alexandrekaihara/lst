@@ -1,9 +1,11 @@
 #!/bin/bash
 
+# Update system
 apt update
 apt upgrade -y
 
-declare -a packagesAptGet=("docker" "docker-compose")
+# Install dependencies
+declare -a packagesAptGet=("docker" "docker-compose" "net-tools" "python3-pip" "openvswitch-switch")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do
@@ -13,3 +15,7 @@ do
   done
   echo "${packagesAptGet[$i-1]} found."
 done
+
+# Install Python dependencies
+python3 -m pip install --upgrade pip
+pip3 install ryu eventlet==0.30.2 pandas
