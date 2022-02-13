@@ -13,28 +13,28 @@ To mitigate problems with version control and the usage of virtual machines, whi
 This section describes how to install all dependencies and execute all the scripts and configurations to set up the topology and virtual machines.
 
 ## 3.1 System Requirements
-Your machine must be using a Linux distribution. In our experiments, were used a Ubuntu version 20.04 virtual machine on Virtualbox version 6.1.26 r145957 (Qt5.6.2). Is highly recommended to have at least 10 GB of free memory to be used by the docker. 
+Your machine must be using a Linux distribution. In our experiments, were used a Ubuntu Server version 20.04.3 LST virtual machine installed on Virtualbox version 6.1.26 r145957 (Qt5.6.2). Is highly recommended to have at least 12 GB of free memory to be used by the docker. 
 
 ## 3.2 Dependencies
-You must install docker (version 20.10.7) and docker compose (version 1.25.0) via:
-> sudo apt-get update && apt-get install docker docker-compose
+All the dependencies consists of:
+- Docker (version 20.10.7)
+- Docker Compose (version 1.25.0)
+- Pip3 (22.0.3)
+- OpenvSwitch (2.13.3)
 
-Then, clone this repository to your local machine via:
-> git clone https://github.com/mdewinged/cidds.git
+We provide a Bash script to install all the needed dependencies. To install all dependencies, execute:
+
+> cd YOURPATH/cidds
+
+> chmod +x experiment/dependencies.sh && ./dependencies.sh
 
 ## 3.3 Execution
 To execute the script to set up the network topology, execute these commands:
-> cd cidds/network/internal
+> cd YOURPATH/cidds/experiment
 
-> chmod +x setup.sh && chmod +x config_network.sh
+> chmod +x setup.sh
 
-> sudo ./setup.sh
+> sudo ./setup.sh partial_experiment.json
 
-If you want to finish the experiment e get back to your original network configuration execute these commands:
-> docker-compose down
-
-> chmod +x remove_network_config.sh
-
-> sudo ./remove_network_config.sh
-
+If you want to finish the experiment e get back to your original network configuration, press CTRL + C once.
  
