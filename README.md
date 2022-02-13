@@ -24,7 +24,9 @@ All the dependencies consists of:
 
 We provide a Bash script to install all the needed dependencies. To install all dependencies, execute:
 
-> cd YOURPATH/cidds
+> sudo git clone https://github.com/mdewinged/cidds
+
+> cd cidds/experiment
 
 > sudo chmod +x experiment/dependencies.sh && sudo ./dependencies.sh
 
