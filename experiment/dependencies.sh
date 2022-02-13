@@ -5,7 +5,7 @@ apt update
 apt upgrade -y
 
 # Install dependencies
-declare -a packagesAptGet=("docker" "docker-compose" "net-tools" "python3-pip" "openvswitch-switch")
+declare -a packagesAptGet=("docker.io" "docker-compose" "net-tools" "python3-pip" "openvswitch-switch")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do
