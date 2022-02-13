@@ -1,5 +1,5 @@
 export REPOSITORY=mdewinged/cidds
-export MAILSERVER=mailserver2
+export MAILSERVER=mailserver
 export WEB=webserver
 export FILE=fileserver
 export BACKUP=backupserver

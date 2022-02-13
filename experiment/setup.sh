@@ -15,10 +15,6 @@ function cleanup(){
 }
 trap cleanup INT
 
-# Check is there any dependencies to install
-chmod +x dependencies.sh
-. dependencies.sh
-
 # Creating directories
 mkdir logs > /dev/null 2>&1
 mkdir attack > /dev/null 2>&1
