@@ -43,7 +43,6 @@ ryu-manager controller.py > logs/controller.log 2>&1 &
 # Instantiate seafile server
 ## OBS: It is necessary because all linuxclients uses the seafolder ID, which is unique and can be stored only after creating container
 echo "[CIDDS] Creating Seafile server"
-docker run -d --network=none --privileged --dns=8.8.8.8 --name=${SEAFILE} ${REPOSITORY}:${SEAFILE} > /dev/null 2>&1
 configure_host ${SEAFILE} 50 1 ${EXTERNAL} 
 ## Set seafolder variable for create_config_files.py
 docker cp $SEAFILE:/home/seafolder /home/seafolder
