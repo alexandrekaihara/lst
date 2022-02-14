@@ -28,7 +28,7 @@ We provide a Bash script to install all the needed dependencies. To install all 
 
 > cd cidds/experiment
 
-> sudo chmod +x experiment/dependencies.sh && sudo ./dependencies.sh
+> sudo chmod +x dependencies.sh && sudo ./dependencies.sh
 
 ## 3.3 Execution
 To execute the script to set up the network topology, execute these commands:
