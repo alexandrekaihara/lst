@@ -13,11 +13,20 @@ function cleanup(){
     trap - SIGINT
     exit 0
 }
+# If any commands here fails, return and end execution
+set -e
+## Keep trabk of the last executed command
+trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
+## Show the last executed command
+trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
+## Execute cleanup function when pressing CTRL+C
 trap cleanup INT
 
 # Creating directories
+set +e
 mkdir logs > /dev/null 2>&1
 mkdir attack > /dev/null 2>&1
+set -e
 
 # Load all environment variables
 echo "[CIDDS] Setting up all environment variables"
@@ -25,7 +34,9 @@ echo "[CIDDS] Setting up all environment variables"
 
 # Remove all remaining network configuration from previous experiments
 echo "[CIDDS] Remove all remaining network configuration from previous experiments"
+set +e
 . tear_down_experiment.sh
+set -e
 
 # Configure bridges
 echo "[CIDDS] Creating bridges ${INTERNAL} e ${EXTERNAL}"
