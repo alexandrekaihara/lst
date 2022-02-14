@@ -8,6 +8,11 @@ ifconfig $INTERNAL up
 IFNAME=`route | grep '^default' | grep -o '[^ ]*$'`
 iptables -t nat -I POSTROUTING -o $IFNAME -j MASQUERADE
 iptables -t nat -I POSTROUTING -o $INTERNAL -j MASQUERADE
+## Permit Forwarding between intercafes
+iptables -A FORWARD -i $INTERNAL -o $IFNAME -j ACCEPT
+iptables -A FORWARD -i $IFNAME -o $INTENAL -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $EXTERNAL -o $IFNAME -j ACCEPT
+iptables -A FORWARD -i $IFNAME -o $EXTERNAL -m state --state ESTABLISHED,RELATED -j ACCEPT
 ### Add multiples IP to the bridge as a gateway for all containers and set routes from host to containers
 ifconfig $INTERNAL promisc
 ip addr add 192.168.$SSUBNET.100/24 dev $INTERNAL
