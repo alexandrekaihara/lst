@@ -12,6 +12,9 @@
 # Example:
 #   - configure_host mailserver 100 1 br-int 
 configure_host(){
+    ## If any commands here fails, return and end execution
+    set -e
+
     ## $1 and $2 and $3 and $4 must not be empty
     if [ -z $1 ] || [ -z $2 ] || [ -z $3 ] || [ -z $4 ]; then
     echo "[ERROR] The first, second, third or fourth argument of this function must not be NULL" 
@@ -66,4 +69,6 @@ configure_host(){
     ip -n $1 addr add 192.168.$2.$3/24 dev vethsubnet$2
     ip netns exec $1 route add default gw 192.168.$2.100
     fi
+
+    set +e
 }
