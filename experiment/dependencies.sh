@@ -5,7 +5,7 @@ apt update
 apt upgrade -y
 
 # Install dependencies
-declare -a packagesAptGet=("docker.io" "docker-compose" "python3" "net-tools" "python3-pip" "openvswitch-switch" "neutron-openvswitch-agent" "openvswitch-common" "openvswitch-dbg" "openvswitch-doc" "openvswitch-pki" "openvswitch-switch-dpdk" "openvswitch-test" "openvswitch-test" "openvswitch-testcontroller" "openvswitch-vtep" "python3-openvswitch")
+declare -a packagesAptGet=("docker.io" "docker-compose" "python3" "net-tools" "python3-pip" "openvswitch-switch") # "neutron-openvswitch-agent" "openvswitch-common" "openvswitch-dbg" "openvswitch-doc" "openvswitch-pki" "openvswitch-switch-dpdk" "openvswitch-test" "openvswitch-test" "openvswitch-testcontroller" "openvswitch-vtep" "python3-openvswitch")
 count=${#packagesAptGet[@]}
 for i in `seq 1 $count` 
 do

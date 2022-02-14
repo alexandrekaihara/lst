@@ -20,6 +20,7 @@ PID=`pgrep ryu` || true
 if [ ! -z "$PID" ]; then kill $PID; fi || true
 
 # Delete inserted firewall rules
+IFNAME=`route | grep '^default' | grep -o '[^ ]*$'` > /dev/null 2>&1 || true
 iptables -D FORWARD -i $INTERNAL -o $IFNAME -j ACCEPT > /dev/null 2>&1 || true
 iptables -D FORWARD -i $IFNAME -o $INTERNAL -m state --state ESTABLISHED,RELATED -j ACCEPT > /dev/null 2>&1 || true
 iptables -D FORWARD -i $EXTERNAL -o $IFNAME -j ACCEPT > /dev/null 2>&1 || true

@@ -85,6 +85,6 @@ chmod +x config_all_hosts.sh
 # Finished setting up experiment
 echo "[CIDDS] EXPERIMENT ALL SET UP!"
 echo "(To end this experiment, press Crtl + C)"
-tail -f logs/controller.log
+tail -f logs/controller.log || true
 
 
