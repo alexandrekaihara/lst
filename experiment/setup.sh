@@ -32,8 +32,8 @@ trap 'error' ERR
 trap cleanup INT
 
 # Creating directories
-mkdir logs > /dev/null 2>&1
-mkdir attack > /dev/null 2>&1
+mkdir logs > /dev/null 2>&1 || true
+mkdir attack > /dev/null 2>&1 || true
 
 # Load all environment variables
 echo "[CIDDS] Setting up all environment variables"
