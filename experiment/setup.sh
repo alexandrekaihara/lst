@@ -13,10 +13,15 @@ function cleanup(){
     trap - SIGINT
     exit 0
 }
+
+# Function to deal with errors
 function error(){
     echo "\"${last_command}\" command filed with exit code $?."
-
+    . tear_down_experiment.sh
+    trap - SIGINT
+    exit 0
 }
+
 # If any commands here fails, return and end execution
 set -e
 ## Keep trabk of the last executed command
