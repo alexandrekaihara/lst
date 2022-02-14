@@ -38,7 +38,7 @@ chmod +x confhosts.sh
 
 # Start Ryu Controller
 echo "[CIDDS] Setting up controller on ${CONTROLLERIP}:${CONTROLLERPORT}"
-ryu-manager controller.py > logs/controller.log 2>&1 & 
+ryu-manager --ofp-listen-host=${CONTROLLERIP} --ofp-tcp-listen-port=${CONTROLLERPORT} controller.py > logs/controller.log 2>&1 & 
 
 # Instantiate seafile server
 ## OBS: It is necessary because all linuxclients uses the seafolder ID, which is unique and can be stored only after creating container
