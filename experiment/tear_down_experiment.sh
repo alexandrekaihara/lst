@@ -20,9 +20,9 @@ PID=`pgrep ryu`
 if [ ! -z "$PID" ]; then kill $PID; fi
 
 # Delete inserted firewall rules
-iptables -D FORWARD -i $INTERNAL -o $IFNAME -j ACCEPT
-iptables -D FORWARD -i $IFNAME -o $INTERNAL -m state --state ESTABLISHED,RELATED -j ACCEPT
-iptables -D FORWARD -i $EXTERNAL -o $IFNAME -j ACCEPT
-iptables -D FORWARD -i $IFNAME -o $EXTERNAL -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -D FORWARD -i $INTERNAL -o $IFNAME -j ACCEPT > /dev/null 2>&1
+iptables -D FORWARD -i $IFNAME -o $INTERNAL -m state --state ESTABLISHED,RELATED -j ACCEPT > /dev/null 2>&1
+iptables -D FORWARD -i $EXTERNAL -o $IFNAME -j ACCEPT > /dev/null 2>&1
+iptables -D FORWARD -i $IFNAME -o $EXTERNAL -m state --state ESTABLISHED,RELATED -j ACCEPT > /dev/null 2>&1
 
 
