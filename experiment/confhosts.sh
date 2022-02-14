@@ -48,8 +48,10 @@ configure_host(){
         fi
     else
         # All other images receive the backup.py e serverconfig.ini (only backup and seafile server doesn't use)
+        set +e
         docker cp backup.py $1:/home/debian/backup.py > /dev/null 2>&1
         docker cp serverconfig.ini $1:/home/debian/serverconfig.ini > /dev/null 2>&1
+        set -e
     fi
     
     ## Add interface on container and host
