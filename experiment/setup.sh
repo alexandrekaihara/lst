@@ -22,9 +22,7 @@ function error(){
     exit 0
 }
 
-# If any commands here fails, return and end execution
-set -e
-## Keep trabk of the last executed command
+## Keep track of the last executed command
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 ## Trap an error on commands
 trap 'error' ERR

@@ -9,6 +9,7 @@ from venv import create
 
 # Brief: Class responsible for configuring all experiment setup, create docker-compose file to setup containers,
 class CreateConfigurationFiles():
+    # Declare all variables to be used inside this class
     def __init__(self, configfile) -> None:
         self.endl = "\n"
         self.ident = "  "
@@ -124,6 +125,7 @@ class CreateConfigurationFiles():
         with(open(filename, "w")) as f:
             f.write(self.config_hosts_script)  
 
+    # Creates the ip lists of possible targets to be attacked inside the internal and external network 
     def create_attack_configs(self):
         path = 'attack/'
         external = []
@@ -166,6 +168,7 @@ class CreateConfigurationFiles():
         create_ip_list('internal_iprange.txt', list(subnet_internal))
         create_ip_list('external_iprange.txt', list(subnet_external))
         
+    # Create the list of machines to connect to ssh
     def create_ssh_configs(self, filename):
         self.ssh_config += "web = " + self.experiment_script[environ['WEB']]['IP'] + self.endl
         self.ssh_config += "mail = " + self.experiment_script[environ['MAILSERVER']]['IP'] + self.endl
