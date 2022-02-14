@@ -12,10 +12,11 @@
 # Example:
 #   - configure_host mailserver 100 1 br-int 
 configure_host(){
-    # $1 and $2 and $3 and $4 must not be empty
+    ## $1 and $2 and $3 and $4 must not be empty
     if [ -z $1 ] || [ -z $2 ] || [ -z $3 ] || [ -z $4 ]; then
     echo "[ERROR] The first, second, third or fourth argument of this function must not be NULL" 
     else
+
     ## Add container to namespace. Available on: https://www.thegeekdiary.com/how-to-access-docker-containers-network-namespace-from-host/
     pid=$(docker inspect -f '{{.State.Pid}}' $1)
     mkdir -p /var/run/netns/

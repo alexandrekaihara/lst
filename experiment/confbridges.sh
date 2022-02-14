@@ -8,7 +8,7 @@ ifconfig $INTERNAL up
 IFNAME=`route | grep '^default' | grep -o '[^ ]*$'`
 iptables -t nat -I POSTROUTING -o $IFNAME -j MASQUERADE
 iptables -t nat -I POSTROUTING -o $INTERNAL -j MASQUERADE
-## Permit Forwarding between intercafes
+## Configure firewall to permit Forwarding between intercafes
 iptables -A FORWARD -i $INTERNAL -o $IFNAME -j ACCEPT
 iptables -A FORWARD -i $IFNAME -o $INTERNAL -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -i $EXTERNAL -o $IFNAME -j ACCEPT
