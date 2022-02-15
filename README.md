@@ -13,7 +13,7 @@ To mitigate problems with version control and the usage of virtual machines, whi
 This section describes how to install all dependencies and execute all the scripts and configurations to set up the topology and virtual machines.
 
 ## 3.1 System Requirements
-Your machine must be using a Linux distribution. In our experiments, were used a Ubuntu Server version 20.04.3 LST virtual machine installed on Virtualbox version 6.1.26 r145957 (Qt5.6.2). Is highly recommended to have at least 12 GB of free memory to be used by the docker. 
+Your machine must be using a Linux distribution. In our experiments, were used a Ubuntu Server version 20.04.3 LTS virtual machine installed on Virtualbox version 6.1.26 r145957 (Qt5.6.2). Is highly recommended to have at least 12 GB of free memory to be used by the docker. 
 
 ## 3.2 Dependencies
 All the dependencies consists of:
