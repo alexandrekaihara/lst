@@ -1,21 +1,26 @@
 # Coburg Intrusion Detection Data Sets  - CIDDS Experiment
-## 1. Description
-This repository is an adaptation of a work developed by Markus Ring et. al., which contains all the scripts used to emulate a small business environment using OpenStack. This environment includes several clients and typical servers like an E-Mail server or a Web server. Python scripts are used to emulate normal user behavior on the clients.
+## Description
+Our goal is to provide an easy-use tool to emulate benign and malicious network flows. This project is a modification of a work developed by Markus Ring et. al. (available at: https://www.hs-coburg.de/cidds), which provided us with all the scripts to emulate a small business environment. This environment includes several clients and typical servers like Mail and Web server. 
 
-The CIDDS-001 Dataset is available at: https://www.hs-coburg.de/cidds
+Provisioning many virtual machines may consume a lot of memory space and CPU resources. Also, configuration scripts may have versioning problems. Thus, we created Docker images for each server and client to mitigate these issues. Also, we will provide Docker compose and Bash scripts to configure the entire network environment with all servers and clients configured.
 
-## 2. Motivation
-Our goal is to provide an easy tool to emulate benign and malicious network flows to develop a Real-Time Network Intrusion Detection System (NIDS). 
+The facility provided by this tool is due to the possibility of configuring the experiment from a single JSON file. You can define the number of machines, the Docker image, the behavior of clients, the IP, and the subnet. For future works, we expect to implement the configuration of the network topology through this centralized configuration file. 
 
-To mitigate problems with version control and the usage of virtual machines, which consume a lot of memory space and CPU resources, we are developing Docker images for each server and client. And also we will provide Docker compose and Bash scripts to set up an entire network environment with all servers and clients configured.
+Another facility is that the docker images encapsulate the dependencies and the configuration process. Thus, it reduces the number of dependencies needed to set up the experiment. And the creation of machines is simplified and faster because the configuration must be done only during the creation of the Docker image.
 
-## 3. Usage
-This section describes how to install all dependencies and execute all the scripts and configurations to set up the topology and virtual machines.
+## Docker image build
+If it is necessary to make any change on the docker images, check the "docker" folder located on the root directory of this repository. To build any docker image, access the folder containing its "Dockerfile" file and execute:
 
-### 3.1 System Requirements
+> docker build --network=host --tag mdewinged/cidds:NEW_CONTAINER_NAME .
+
+To use the newly built image in the experiment, access the "cidds/experiment" folder and change the file named as "variables" and find the respective image and change its value for the "NEW_CONTAINER_NAME" you have attributed. For example, you have built another version of the webserver and named as webserver2. Thus, you need to change the value of WEB=webserver2 in the "variable" file. 
+
+The only image that does not follow the command above is the seafileserver. Due to a particular characteristic of its configuration, the seafileserver must create a network interface to build the image, and its IP address in the experiment is static (default is 192.168.50.1). If you need to change the IP on which the server listens, a rebuild is necessary with the new IP. More detailed instructions are located inside the "cidds/docker/seafileserver" folder.
+
+## System Requirements
 Your machine must be using a Linux distribution. In our experiments, were used a Ubuntu Server version 20.04.3 LTS virtual machine installed on Virtualbox version 6.1.26 r145957 (Qt5.6.2). Is highly recommended to have at least 12 GB of free memory to be used by the docker. 
 
-### 3.2 Dependencies
+## Dependencies
 All the dependencies consists of:
 - Docker (version 20.10.7)
 - Docker Compose (version 1.25.0)
@@ -30,7 +35,7 @@ We provide a Bash script to install all the needed dependencies. To install all 
 
 > sudo chmod +x dependencies.sh && sudo ./dependencies.sh
 
-### 3.3 Execution
+## Execution
 To execute the script to set up the network topology, execute these commands:
 
 > sudo chmod +x setup.sh
@@ -38,4 +43,3 @@ To execute the script to set up the network topology, execute these commands:
 > sudo ./setup.sh partial_experiment.json
 
 If you want to finish the experiment e get back to your original network configuration, press CTRL + C once.
- 
