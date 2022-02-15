@@ -1,4 +1,4 @@
-# Coburg Intrusion Detection Data Sets  - CIDDS-001
+# Coburg Intrusion Detection Data Sets  - CIDDS Experiment
 ## 1. Description
 This repository is an adaptation of a work developed by Markus Ring et. al., which contains all the scripts used to emulate a small business environment using OpenStack. This environment includes several clients and typical servers like an E-Mail server or a Web server. Python scripts are used to emulate normal user behavior on the clients.
 
