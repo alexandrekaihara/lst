@@ -1,8 +1,19 @@
-# Usage: 
-## Build: docker build -t fileserver --network=host .
-## Run ssh: docker run --cap-add=NET_ADMIN -it --network="pnet" -p 446:445 fileserver
-## Create network: docker network create --subnet "192.168.1.0/24" --ip-range "192.168.1.0/24" --gateway "192.168.1.125" --attachable -o "com.docker.network.bridge.default_bridge"="true" -o "com.docker.network.brigde.default_bridge"="true" -o "com.docker.network.bridge.enable_icc"="true" -o "com.docker.network.bridge.enable_ip_masquerade"="true" -o "com.docker.network.bridge.host_binding_ipv4"="0.0.0.0" -o "com.docker.network.driver.mtu"="1500" pnet
-## Install basic tools: apt install nano iptables net-tools iproute2 iputils-ping -y
+#
+# Copyright (C) 2022 Alexandre Mitsuru Kaihara
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
 # Imports
 FROM ubuntu:20.04
