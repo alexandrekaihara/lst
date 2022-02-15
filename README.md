@@ -32,7 +32,6 @@ We provide a Bash script to install all the needed dependencies. To install all 
 
 ## 3.3 Execution
 To execute the script to set up the network topology, execute these commands:
-> cd YOURPATH/cidds/experiment
 
 > sudo chmod +x setup.sh
 
