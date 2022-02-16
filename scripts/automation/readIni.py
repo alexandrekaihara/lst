@@ -99,19 +99,34 @@ def configServers(parser, subnet, host):
 	# Determine the server ips using the subnet information 
 	try:
 		printIP = parser.get(subnet, "print")
+	except Exception as e:
+		printIP = "0.0.0.0"
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+	try:
 		mailIP = parser.get(subnet, "mail")
+	except Exception as e:
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+		mailIP = "0.0.0.0"
+	try:
 		fileIP = parser.get(subnet, "file")
+	except Exception as e:
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+		fileIP = "0.0.0.0"
+	try:
 		webIP = parser.get(subnet, "web")
+	except Exception as e:
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+		webIP = "0.0.0.0"
+	try:
 		seaIP = parser.get(subnet, "seafile")
+	except Exception as e:
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+		seaIP = "0.0.0.0"
+	try:
 		seaFolder = parser.get(subnet, "seaFolder")
 	except Exception as e:
-		echoC(__name__, "configServers() NoSectionError. Setting default IPs for servers")
-		printIP = "0.0.0.0"
-		mailIP = "0.0.0.0"
-		fileIP = "0.0.0.0"
-		webIP = "0.0.0.0"
-		seaIP = "0.0.0.0"
-		seaFolder = "empty"
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+		seaFolder = "0.0.0.0"
 	# Adapt mail.ini for Mail-Server 
 	with open("packages/mailing/mail.ini", "w") as file:
 		file.write("# Login-Informationen fuer mailing.py anlegen\n")

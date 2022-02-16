@@ -52,5 +52,5 @@ ovs-vsctl set-controller $EXTERNAL tcp:$CONTROLLERIP:$CONTROLLERPORT
 
 # Enable communicatiob between switches subnets
 iptables -A FORWARD -i $INTERNAL -o $EXTERNAL -j ACCEPT
-iptables -A FORWARD -i $EXTERNAL -o $INTERNAL -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $EXTERNAL -o $INTERNAL -j ACCEPT
 

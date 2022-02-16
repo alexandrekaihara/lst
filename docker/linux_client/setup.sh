@@ -80,3 +80,14 @@ systemctl enable automation.service
 
 # Prettify Prompt 
 echo -e "PS1='\[\033[1;37m\]\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\[\033[41;37m\]\w\$\[\033[0m\] '" >> /home/debian/.bashrc
+
+# Generate dummy files for seafile
+mkdir -pv /home/debian/tmpseafiles
+i=0
+while [ $i -le 100 ]
+do
+  i=`expr $i + 1`;
+  zufall=$RANDOM;
+  zufall=$(($zufall % 9999))
+  dd if=/dev/zero of=/home/debian/tmpseafiles/test-`expr $zufall`.dat bs=1K count=`expr $zufall`
+done

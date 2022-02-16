@@ -48,17 +48,6 @@ mv /home/debian/sshiplist.ini    /home/debian/automation/packages/system/sshipli
 mv /home/debian/ipList.txt       /home/debian/automation/packages/attacking/ipList.txt > /dev/null 2>&1
 mv /home/debian/ipListPort80.txt /home/debian/automation/packages/attacking/ipListPort80.txt > /dev/null 2>&1
 mv /home/debian/iprange.txt      /home/debian/automation/packages/attacking/iprange.txt > /dev/null 2>&1
-    
-# Generate dummy files for seafile
-mkdir -pv /home/debian/tmpseafiles
-i=0
-while [ $i -le 100 ]
-do
-  i=`expr $i + 1`;
-  zufall=$RANDOM;
-  zufall=$(($zufall % 9999))
-  dd if=/dev/zero of=/home/debian/tmpseafiles/test-`expr $zufall`.dat bs=1K count=`expr $zufall`
-done
 
 # Configure printer 
 /etc/init.d/cups start
