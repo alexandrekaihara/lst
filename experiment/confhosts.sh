@@ -48,7 +48,7 @@ configure_host(){
         docker cp sshiplist.ini $1:/home/debian/sshiplist.ini
 
         # If $5 is attacker type, then copy the attacker config files
-        if [ $5 = 'attacker' ]; then
+        if [ $5 = 'attacker' ] || [ $5 = 'external_attacker' ]; then
             # If the subnet is external
             if [ $2 = $ESUBNET ]; then
             docker cp attack/external_ipListPort80.txt $1:/home/debian/ipListPort80.txt
