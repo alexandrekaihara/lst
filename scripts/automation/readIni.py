@@ -16,7 +16,6 @@
 #
 
 
-from os import environ
 from packages.system import mainscript
 from packages.system.echoX import echoC
 from packages.system import setupWorkingSchedule
@@ -99,35 +98,34 @@ def getAndSetSubnetHostAndHostname(parser):
 def configServers(parser, subnet, host):
 	# Determine the server ips using the subnet information 
 	try:
-		if subnet != environ['ESUBNET']:
-			printIP = parser.get(subnet, "print")
+		printIP = parser.get(subnet, "print")
 	except Exception as e:
 		printIP = "0.0.0.0"
-		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer")
 	try:
 		mailIP = parser.get(subnet, "mail")
 	except Exception as e:
-		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer")
 		mailIP = "0.0.0.0"
 	try:
 		fileIP = parser.get(subnet, "file")
 	except Exception as e:
-		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer")
 		fileIP = "0.0.0.0"
 	try:
 		webIP = parser.get(subnet, "web")
 	except Exception as e:
-		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer")
 		webIP = "0.0.0.0"
 	try:
 		seaIP = parser.get(subnet, "seafile")
 	except Exception as e:
-		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer")
 		seaIP = "0.0.0.0"
 	try:
 		seaFolder = parser.get(subnet, "seaFolder")
 	except Exception as e:
-		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)
+		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer")
 		seaFolder = "0.0.0.0"
 	# Adapt mail.ini for Mail-Server 
 	with open("packages/mailing/mail.ini", "w") as file:
