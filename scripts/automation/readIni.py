@@ -16,6 +16,7 @@
 #
 
 
+from os import environ
 from packages.system import mainscript
 from packages.system.echoX import echoC
 from packages.system import setupWorkingSchedule
@@ -98,7 +99,8 @@ def getAndSetSubnetHostAndHostname(parser):
 def configServers(parser, subnet, host):
 	# Determine the server ips using the subnet information 
 	try:
-		printIP = parser.get(subnet, "print")
+		if subnet != environ['ESUBNET']:
+			printIP = parser.get(subnet, "print")
 	except Exception as e:
 		printIP = "0.0.0.0"
 		echoC(__name__, "configServers() NoSectionError. Setting default IPs for printer on subnet", subnet)

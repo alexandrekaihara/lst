@@ -94,10 +94,10 @@ class CreateConfigurationFiles():
         self.serverconfig = "[backup]\nip = " + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ["BACKUP"]] + 2*self.endl
         for subnet in self.subnets:
             self.serverconfig += '[' + subnet + ']' + self.endl
-            self.serverconfig += 'print = '   + self.nonclientsIP[subnet][environ['REPOSITORY']+':'+environ["PRINTER"]] + self.endl
             self.serverconfig += 'mail = '    + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ["MAILSERVER"]] + self.endl
             self.serverconfig += 'file = '    + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ["FILE"]] + self.endl
             if subnet != "50":
+                self.serverconfig += 'print = '   + self.nonclientsIP[subnet][environ['REPOSITORY']+':'+environ["PRINTER"]] + self.endl
                 self.serverconfig += 'web = '     + self.nonclientsIP[environ['SSUBNET']][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
             else:
                 self.serverconfig += 'web = '     + self.nonclientsIP[environ['ESUBNET']][environ['REPOSITORY']+':'+environ["WEB"]] + self.endl
@@ -123,22 +123,28 @@ class CreateConfigurationFiles():
             with open("printersip/"+str(subnet), 'w') as f:
                 f.write(printerip)
 
-        # For each container described on the .json file
+        # Add first the configuration of the servers and printers
+        seafile = environ['REPOSITORY']+':'+environ['SEAFILE']
+        linuxclient = environ['REPOSITORY']+':'+environ['LCLIENT']
         for name, params in self.experiment_script.items():
-            if params['image'] != environ['REPOSITORY']+':'+environ['SEAFILE']:
+            if params['image'] not in (seafile, linuxclient):
+                subnet = params['IP'].split('.')[2]
+                hostip = params['IP'].split('.')[3]
+                bridge = params['bridge']   
+                self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + self.endl
+                self.config_hosts_script += "echo \"Configuring " + name + "\"" + self.endl 
+                
+        # For each linux client described on the .json file
+        for name, params in self.experiment_script.items():
+            if (params['image'] != seafile) and (params['image'] == linuxclient):
                 # If is a Linuxclient image
                 subnet = params['IP'].split('.')[2]
                 hostip = params['IP'].split('.')[3]
                 bridge = params['bridge']   
-                # If the container is a Linuxclient, then add the filename behaviour parameter
-                if params['image'] == environ['REPOSITORY']+':'+environ['LCLIENT']:
-                    behaviour = params['client_behaviour']
-                    self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + " " + behaviour + self.endl
-                # Do not insert the behaviour parameter
-                else:
-                    self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + self.endl
+                behaviour = params['client_behaviour']
+                self.config_hosts_script += "configure_host " + name + " " + subnet + " " + hostip + " " + bridge + " " + behaviour + self.endl
                 self.config_hosts_script += "echo \"Configuring " + name + "\"" + self.endl 
-
+                
         # Saving script
         with(open(filename, "w")) as f:
             f.write(self.config_hosts_script)  
