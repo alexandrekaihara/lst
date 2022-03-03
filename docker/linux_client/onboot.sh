@@ -33,7 +33,7 @@ $ONBOOTLOG="${IP}_onboot.log"
 # Update the automation directory
 until unzip -o main.zip -d /home/debian
 do
-  wget https://github.com/mdewinged/cidds/archive/refs/heads/main.zip --no-check-certificate
+  wget https://github.com/alexandrekaihara/cidds/archive/refs/heads/main.zip --no-check-certificate
 done
 rm main.zip 
 mv /home/debian/cidds-main/scripts/automation /home/debian/
