@@ -1,4 +1,4 @@
-export REPOSITORY=mdewinged/cidds
+export REPOSITORY=alexandrekaihara/cidds
 export MAILSERVER=mailserver
 export WEB=webserver
 export FILE=fileserver
