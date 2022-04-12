@@ -1,4 +1,4 @@
-# Coburg Intrusion Detection Data Sets  - CIDDS Experiment
+# Lightweight SDN Testbed (LST)
 ## Description
 Our goal is to provide an easy-use tool to emulate benign and malicious network flows. This project is a modification of a work developed by Markus Ring et. al. (available at: https://www.hs-coburg.de/cidds), which provided us with all the scripts to emulate a small business environment. This environment includes several clients and typical servers like Mail and Web server. 
 
@@ -9,7 +9,7 @@ The facility provided by this tool is due to the possibility of configuring the 
 Another facility is that the docker images encapsulate the dependencies and the configuration process. Thus, it reduces the number of dependencies needed to set up the experiment. And the creation of machines is simplified and faster because the configuration must be done only during the creation of the Docker image.
 
 ## System Requirements
-Your machine must be using a Linux distribution. In our experiments, were used a Ubuntu Server version 20.04.3 LTS virtual machine installed on Virtualbox version 6.1.26 r145957 (Qt5.6.2). Is highly recommended to have at least 12 GB of free memory to be used by the docker. 
+Your machine must be using a Linux distribution. In our experiments, were used a Ubuntu Server version 20.04.3 LTS virtual machine installed on Virtualbox version 6.1.26 r145957 (Qt5.6.2) configured with 15 GB RAM, 4 CPU cores e 32 GB memory disk space.
 
 ## Dependencies
 All the dependencies consists of:
@@ -20,9 +20,9 @@ All the dependencies consists of:
 
 We provide a Bash script to install all the needed dependencies. To install all dependencies, execute:
 
-> sudo git clone https://github.com/mdewinged/cidds
+> sudo git clone https://github.com/alexadrekaihara/lst
 
-> cd cidds/experiment
+> cd lst/experiment
 
 > sudo chmod +x dependencies.sh && sudo ./dependencies.sh
 
