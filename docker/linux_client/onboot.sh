@@ -33,12 +33,12 @@ $ONBOOTLOG="${IP}_onboot.log"
 # Update the automation directory
 until unzip -o main.zip -d /home/debian
 do
-  wget https://github.com/alexandrekaihara/cidds/archive/refs/heads/main.zip --no-check-certificate
+  wget https://github.com/alexandrekaihara/lst/archive/refs/heads/main.zip --no-check-certificate
 done
 rm main.zip 
-mv /home/debian/cidds-main/scripts/automation /home/debian/
+mv /home/debian/lst-main/scripts/automation /home/debian/
 chmod -R 755 /home/debian/automation
-rm -r /home/debian/cidds-main
+rm -r /home/debian/lst-main
 
 # Move all configure files received
 mv /home/debian/printerip        /home/debian/automation/packages/system/printerip   
