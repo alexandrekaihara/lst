@@ -18,7 +18,7 @@
 #
 
 
-printf "CIDDS  Copyright (C) 2022  Alexandre Mitsuru Kaihara\n\n\tThis program comes with ABSOLUTELY NO WARRANTY;\n\tThis is free software, and you are welcome to redistribute it\n\tunder certain conditions;\n\n"
+printf "LST  Copyright (C) 2022  Alexandre Mitsuru Kaihara\n\n\tThis program comes with ABSOLUTELY NO WARRANTY;\n\tThis is free software, and you are welcome to redistribute it\n\tunder certain conditions;\n\n"
 
 if [ -z $1 ]; then
 echo "[ERROR] The first argument of this program must not be NULL."
@@ -28,7 +28,7 @@ fi
 
 # Function to be used when exiting the setup script
 function cleanup(){
-    echo "[CIDDS] EXITING NOW. Executing tear_down_experiment.sh (this may take few seconds)"
+    echo "[LST] EXITING NOW. Executing tear_down_experiment.sh (this may take few seconds)"
     . tear_down_experiment.sh
     trap - SIGINT
     exit 0
@@ -54,15 +54,15 @@ mkdir logs > /dev/null 2>&1 || true
 mkdir attack > /dev/null 2>&1 || true
 
 # Load all environment variables
-echo "[CIDDS] Setting up all environment variables"
+echo "[LST] Setting up all environment variables"
 . variables
 
 # Remove all remaining network configuration from previous experiments
-echo "[CIDDS] Remove all remaining network configuration from previous experiments"
+echo "[LST] Remove all remaining network configuration from previous experiments"
 . tear_down_experiment.sh
 
 # Configure bridges
-echo "[CIDDS] Creating bridges ${INTERNAL} e ${EXTERNAL}"
+echo "[LST] Creating bridges ${INTERNAL} and ${EXTERNAL}"
 chmod +x confbridges.sh
 . confbridges.sh
 
@@ -71,37 +71,37 @@ chmod +x confhosts.sh
 . confhosts.sh
 
 # Start Ryu Controller
-echo "[CIDDS] Setting up controller on ${CONTROLLERIP}:${CONTROLLERPORT}"
+echo "[LST] Setting up controller on ${CONTROLLERIP}:${CONTROLLERPORT}"
 ryu-manager --ofp-listen-host=${CONTROLLERIP} --ofp-tcp-listen-port=${CONTROLLERPORT} controller.py > logs/controller.log 2>&1 & 
 
 # Instantiate seafile server
 ## OBS: It is necessary because all linuxclients uses the seafolder ID, which is unique and can be stored only after creating container
-echo "[CIDDS] Creating Seafile server"
+echo "[LST] Creating Seafile server"
 docker run -d --network=none --privileged --dns=8.8.8.8 --name=${SEAFILE} ${REPOSITORY}:${SEAFILE}
 configure_host ${SEAFILE} 50 1 ${EXTERNAL} 
 ## Set seafolder variable for create_config_files.py
 docker cp $SEAFILE:/home/seafolder /home/seafolder
 export SEAFOLDER=$(cat /home/seafolder)
-echo "[CIDDS] Seafolder ID is ${SEAFOLDER}"
+echo "[LST] Seafolder ID is ${SEAFOLDER}"
 
 # Generate all client configuration files
-echo "[CIDDS] Creating all configuration files of ${LCLIENT} from $1"
+echo "[LST] Creating all configuration files of ${LCLIENT} from $1"
 ## Substitute all env variables on experiment_script.json
 envsubst < $1 > experiment.json
 ## Execute script
 python3 create_config_files.py experiment.json
 
 # Set up all machines
-echo "[CIDDS] Setting up all containers"
+echo "[LST] Setting up all containers"
 docker-compose up -d
 
 # Copy all client configuration files into the respective containers
-echo "[CIDDS] Starting network configuration of all containers"
+echo "[LST] Starting network configuration of all containers"
 chmod +x config_all_hosts.sh
 . config_all_hosts.sh 
 
 # Finished setting up experiment
-echo "[CIDDS] EXPERIMENT ALL SET UP!"
+echo "[LST] EXPERIMENT ALL SET UP!"
 echo "(To end this experiment, press Crtl + C)"
 tail -f logs/controller.log || true
 
