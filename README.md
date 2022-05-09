@@ -77,3 +77,7 @@ If any errors occur during the setup and execution o the experiment, check:
 - If there exist two definitions of the default gateway, remove one. It can cause problems to configure the Firewall permissions;
 - Verify if your computer already has defined subnets that may conflict with the subnets defined in the "lst/experiment/variable" file. It may affect the routing process and potentially break the configuration of a host because of IP address conflicts.
 - It is created an interface for each container following the pattern of "veth" + "subnet tag" + "host IP part". For example, the container has the IP 192.168.50.1, then its interface will be named veth50.1. Check if won't have any name conflict with your existing network interfaces to the ones that will be created for the experiment;
+
+## Video
+
+The link of the video for SBRC Salão de Ferramentas is available at https://www.youtube.com/watch?v=ln0Np3dH6kk
