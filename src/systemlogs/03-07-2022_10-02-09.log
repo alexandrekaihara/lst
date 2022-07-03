@@ -1,0 +1,2 @@
+[2022-07-03 10:02:09,705] INFO - Starting experiment (executor.py run:44)
+[2022-07-03 10:02:09,706] INFO - Reading and loading test.json (filehandler.py read_json:30)

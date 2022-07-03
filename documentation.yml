@@ -1,0 +1,99 @@
+Recursos:
+    Host:
+        - Definir Gateway
+        - Definir firewall
+        - (Não permitir conectar host-host)
+        - Definição do IP e mascara
+    Switch:
+        - Definição de gateway
+        - Definição do IP e mascara
+    Controlador:
+        - Definição do IP e porta que o controlador escuta
+        - Permitir instanciar quaisquer controlador
+    Links:
+        - Permitir conectar Host-switch
+        - Permitir conectar switch-switch
+
+
+Especificação:
+Switch:
+    IP (Optional):
+        Definition: 
+            - List of IP and mask. It defines the IP addresses of the switch L3 and the subnets to which it belongs to
+        Restrictions:
+            - If the IP and routing_table are not defined, the switch will have L2 functions
+            - It is possible to define the IP and not the routing table, therefore the routing table will only contain the entry for those IP the switch holds
+            - If the IP does not correpond to the subnet of the hosts to which it is connected, must raise a warning (the network will not work properly)
+    Gateway (Optional if L3 switch):
+        Definition:
+            - IP of the gateway, the name of any other switch or host or "internet" (gateway is the host's gateway interface)
+        Restrictions:
+            - If the switch L3 wants to have connection to the world, set gateway with the IP of the interface of the host that has connection to the internet or put "internet"
+            - IF the switch is L3, then it must define a gatewawy
+    controller_port:
+        Definition:
+            - The port in which the controller is listening to
+    controller_ip:
+        Definition:
+            - The IP address in which the controller is listening to
+
+Controller:
+    image (only if the controller is not on localhost):
+        Definition:
+            - Instantiate a Docker container that has installed and configured the controller inside the container
+    controller_port:
+        Definition:
+            - The port in which the controller is listening to
+    controller_ip:
+        Definition:
+            - The IP address in which the controller is listening to
+    copy_file  (param enabled only if the controller is not on localhost; optional):
+        Definition:
+            - Copy a local_file inside the container right after instantiating it
+    instantiate (param enabled for instantiating localhost controller):
+        Definition:
+            - Is a list of strings containing the instructions to be executed by command line to instantiate the controller on host's machine
+            - Define a default configuration
+    run (param enabled only if the controller is not on localhost; optional): 
+        Definition:
+            - Is a list of instructions to be executed inside the container after instantiating and copy_file (e.g. "docker exec -it container_name sh -c "cd home"")
+
+Host:
+    Gateway (Optional if it has only one connection):
+        Definition:
+            - IP of the gateway, the name of any other switch or host or "internet" (gateway is the host's gateway interface)
+        Restrictions:
+            - The gateway of hosts are the ip of the first hop by default
+            - Gateway param is optional
+            - Gateway parameters are available only on "container" e "switch"
+    image:
+        Definition:
+            - The name of a local image on docker container or a image:version of an image from Dockerhub
+        Restrictions:
+    IP:
+        Definition:
+            - List of IP and mask. It defines the IP addresses of the switch L3 and the subnets to which it belongs to
+        Restrictions:
+    DNS (Optional):
+        Definition:
+            - The IP address of the DNS server
+        Restrictions:
+            - By default the DNS server is the "8.8.8.8"
+    depends_on (Optional):
+        Definition:
+            - 
+        Restrictions:
+    copy_file  (optional):
+        Definition:
+            - Copy a local_file inside the container right after instantiating it
+    run (optional): 
+        Definition:
+            - Is a list of instructions to be executed inside the container after instantiating and copy_file
+link:
+    
+
+
+Capacidades:
+    - Adicionar parametros de configuração
+    - 
+

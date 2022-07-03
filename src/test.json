@@ -1,0 +1,7 @@
+{
+    "test":{
+        "type": "controller",
+        "controller_ip": "192.178.56.1",
+        "controller_port": 12
+    }
+}
