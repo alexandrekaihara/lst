@@ -14,40 +14,126 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from elements.node import Node
-
-
 # Brief: This class 
-class Host(Node):
+class Host():
     def __init__(self, commandlinehelper):
-        self.commandlinehelper = commandlinehelper
+        self._IP = self.set_ip()
+        self._IMAGE = self.set_image()
+        self._GATEWAY = self.set_gateway()
+        self._DNS = self.set_dns()
+        self.depends_on = self.set_depends_on()
+        self.copy_file = self.set_copy_file()
+        self.run = self.set_run()
 
-    # Brief: Copy a local file into the Docker container
+        self.ip = self.set_ip()
+        self.image = self.set_image()
+        self.gateway = self.set_gateway()
+        self.dns = self.set_dns()
+        self.depends_on = self.set_depends_on()
+        self.copy_file = self.set_copy_file()
+        self.run = self.set_run()
+
+    # Brief: Set the ip parameter if exists
     # Params:
-    #   String host_name: Name of the host to copy the file
-    #   String file_path: Path to the file
-    #   String dest_path: Path to where the file will be copied
+    #   Dict object: A link object
     # Return:
-    #   Returns bool of the status of the operation (if success returns true, else returns false)
-    def copy_file(self, host_name, file_path, dest_path):
+    #   Returns the value of the ip if exists, otherwise, returns none
+    def set_ip(self, object):
         pass
 
-    # Brief: Executes a command to execute on command line inside a container
+    # Brief: Set the image parameter if exists
     # Params:
-    #   String container_name: Name of the conteiner in which will be executed the command
-    #   String command: String containing a command to execute inside a container
-    #   String command: List of commands to execute inside a container
+    #   Dict object: A link object
     # Return:
-    #   None
-    def run(self, container_name,  command = "", commands = []):
+    #   Returns the value of the image if exists, otherwise, returns none
+    def set_image(self, object):
         pass
 
-    # Brief: Executes a bash script
+    # Brief: Set the gateway parameter if exists
     # Params:
-    #   String filename: Path to the bash script
+    #   Dict object: A link object
     # Return:
-    #   None
-    def run(self, container_name, filename):
+    #   Returns the value of the gateway if exists, otherwise, returns none
+    def set_gateway(self, object):
         pass
 
-    # create firewall methods
+    # Brief: Set the dns parameter if exists
+    # Params:
+    #   Dict object: A link object
+    # Return:
+    #   Returns the value of the dns if exists, otherwise, returns none
+    def set_dns(self, object):
+        pass
+
+    # Brief: Set the depends_on parameter if exists
+    # Params:
+    #   Dict object: A link object
+    # Return:
+    #   Returns the value of the depends_on if exists, otherwise, returns none
+    def set_depends_on(self, object):
+        pass
+
+    # Brief: Set the copy_file parameter if exists
+    # Params:
+    #   Dict object: A link object
+    # Return:
+    #   Returns the value of the copy_file if exists, otherwise, returns none
+    def set_copy_file(self, object):
+        pass
+
+    # Brief: Set the run parameter if exists
+    # Params:
+    #   Dict object: A link object
+    # Return:
+    #   Returns the value of the run if exists, otherwise, returns none
+    def set_run(self, object):
+        pass
+
+    # Brief: Returns the value of ip
+    # Params:
+    # Return:
+    #   Returns the value of the ip
+    def get_ip(self):
+        return self._ip
+
+    # Brief: Returns the value of image
+    # Params:
+    # Return:
+    #   Returns the value of the image
+    def get_image(self):
+        return self._image
+        
+    # Brief: Returns the value of gateway
+    # Params:
+    # Return:
+    #   Returns the value of the gateway
+    def get_gateway(self):
+        return self._gateway
+        
+    # Brief: Returns the value of dns
+    # Params:
+    # Return:
+    #   Returns the value of the dns
+    def get_dns(self):
+        return self._dns
+        
+    # Brief: Returns the value of depends_on
+    # Params:
+    # Return:
+    #   Returns the value of the depends_on
+    def get_depends_on(self):
+        return self._depends_on
+        
+    # Brief: Returns the value of copy_file
+    # Params:
+    # Return:
+    #   Returns the value of the copy_file
+    def get_copy_file(self):
+        return self._copy_file
+        
+    # Brief: Returns the value of run
+    # Params:
+    # Return:
+    #   Returns the value of the run
+    def get_run(self):
+        return self._run

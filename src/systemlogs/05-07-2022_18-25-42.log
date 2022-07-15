@@ -1,0 +1,3 @@
+[2022-07-05 18:25:42,690] INFO - Starting experiment (executor.py run:62)
+[2022-07-05 18:25:42,690] INFO - Reading and loading test.json (filehandler.py read_json:31)
+[2022-07-05 18:25:42,690] INFO - Loading the json objects into classes (executor.py run:66)

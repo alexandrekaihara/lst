@@ -16,7 +16,7 @@ Recursos:
 
 
 Especificação:
-Switch:
+Switch are also containeres:
     IP (Optional):
         Definition: 
             - List of IP and mask. It defines the IP addresses of the switch L3 and the subnets to which it belongs to
@@ -90,6 +90,8 @@ Host:
         Definition:
             - Is a list of instructions to be executed inside the container after instantiating and copy_file
 link:
+    peer1
+    peer2
     
 
 
@@ -97,3 +99,27 @@ Capacidades:
     - Adicionar parametros de configuração
     - 
 
+Implementation Plan:
+
+
+Level 1 - Create nodes:
+Instantiate any host
+Instantiate any switch (local)
+Instantiate any controller (local)
+Level 2 - Connect nodes:
+Connect Host-switch
+Connect switch-switch
+Connect switch-controller
+Level 3 - Executar demonstração planejada:
+Search for an security experiment
+Create script
+Level 4 - Implement the Report Generator:
+Select which metrics to collect
+Implement Collect metrics
+Collect metrics from experiment
+Level 5 - Create JSON converter:
+Implement converter from JSON to Python script experiment
+Level 6 - Create nodes 2: 
+Instantiate switch (container)
+Instantiate controller (container)
+Level 7 - Implement other configuration options:

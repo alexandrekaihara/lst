@@ -1,0 +1,4 @@
+[2022-07-05 18:45:36,667] INFO - Starting experiment (executor.py run:62)
+[2022-07-05 18:45:36,667] INFO - Reading and loading test.json (filehandler.py read_json:31)
+[2022-07-05 18:45:36,667] INFO - Loading the json objects into classes (executor.py run:66)
+[2022-07-05 18:45:36,668] ERROR - The object test is missing the run parameter definition (controller.py _set_run:107)

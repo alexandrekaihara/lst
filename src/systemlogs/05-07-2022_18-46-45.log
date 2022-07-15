@@ -1,0 +1,5 @@
+[2022-07-05 18:46:45,951] INFO - Starting experiment (executor.py run:62)
+[2022-07-05 18:46:45,951] INFO - Reading and loading test.json (filehandler.py read_json:31)
+[2022-07-05 18:46:45,952] INFO - Loading the json objects into classes (executor.py run:66)
+[2022-07-05 18:46:45,952] INFO - Intantiating the controllers (executor.py run:73)
+[2022-07-05 18:46:45,952] INFO - Finished experiment setup (executor.py run:78)
