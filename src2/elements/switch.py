@@ -23,14 +23,14 @@ from exceptions import NodeInstantiationFailed
 class Switch(Node):
     def instantiate(self):
         try:
-            subprocess.run(f"ovs-vsctl add-br {self.getNodeName}")
+            subprocess.run(f"ovs-vsctl add-br {self.getNodeName}", shell=True)
         except Exception as ex:
             logging.error(f"Error while creating the switch {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while creating the switch {self.getNodeName()}: {str(ex)}")
         
     def delete(self):
         try:
-            subprocess.run(f"ovs-vsctl del-br {self.getNodeName}")
+            subprocess.run(f"ovs-vsctl del-br {self.getNodeName}", shell=True)
         except Exception as ex:
             logging.error(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}")
