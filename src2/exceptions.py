@@ -23,5 +23,5 @@ class MissingObjectParameter(Exception):
     pass
 
 # Brief: This exception is related to a failure during docker container instantiation 
-class DockerImageInstantiationFailed(Exception):
+class NodeInstantiationFailed(Exception):
     pass

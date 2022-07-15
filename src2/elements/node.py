@@ -16,7 +16,7 @@
 
 import logging
 import subprocess
-from exceptions import DockerImageInstantiationFailed
+from exceptions import NodeInstantiationFailed
 
 
 # Brief: This is a super class that define methods common for network nodes
@@ -26,8 +26,8 @@ class Node:
     #   String containerName: Name of the container
     # Return:
     #   None
-    def __init__(self, containerName: str) -> None:
-        self.__containerName = containerName
+    def __init__(self, nodeName: str) -> None:
+        self.__nodeName = nodeName
 
     # Brief: Instantiate the container
     # Params:
@@ -38,12 +38,12 @@ class Node:
     def instantiate(self, dockerImage="ubuntu:20.04", dockerCommand = '') -> None:
         try:    
             if dockerCommand == '':
-                subprocess.run(f"docker run -d --network=none --name={self.__containerName} {dockerImage} tail -f /dev/null", shell=True)
+                subprocess.run(f"docker run -d --network=none --name={self.getNodeName()} {dockerImage} tail -f /dev/null", shell=True)
             else:
                 subprocess.run(dockerCommand, shell=True)
         except Exception as ex:
-            logging.error(f"Error while criating the host {self.__containerName}: {str(ex)}")
-            raise DockerImageInstantiationFailed(f"Error while criating the host {self.__containerName}: {str(ex)}")
+            logging.error(f"Error while criating the host {self.getNodeName()}: {str(ex)}")
+            raise NodeInstantiationFailed(f"Error while criating the host {self.getNodeName()}: {str(ex)}")
 
     # Brief: Instantiate the container
     # Params:
@@ -53,15 +53,15 @@ class Node:
     #   None
     def delete(self):
         try:    
-            subprocess.run(f"docker kill {self.getContainerName()} && docker rm {self.getContainerName()}", shell=True)
+            subprocess.run(f"docker kill {self.getnodeName()} && docker rm {self.getnodeName()}", shell=True)
         except Exception as ex:
-            logging.error(f"Error while deleting the host {self.__containerName}: {str(ex)}")
-            raise DockerImageInstantiationFailed(f"Error while deleting the host {self.__containerName}: {str(ex)}")
+            logging.error(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
+            raise NodeInstantiationFailed(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
 
     # Brief: Returns the value of the container name
     # Params:
     #   String containerName: Name of the container
     # Return:
     #   None
-    def getContainerName(self):
-        return self.__containerName
+    def getNodeName(self):
+        return self.__nodeName

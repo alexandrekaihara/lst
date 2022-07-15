@@ -14,6 +14,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-class Switch():
-    def __init__(self) -> None:
-        pass
+import logging
+import subprocess
+from elements.node import Node
+from exceptions import NodeInstantiationFailed
+
+
+class Switch(Node):
+    def instantiate(self):
+        try:
+            subprocess.run(f"ovs-vsctl add-br {self.getNodeName}")
+        except Exception as ex:
+            logging.error(f"Error while creating the switch {self.getNodeName()}: {str(ex)}")
+            raise NodeInstantiationFailed(f"Error while creating the switch {self.getNodeName()}: {str(ex)}")
+        
+    def delete(self):
+        try:
+            subprocess.run(f"ovs-vsctl del-br {self.getNodeName}")
+        except Exception as ex:
+            logging.error(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}")
+            raise NodeInstantiationFailed(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}")
+        
