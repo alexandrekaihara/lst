@@ -21,15 +21,47 @@ from exceptions import DockerImageInstantiationFailed
 
 # Brief: This is a super class that define methods common for network nodes
 class Node:
-    def __init__(self):
-        pass
+    # Brief: Constructor of Node super class
+    # Params:
+    #   String containerName: Name of the container
+    # Return:
+    #   None
+    def __init__(self, containerName: str) -> None:
+        self.__containerName = containerName
 
-    def instantiate(self, containerName, dockerImage="ubuntu:20.04", dockerCommand = ''):
+    # Brief: Instantiate the container
+    # Params:
+    #   String dockerImage: Name of the container of a local image or in a Docker Hub repository
+    #   String DockerCommand: String to be used to instantiate the container instead of the standard command
+    # Return:
+    #   None
+    def instantiate(self, dockerImage="ubuntu:20.04", dockerCommand = '') -> None:
         try:    
             if dockerCommand == '':
-                subprocess.run("docker run -d --network=none --name={containerName} {dockerImage} tail -f /dev/null")
+                subprocess.run(f"docker run -d --network=none --name={self.__containerName} {dockerImage} tail -f /dev/null", shell=True)
             else:
-                subprocess.run(dockerCommand)
+                subprocess.run(dockerCommand, shell=True)
         except Exception as ex:
-            logging.error(f"Error while criating the host {containerName}: {str(ex)}")
-            raise DockerImageInstantiationFailed(f"Error while criating the host {containerName}: {str(ex)}")
+            logging.error(f"Error while criating the host {self.__containerName}: {str(ex)}")
+            raise DockerImageInstantiationFailed(f"Error while criating the host {self.__containerName}: {str(ex)}")
+
+    # Brief: Instantiate the container
+    # Params:
+    #   String dockerImage: Name of the container of a local image or in a Docker Hub repository
+    #   String DockerCommand: String to be used to instantiate the container instead of the standard command
+    # Return:
+    #   None
+    def delete(self):
+        try:    
+            subprocess.run(f"docker kill {self.getContainerName()} && docker rm {self.getContainerName()}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while deleting the host {self.__containerName}: {str(ex)}")
+            raise DockerImageInstantiationFailed(f"Error while deleting the host {self.__containerName}: {str(ex)}")
+
+    # Brief: Returns the value of the container name
+    # Params:
+    #   String containerName: Name of the container
+    # Return:
+    #   None
+    def getContainerName(self):
+        return self.__containerName

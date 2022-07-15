@@ -19,15 +19,5 @@ from elements.node import Node
 
 # Brief: This class is responsible for create, deleting and configuring a host
 class Host(Node):
-    # Brief: Set the peer1 parameter if exists
-    # Params:
-    #   String dockerImage: Is the name of the docker image to be instantiated
-    #   String dockerCommand: Optional parameter to define the command to be used to instantiate the container instead of the deafult value
-    # Return:
-    #   None
-    def __init__(self, containerName):
-        self._containerName = containerName
 
-    def getContainerName(self):
-        return self._containerName
 
