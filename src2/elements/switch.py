@@ -22,6 +22,9 @@ from exceptions import NodeInstantiationFailed
 
 class Switch(Node):
     def instantiate(self):
+        super().instantiate(dockerImage="openvswitch")
+
+    def instantiate_local(self):
         try:
             subprocess.run(f"ovs-vsctl add-br {self.getNodeName()}", shell=True)
         except Exception as ex:

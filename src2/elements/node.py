@@ -38,12 +38,12 @@ class Node:
     def instantiate(self, dockerImage="ubuntu:20.04", dockerCommand = '') -> None:
         try:    
             if dockerCommand == '':
-                subprocess.run(f"docker run -d --network=none --name={self.getNodeName()} {dockerImage} tail -f /dev/null", shell=True)
+                subprocess.run(f"docker run -d --network=none --name={self.getNodeName()} {dockerImage}", shell=True)
             else:
                 subprocess.run(dockerCommand, shell=True)
         except Exception as ex:
-            logging.error(f"Error while criating the host {self.getNodeName()}: {str(ex)}")
-            raise NodeInstantiationFailed(f"Error while criating the host {self.getNodeName()}: {str(ex)}")
+            logging.error(f"Error while criating the container {self.getNodeName()}: {str(ex)}")
+            raise NodeInstantiationFailed(f"Error while criating the container {self.getNodeName()}: {str(ex)}")
 
     # Brief: Instantiate the container
     # Params:
