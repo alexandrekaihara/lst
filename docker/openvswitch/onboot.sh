@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 # Copyright (C) 2022 Alexandre Mitsuru Kaihara
 #
@@ -16,14 +18,6 @@
 #
 
 
-FROM ubuntu:20.04
-RUN apt update \
-&&  RUNLEVEL=1 apt install -y --no-install-recommends openvswitch-switch sudo
-
-COPY onboot.sh /home
-RUN chmod +x /home/onboot.sh
-CMD ["./home/onboot.sh"]
-
-# For conecting via Open SSL
-EXPOSE 22
-
+# Start container and keep alive
+sudo /usr/share/openvswitch/scripts/ovs-ctl start
+tail -f /dev/null
