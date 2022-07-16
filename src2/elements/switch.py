@@ -22,7 +22,7 @@ from exceptions import NodeInstantiationFailed
 
 class Switch(Node):
     def instantiate(self):
-        super().instantiate(dockerImage="openvswitch")
+        super().instantiate(dockerCommand=f"docker run -d --network=none --privileged --name={self.getNodeName()} openvswitch")
 
     def instantiate_local(self):
         try:
