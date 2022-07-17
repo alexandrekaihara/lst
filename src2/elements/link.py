@@ -38,15 +38,18 @@ class Link():
 
     # Brief: Creates Linux virtual interfaces and connects peers to the nodes
     # Params:
-    #   String peer1Ip: Ip of the first peer in format "192.168.56.100/24"
-    #   String peer2Ip: Ip of the second peer in format "192.168.56.100/24"
+    #   String peer1Ip: Ip of the first peer in format "192.168.56.100"
+    #   String peer1Mask: integer corresponding to the subnet mask of peer1 (e.g. 24 = 255.255.0.0)
+    #   String peer2Ip: Ip of the second peer in format "192.168.56.100"
+    #   String peer2Mask: integer corresponding to the subnet mask of peer2 (e.g. 24 = 255.255.0.0)
     # Return:
     #   None
-    def connect(self, peer1Ip: str, peer2Ip: str) -> None:
+    def connect(self, peer1Ip: str, peer1Mask: int, peer2Ip: str, peer2Mask: int) -> None:
         self.__create(self.__peer1Name, self.__peer2Name)
-        self.__set(self.__peer1.getNodeName(), self.__peer1Name)
-        self.__set(self.__peer2.getNodeName(), self.__peer2Name)
-
+        self.__setIp(self.__peer1Name, peer1Ip, peer1Mask)
+        self.__setIp(self.__peer2Name, peer2Ip, peer2Mask)
+        self.__setInterface(self.__peer1.getNodeName(), self.__peer1Name)
+        self.__setInterface(self.__peer2.getNodeName(), self.__peer2Name)
 
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
@@ -69,12 +72,26 @@ class Link():
     #   String peerName: Name of the interface to set to node
     # Return:
     #   None
-    def __set(self, nodeName: str, peerName: str) -> None:
+    def __setInterface(self, nodeName: str, peerName: str) -> None:
         try:
             subprocess.run(f"ip link set {peerName} netns {nodeName}", shell=True)
         except Exception as ex:
             logging.error(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
             raise Exception(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
+
+    # Brief: Set Ip to an interface
+    # Params:
+    #   String nodeName: Name of the node network namespace
+    #   String peerName: Name of the interface to set to node
+    # Return:
+    #   None
+    def __setIp(self, interfaceName: str, ip: str, mask: int) -> None:
+        try:
+            subprocess.run(f"ip addr add {ip}/{mask} dev {interfaceName}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
+            raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
+
 
     # Brief: Returns the value of peer1
     # Params:
