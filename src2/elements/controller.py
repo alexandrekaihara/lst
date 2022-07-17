@@ -39,7 +39,7 @@ class Controller(Node):
         #except Exception as ex:
         #    logging.error(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
         #    raise Exception(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
-    pass
+        pass
 
     def instantiate_local(self, controllerIp, controllerPort):
         process = self.__getProcess()

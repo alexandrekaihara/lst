@@ -20,7 +20,8 @@ FROM ubuntu:20.04
 RUN apt update \
 &&  RUNLEVEL=1 apt install -y --no-install-recommends sudo net-tools iproute2 iputils-ping python3 python3-pip\
 && python3 -m pip install --upgrade pip \
-&& pip3 install ryu eventlet==0.30.2 pandas
+&& pip3 install ryu eventlet==0.30.2 pandas \
+&& apt-get -o Dpkg::Options::="--force-confmiss" install --reinstall netbase
 
 COPY controller.py /home
 

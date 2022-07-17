@@ -26,7 +26,7 @@ class Switch(Node):
     # Return:
     #   None
     def instantiate(self) -> None:
-        super().instantiate(dockerCommand=f"docker run -d --network=none --privileged --name={self.getNodeName()} openvswitch")
+        super().instantiate(dockerCommand=f"d ocker run -d --network=none --privileged --name={self.getNodeName()} openvswitch")
         try:
             subprocess.run(f"docker exec {self.getNodeName()} ovs-vsctl add-br {self.getNodeName()}", shell=True)
             subprocess.run(f"docker exec {self.getNodeName()} ip link set {self.getNodeName()} up", shell=True)

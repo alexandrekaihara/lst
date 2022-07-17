@@ -95,8 +95,7 @@ class Link():
 
     # Brief: Set Ip to an interface (the ip must be set only after connecting it to a container, because)
     # Params:
-    #   String nodeName: Name of the node's network namespace
-    #   String peerName: Name of the interface to set to node
+    #   String node: Node object to set the interface
     #   String ip: IP address to be set to peerName interface
     #   String mask: Network mask for the IP address
     # Return:
@@ -120,3 +119,17 @@ class Link():
         except Exception as ex:
             logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
             raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
+
+    # Brief: Set Ip to an interface (the ip must be set only after connecting it to a container, because)
+    # Params:
+    #   String nodeName: Name of the container to set the IP
+    #   String destinationIp: The destination IP address of the gateway in format "XXX.XXX.XXX.XXX"
+    #   String outputInterface: The name of the interface to forward as gateway
+    # Return:
+    #   None
+    def setGateway(self, nodeName: str, destinationIp: str, outputInterface: str) -> None:
+        try:
+            subprocess.run(f"docker exec {nodeName} route add default gw {destinationIp} dev {outputInterface}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while setting gateway {destinationIp} on device {outputInterface} in {nodeName}: {str(ex)}")
+            raise Exception(f"Error while setting gateway {destinationIp} on device {outputInterface} in {nodeName}: {str(ex)}")
