@@ -18,7 +18,7 @@
 
 FROM ubuntu:20.04
 RUN apt update \
-&&  RUNLEVEL=1 apt install -y --no-install-recommends openvswitch-switch sudo net-tools iproute2
+&&  RUNLEVEL=1 apt install -y --no-install-recommends openvswitch-switch sudo net-tools iproute2 iputils-ping 
 
 COPY onboot.sh /home
 RUN chmod +x /home/onboot.sh
