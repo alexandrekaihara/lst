@@ -25,8 +25,21 @@ class Controller(Node):
         super(Controller, self).__init__(nodeName)
         self.__process = 0
 
-    def instantiate(self) -> None:
-        super().instantiate(dockerImage='ryucontroller')
+    # Brief: Instantiate a controller container
+    # Params:
+    # Return:
+    #   None
+    def instantiate(self, dockerImage='ryucontroller', dockerCommand='') -> None:
+        super().instantiate(dockerImage=dockerImage, dockerCommand=dockerCommand)
+
+    def initController(self, ip:str, mask: int):
+        #try:
+        #    subprocess.run(f"ip link set {peerName} netns {nodeName}", shell=True)
+        #    subprocess.run(f"ip -n {nodeName} link set {peerName} up", shell=True)
+        #except Exception as ex:
+        #    logging.error(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
+        #    raise Exception(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
+    pass
 
     def instantiate_local(self, controllerIp, controllerPort):
         process = self.__getProcess()
@@ -50,8 +63,8 @@ class Controller(Node):
                 logging.error(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}\nThreads error: {stderr}")
                 raise NodeInstantiationFailed(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}\nThreads error: {stderr}")
         else:
-            logging.error(f"Can't delete {self.getNodename()}. {self.getNodename()} was not instantiated.")
-            raise Exception(f"Can't delete {self.getNodename()}. {self.getNodename()} was not instantiated.")
+            logging.error(f"Can't delete {self.getNodeName()}. {self.getNodeName()} was not instantiated.")
+            raise Exception(f"Can't delete {self.getNodeName()}. {self.getNodeName()} was not instantiated.")
         
     def __getProcess(self):
         return self.__process

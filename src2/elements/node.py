@@ -39,7 +39,7 @@ class Node:
     def instantiate(self, dockerImage="host:latest", dockerCommand = '') -> None:
         try:    
             if dockerCommand == '':
-                subprocess.run(f"docker run -d --network=none --name={self.getNodeName()} {dockerImage} tail -f /dev/null", shell=True)
+                subprocess.run(f"docker run -d --network=none --privileged --name={self.getNodeName()} {dockerImage} tail -f /dev/null", shell=True)
             else:
                 subprocess.run(dockerCommand, shell=True)
             self.__enableNamespace(self.getNodeName())
