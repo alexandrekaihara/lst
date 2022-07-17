@@ -51,6 +51,10 @@ class Link():
         self.__setIp(self.__peer1.getNodeName(), self.__peer1Name, peer1Ip, peer1Mask)
         self.__setIp(self.__peer2.getNodeName(), self.__peer2Name, peer2Ip, peer2Mask)
 
+        # If the any of the node peers is switch, it needs to create a 
+        if self.__peer1.__class__.__name__ == "Switch": self.__createSwitchPort(self.__peer1.getNodeName(), self.__peer1Name)
+        if self.__peer2.__class__.__name__ == "Switch": self.__createSwitchPort(self.__peer2.getNodeName(), self.__peer1Name)
+
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
     #   String peer1Name: Name of the interface to connect to the first peer 
@@ -78,6 +82,19 @@ class Link():
             logging.error(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
             raise Exception(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
 
+    # Brief: Creates a port in OpenvSwitch bridge
+    # Params:
+    #   String nodeName: The name of the bridge is for default the same name of the switch container
+    #   String peerName: Name of the interface to connect to the switch
+    # Return:
+    #   None
+    def __createSwitchPort(nodeName, peerName) -> None:
+        try:
+            subprocess.run(f"docker exec {nodeName} ovs-vsctl add-port {nodeName} {peerName}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while creating port {peerName} in switch {nodeName}: {str(ex)}")
+            raise Exception(f"Error while creating port {peerName} in switch {nodeName}: {str(ex)}")
+
     # Brief: Set Ip to an interface
     # Params:
     #   String nodeName: Name of the node's network namespace
@@ -90,8 +107,8 @@ class Link():
         try:
             subprocess.run(f"ip -n {nodeName} addr add {ip}/{mask} dev {peerName}", shell=True)
         except Exception as ex:
-            logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
-            raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
+            logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
+            raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
 
 
     # Brief: Returns the value of peer1
