@@ -55,7 +55,7 @@ class Node:
     #   None
     def delete(self) -> None:
         try:    
-            subprocess.run(f"docker kill {self.getnodeName()} && docker rm {self.getnodeName()}", shell=True)
+            subprocess.run(f"docker kill {self.getNodeName()} && docker rm {self.getNodeName()}", shell=True)
         except Exception as ex:
             logging.error(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
