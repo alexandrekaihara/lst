@@ -95,7 +95,7 @@ class Link():
     #   String peerName: Name of the interface to connect to the switch
     # Return:
     #   None
-    def __createSwitchPort(nodeName, peerName) -> None:
+    def __createSwitchPort(self, nodeName, peerName) -> None:
         try:
             subprocess.run(f"docker exec {nodeName} ovs-vsctl add-port {nodeName} {peerName}", shell=True)
         except Exception as ex:
