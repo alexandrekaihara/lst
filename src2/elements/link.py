@@ -37,7 +37,7 @@ class Link():
         self.__peer2Name = "veth"+self.__peer2.getNodeName()+self.__peer1.getNodeName()
         self.__connect()
 
-    # Brief: Creates Linux virtual interfaces and connects peers to the nodes
+    # Brief: Creates Linux virtual interfaces and connects peers to the nodes, in case of one of the nodes is a switch, it also creates a port in bridge
     # Params:
     #   String peer1Ip: Ip of the first peer in format "192.168.56.100"
     #   String peer1Mask: integer corresponding to the subnet mask of peer1 (e.g. 24 = 255.255.0.0)
@@ -49,6 +49,9 @@ class Link():
         self.__create(self.__peer1Name, self.__peer2Name)
         self.__setInterface(self.__peer1.getNodeName(), self.__peer1Name)
         self.__setInterface(self.__peer2.getNodeName(), self.__peer2Name)
+
+        if self.__peer1.__class__.__name__ == "Switch": self.__createSwitchPort(self.__peer1.getNodeName(), self.__peer1Name)
+        if self.__peer2.__class__.__name__ == "Switch": self.__createSwitchPort(self.__peer2.getNodeName(), self.__peer2Name)
 
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
@@ -106,29 +109,14 @@ class Link():
         else:
             logging.error(f"Incorrect node reference for this Link class, expected reference of object {self.__peer1.getNodeName()} or {self.__peer2.getNodeName()}")
             raise Exception(f"Incorrect node reference for this Link class, expected reference of object {self.__peer1.getNodeName()} or {self.__peer2.getNodeName()}")
-            
-        if node.__class__.__name__ == "Switch": 
-            self.__setSwitchIp(node.getNodeName(), peerName, ip, mask)
-            self.__createSwitchPort(node.getNodeName(), peerName)
-        else:
-            try:
-                subprocess.run(f"ip -n {node.getNodeName()} addr add {ip}/{mask} dev {peerName}", shell=True)
-            except Exception as ex:
-                logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
-                raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
 
-    # Brief: Set Ip to a bridge 
-    # Params:
-    #   String nodeName: Name of the node's network namespace
-    #   String peerName: Name of the interface to set to node
-    #   String ip: IP address to be set to peerName interface
-    #   String mask: Network mask for the IP address
-    # Return:
-    #   None
-    def __setSwitchIp(self, nodeName: str, peerName: str, ip: str, mask: int) -> None:
+        if node.__class__.__name__ == "Switch": 
+            # If it is a switch, needs to set the ip in bridge instead of the created interface
+            command = f"ip -n {node.getNodeName()} addr add {ip}/{mask} dev {node.getNodeName()}"
+        else:
+            command = f"ip -n {node.getNodeName()} addr add {ip}/{mask} dev {peerName}"
         try:
-            subprocess.run(f"ip -n {nodeName} addr add {ip}/{mask} dev {nodeName}", shell=True)
+            subprocess.run(command, shell=True)
         except Exception as ex:
             logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
             raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
-    
