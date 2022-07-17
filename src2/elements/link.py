@@ -144,7 +144,6 @@ class Link():
         except Exception as ex:
             logging.error(f"Error adding route {ip}/{mask} via {peerName} in {nodeName}: {str(ex)}")
             raise Exception(f"Error adding route {ip}/{mask} via {peerName} in {nodeName}: {str(ex)}")
-        
 
     # Brief: Set Ip to an interface (the ip must be set only after connecting it to a container, because)
     # Params:
@@ -160,4 +159,14 @@ class Link():
             logging.error(f"Error while setting gateway {destinationIp} on device {outputInterface} in {nodeName}: {str(ex)}")
             raise Exception(f"Error while setting gateway {destinationIp} on device {outputInterface} in {nodeName}: {str(ex)}")
 
+    # Brief: Check if exists a default gw
+    # Params:
+    #   String nodeName: Name of the container to check if already exists default gateway
+    # Return:
+    #   None
     def __isDefaultGateway(self, nodeName: str):
+        try:
+            subprocess.run(f"docker exec {nodeName} ", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while setting gateway {destinationIp} on device {outputInterface} in {nodeName}: {str(ex)}")
+            raise Exception(f"Error while setting gateway {destinationIp} on device {outputInterface} in {nodeName}: {str(ex)}")
