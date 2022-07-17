@@ -30,11 +30,12 @@ class Link():
     #   String peer2Name: Name of the interface to be connected to the second object
     # Return:
     #   None
-    def __init__(self, peer1: Node, peer2: Node, peer1Name: str, peer2Name: str) -> None:
+    def __init__(self, peer1: Node, peer2: Node) -> None:
         self.__peer1 = peer1
         self.__peer2 = peer2
-        self.__peer1Name = peer1Name
-        self.__peer2Name = peer2Name
+        self.__peer1Name = "veth"+self.__peer1.getNodeName()+self.__peer2.getNodeName()
+        self.__peer2Name = "veth"+self.__peer2.getNodeName()+self.__peer1.getNodeName()
+        self.__connect()
 
     # Brief: Creates Linux virtual interfaces and connects peers to the nodes
     # Params:
@@ -44,23 +45,10 @@ class Link():
     #   String peer2Mask: integer corresponding to the subnet mask of peer2 (e.g. 24 = 255.255.0.0)
     # Return:
     #   None
-    def connect(self, peer1Ip: str, peer1Mask: int, peer2Ip: str, peer2Mask: int) -> None:
+    def __connect(self) -> None:
         self.__create(self.__peer1Name, self.__peer2Name)
         self.__setInterface(self.__peer1.getNodeName(), self.__peer1Name)
         self.__setInterface(self.__peer2.getNodeName(), self.__peer2Name)
-        
-        # If the any of the node peers is switch, it needs to create a 
-        if self.__peer1.__class__.__name__ == "Switch": 
-            self.__setSwitchIp(self.__peer1.getNodeName(), self.__peer1Name, peer1Ip, peer1Mask)
-            self.__createSwitchPort(self.__peer1.getNodeName(), self.__peer1Name)
-        else:
-            self.__setIp(self.__peer1.getNodeName(), self.__peer1Name, peer1Ip, peer1Mask)
-        if self.__peer2.__class__.__name__ == "Switch": 
-            self.__setSwitchIp(self.__peer2.getNodeName(), self.__peer2Name, peer2Ip, peer2Mask)
-            self.__createSwitchPort(self.__peer2.getNodeName(), self.__peer1Name)
-        else: 
-            self.__setIp(self.__peer2.getNodeName(), self.__peer2Name, peer2Ip, peer2Mask)
-
 
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
@@ -110,12 +98,24 @@ class Link():
     #   String mask: Network mask for the IP address
     # Return:
     #   None
-    def __setIp(self, nodeName: str, peerName: str, ip: str, mask: int) -> None:
-        try:
-            subprocess.run(f"ip -n {nodeName} addr add {ip}/{mask} dev {peerName}", shell=True)
-        except Exception as ex:
-            logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
-            raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
+    def setIp(self, node: Node, ip: str, mask: int) -> None:
+        if node == self.__peer1:
+            peerName = self.__peer1Name
+        elif node == self.__peer2:
+            peerName = self.__peer2Name
+        else:
+            logging.error(f"Incorrect node reference for this Link class, expected reference of object {self.__peer1.getNodeName()} or {self.__peer2.getNodeName()}")
+            raise Exception(f"Incorrect node reference for this Link class, expected reference of object {self.__peer1.getNodeName()} or {self.__peer2.getNodeName()}")
+            
+        if node.__class__.__name__ == "Switch": 
+            self.__setSwitchIp(node.getNodeName(), peerName, ip, mask)
+            self.__createSwitchPort(node.getNodeName(), peerName)
+        else:
+            try:
+                subprocess.run(f"ip -n {node.getNodeName()} addr add {ip}/{mask} dev {peerName}", shell=True)
+            except Exception as ex:
+                logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
+                raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
 
     # Brief: Set Ip to a bridge 
     # Params:
@@ -131,19 +131,4 @@ class Link():
         except Exception as ex:
             logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
             raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
-
-    # Brief: Returns the value of peer1
-    # Params:
-    # Return:
-    #   Returns the value of the peer1
-    def get_peer1(self):
-        return self._peer1
-
-    # Brief: Returns the peer2
-    # Params:
-    # Return:
-    #   Return the value of the peer2
-    def get_peer2(self):
-        return self._peer2
-
     
