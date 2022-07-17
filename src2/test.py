@@ -27,6 +27,8 @@ h2.delete()
 
 
 
+c1 = Controller("c1")
+c2 = Controller("c2")
 
 h1 = Host("h1")
 h1.instantiate()
@@ -41,6 +43,9 @@ h5.instantiate()
 
 s1 = Switch("s1")
 s1.instantiate()
+ls1 = Link(c1, s1)
+ls1.setIp("192.168.100.100", 32)
+
 s2 = Switch("s2")
 s2.instantiate()
 

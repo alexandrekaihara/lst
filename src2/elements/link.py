@@ -30,11 +30,11 @@ class Link():
     #   String peer2Name: Name of the interface to be connected to the second object
     # Return:
     #   None
-    def __init__(self, peer1: Node, peer2: Node) -> None:
-        self.__peer1 = peer1
-        self.__peer2 = peer2
-        self.__peer1Name = "veth"+self.__peer1.getNodeName()+self.__peer2.getNodeName()
-        self.__peer2Name = "veth"+self.__peer2.getNodeName()+self.__peer1.getNodeName()
+    def __init__(self, node1: Node, node2: Node) -> None:
+        self.__node1 = node1
+        self.__node2 = node2
+        self.__peer1Name = "veth"+self.__node1.getNodeName()+self.__node2.getNodeName()
+        self.__peer2Name = "veth"+self.__node2.getNodeName()+self.__node1.getNodeName()
         self.__connect()
 
     # Brief: Creates Linux virtual interfaces and connects peers to the nodes, in case of one of the nodes is a switch, it also creates a port in bridge
@@ -47,11 +47,11 @@ class Link():
     #   None
     def __connect(self) -> None:
         self.__create(self.__peer1Name, self.__peer2Name)
-        self.__setInterface(self.__peer1.getNodeName(), self.__peer1Name)
-        self.__setInterface(self.__peer2.getNodeName(), self.__peer2Name)
+        self.__setInterface(self.__node1.getNodeName(), self.__peer1Name)
+        self.__setInterface(self.__node2.getNodeName(), self.__peer2Name)
 
-        if self.__peer1.__class__.__name__ == "Switch": self.__createSwitchPort(self.__peer1.getNodeName(), self.__peer1Name)
-        if self.__peer2.__class__.__name__ == "Switch": self.__createSwitchPort(self.__peer2.getNodeName(), self.__peer2Name)
+        if self.__peer1.__class__.__name__ == "Switch": self.__createSwitchPort(self.__node1.getNodeName(), self.__peer1Name)
+        if self.__peer2.__class__.__name__ == "Switch": self.__createSwitchPort(self.__node2.getNodeName(), self.__peer2Name)
 
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
@@ -101,13 +101,18 @@ class Link():
     # Return:
     #   None
     def setIp(self, node: Node, ip: str, mask: int) -> None:
-        if node == self.__peer1:
+        # Check if the node is a switch
+        if node == self.__node1:
             peerName = self.__peer1Name
-        elif node == self.__peer2:
+            otherPeerName = self.__peer2Name
+            otherNodeName = self.__node2.getNodeName()
+        elif node == self.__node2:
             peerName = self.__peer2Name
+            otherPeerName = self.__peer1Name
+            otherNodeName = self.__node1.getNodeName()
         else:
-            logging.error(f"Incorrect node reference for this Link class, expected reference of object {self.__peer1.getNodeName()} or {self.__peer2.getNodeName()}")
-            raise Exception(f"Incorrect node reference for this Link class, expected reference of object {self.__peer1.getNodeName()} or {self.__peer2.getNodeName()}")
+            logging.error(f"Incorrect node reference for this Link class, expected reference of object {self.__node1.getNodeName()} or {self.__node2.getNodeName()}")
+            raise Exception(f"Incorrect node reference for this Link class, expected reference of object {self.__node1.getNodeName()} or {self.__node2.getNodeName()}")
 
         if node.__class__.__name__ == "Switch": 
             # If it is a switch, needs to set the ip in bridge instead of the created interface
@@ -120,6 +125,27 @@ class Link():
             logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
             raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
 
+        # Insert a new route on the other peer automatically
+        self.addRoute(otherNodeName, otherPeerName, ip, mask)
+        # Define the interface as the default gateway if it doensn't exist
+        self.setDefaultGateway(otherNodeName, otherPeerName, ip)
+
+    # Brief: Add a route in routing table of container
+    # Params:
+    #   String node: Node object to set the new route
+    #   String peerName: name of the gateway interface
+    #   String ip: IP address of the route
+    #   String mask: Network mask for the IP address route
+    # Return:
+    #   None
+    def addRoute(self, nodeName: str, peerName: str, ip: str, mask: int):
+        try:
+            subprocess.run(f"docker exec {nodeName} ip route add {ip}/{mask} via {peerName}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error adding route {ip}/{mask} via {peerName} in {nodeName}: {str(ex)}")
+            raise Exception(f"Error adding route {ip}/{mask} via {peerName} in {nodeName}: {str(ex)}")
+        
+
     # Brief: Set Ip to an interface (the ip must be set only after connecting it to a container, because)
     # Params:
     #   String nodeName: Name of the container to set the IP
@@ -127,9 +153,11 @@ class Link():
     #   String outputInterface: The name of the interface to forward as gateway
     # Return:
     #   None
-    def setGateway(self, nodeName: str, destinationIp: str, outputInterface: str) -> None:
+    def setDefaultGateway(self, nodeName: str, outputInterface: str, destinationIp: str) -> None:
         try:
             subprocess.run(f"docker exec {nodeName} route add default gw {destinationIp} dev {outputInterface}", shell=True)
         except Exception as ex:
             logging.error(f"Error while setting gateway {destinationIp} on device {outputInterface} in {nodeName}: {str(ex)}")
             raise Exception(f"Error while setting gateway {destinationIp} on device {outputInterface} in {nodeName}: {str(ex)}")
+
+    def __isDefaultGateway(self, nodeName: str):
