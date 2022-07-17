@@ -14,28 +14,67 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+
+import logging
+import subprocess
+from elements.node import Node
+
+
 # This class holds the values of the network node link and some
 class Link():
-    def __init__(self, object):
-        self._peer1 = self.set_peer1(object)
-        self._peer2 = self.set_peer2(object)
-
-    # Brief: Set the peer1 parameter if exists
+    # Brief: Creates Linux virtual interfaces and connects peers to the nodes
     # Params:
-    #   Dict object: A link object
+    #   String peer1: Reference to the first node object class
+    #   String peer2: Reference to the second node object class
+    #   String peer1Name: Name of the interface to be connected to the first object
+    #   String peer2Name: Name of the interface to be connected to the second object
     # Return:
-    #   Returns the value of the peer1 if exists, otherwise, returns none
-    def set_peer1(self, object):
-        pass
+    #   None
+    def __init__(self, peer1: Node, peer2: Node, peer1Name: str, peer2Name: str) -> None:
+        self.__peer1 = peer1
+        self.__peer2 = peer2
+        self.__peer1Name = peer1Name
+        self.__peer2Name = peer2Name
 
-    # Brief: Set the peer2 parameter if exists
+    # Brief: Creates Linux virtual interfaces and connects peers to the nodes
     # Params:
-    #   Dict object: A link object
+    #   String peer1Ip: Ip of the first peer in format "192.168.56.100/24"
+    #   String peer2Ip: Ip of the second peer in format "192.168.56.100/24"
     # Return:
-    #   Returns the value of the peer2 if exists, otherwise, returns none
-    def set_peer2(self, object):
-        pass
+    #   None
+    def connect(self, peer1Ip: str, peer2Ip: str) -> None:
+        self.__create(self.__peer1name, self.__peer2Name)
+        self.__set(self.__peer1.getNodeName(), self.peer1Name)
+        self.__set(self.__peer2.getNodeName(), self.peer2Name)
+
+    # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
+    # Params:
+    #   String peer1Name: Name of the interface to connect to the first peer 
+    #   String peer2Name: Name of the interface to connect to the second peer 
+    # Return:
+    #   None
+    def __create(self, peer1Name: str, peer2Name: str) -> None:
+        try:
+            subprocess.run(f"ip link add {peer1Name} type veth peer name {peer2Name}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while creating virtual interfaces {peer1Name} and {peer2Name}: {str(ex)}")
+            raise Exception(f"Error while creating virtual interfaces {peer1Name} and {peer2Name}: {str(ex)}")
+        subprocess.run(f"ip link set {peer1Name}", shell=True)
+        subprocess.run(f"ip link set {peer2Name}", shell=True)
     
+    # Brief: Set the interface to node
+    # Params:
+    #   String nodeName: Name of the node network namespace
+    #   String peerName: Name of the interface to set to node
+    # Return:
+    #   None
+    def __set(self, nodeName: str, peerName: str) -> None:
+        try:
+            subprocess.run(f"ip link set {peerName} netns {nodeName}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
+            raise Exception(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
+
     # Brief: Returns the value of peer1
     # Params:
     # Return:

@@ -28,6 +28,7 @@ class Node:
     #   None
     def __init__(self, nodeName: str) -> None:
         self.__nodeName = nodeName
+        self.__dns = "8.8.8.8"
 
     # Brief: Instantiate the container
     # Params:
@@ -39,6 +40,7 @@ class Node:
         try:    
             if dockerCommand == '':
                 subprocess.run(f"docker run -d --network=none --name={self.getNodeName()} {dockerImage}", shell=True)
+                self.__enableNamespace(self.getNodeName())
             else:
                 subprocess.run(dockerCommand, shell=True)
         except Exception as ex:
@@ -51,17 +53,29 @@ class Node:
     #   String DockerCommand: String to be used to instantiate the container instead of the standard command
     # Return:
     #   None
-    def delete(self):
+    def delete(self) -> None:
         try:    
             subprocess.run(f"docker kill {self.getnodeName()} && docker rm {self.getnodeName()}", shell=True)
         except Exception as ex:
             logging.error(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
 
+    # Brief: Enable accessing the Docker node namespace directly
+    # Params:
+    # Return:
+    #   None
+    def __enableNamespace(self, nodeName) -> None:
+        try:    
+            subprocess.run(f"pid=$(docker inspect -f '{{{{.State.Pid}}}}' {nodeName}); mkdir -p /var/run/netns/; ln -sfT /proc/$pid/ns/net /var/run/netns/{nodeName}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
+            raise Exception(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
+
+
     # Brief: Returns the value of the container name
     # Params:
     #   String containerName: Name of the container
     # Return:
     #   None
-    def getNodeName(self):
+    def getNodeName(self) -> str:
         return self.__nodeName

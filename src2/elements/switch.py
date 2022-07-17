@@ -21,19 +21,17 @@ from exceptions import NodeInstantiationFailed
 
 
 class Switch(Node):
-    def instantiate(self):
+    def instantiate(self) -> None:
         super().instantiate(dockerCommand=f"docker run -d --network=none --privileged --name={self.getNodeName()} openvswitch")
 
-    def
-
-    def instantiate_local(self):
+    def instantiate_local(self) -> None:
         try:
             subprocess.run(f"ovs-vsctl add-br {self.getNodeName()}", shell=True)
         except Exception as ex:
             logging.error(f"Error while creating the switch {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while creating the switch {self.getNodeName()}: {str(ex)}")
         
-    def delete_local(self):
+    def delete_local(self) -> None:
         try:
             subprocess.run(f"ovs-vsctl del-br {self.getNodeName()}", shell=True)
         except Exception as ex:
