@@ -25,7 +25,10 @@ class Controller(Node):
         super(Controller, self).__init__(nodeName)
         self.__process = 0
 
-    def instantiate(self, controllerIp, controllerPort):
+    def instantiate(self) -> None:
+        super().instantiate(dockerImage='ryucontroller')
+
+    def instantiate_local(self, controllerIp, controllerPort):
         process = self.__getProcess()
         if process == 0:
             try:
