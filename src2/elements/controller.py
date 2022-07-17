@@ -32,14 +32,22 @@ class Controller(Node):
     def instantiate(self, dockerImage='ryucontroller', dockerCommand='') -> None:
         super().instantiate(dockerImage=dockerImage, dockerCommand=dockerCommand)
 
-    def initController(self, ip:str, mask: int):
-        #try:
-        #    subprocess.run(f"ip link set {peerName} netns {nodeName}", shell=True)
-        #    subprocess.run(f"ip -n {nodeName} link set {peerName} up", shell=True)
-        #except Exception as ex:
-        #    logging.error(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
-        #    raise Exception(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
-        pass
+    # Brief: Instantiate a controller container, the ip and port will only be used if the command parameter is an empty list. In this case, will be instantiated a Ryu controller.
+    # Params:
+    #   String ip: Ip address to which the controller will be listening to
+    #   int port: Number of the port that the controller will be listening to
+    #   List<String> command: List of commands to execute in the controller to instantiate the controller
+    # Return:
+    #   None
+    def initController(self, ip:str, port: int, command=[]):
+        try:
+            if len(command) == 0:
+                subprocess.run(f"docker exec {self.getNodeName()} ryu-manager --ofp-listen-host={ip} --ofp-tcp-listen-port={port} controller.py", shell=True)
+            else:
+                for c in command: subprocess.run(c, shell=True)
+        except Exception as ex:
+            logging.error(f"Error while setting up controller {self.getNodeName()} in {ip}/{port}: {str(ex)}")
+            raise Exception(f"Error while setting up controller {self.getNodeName()} in {ip}/{port}: {str(ex)}")
 
     def instantiate_local(self, controllerIp, controllerPort):
         process = self.__getProcess()
