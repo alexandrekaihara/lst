@@ -3,6 +3,10 @@ from elements.switch import Switch
 from elements.link import Link
 from elements.controller import Controller
 
+h1 = Host("h1")
+h1.instantiate()
+h2 = Host("h2")
+h2.instantiate()
 s1 = Switch("s1")
 s1.instantiate()
 s2 = Switch("s2")
