@@ -36,7 +36,7 @@ class Node:
     #   String DockerCommand: String to be used to instantiate the container instead of the standard command
     # Return:
     #   None
-    def instantiate(self, dockerImage="ubuntu:20.04", dockerCommand = '') -> None:
+    def instantiate(self, dockerImage="host:latest", dockerCommand = '') -> None:
         try:    
             if dockerCommand == '':
                 subprocess.run(f"docker run -d --network=none --name={self.getNodeName()} {dockerImage} tail -f /dev/null", shell=True)
