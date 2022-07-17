@@ -44,8 +44,9 @@ class Link():
     #   None
     def connect(self, peer1Ip: str, peer2Ip: str) -> None:
         self.__create(self.__peer1name, self.__peer2Name)
-        self.__set(self.__peer1.getNodeName(), self.peer1Name)
-        self.__set(self.__peer2.getNodeName(), self.peer2Name)
+        self.__set(self.__peer1.getNodeName(), self.__peer1Name)
+        self.__set(self.__peer2.getNodeName(), self.__peer2Name)
+
 
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
@@ -59,8 +60,8 @@ class Link():
         except Exception as ex:
             logging.error(f"Error while creating virtual interfaces {peer1Name} and {peer2Name}: {str(ex)}")
             raise Exception(f"Error while creating virtual interfaces {peer1Name} and {peer2Name}: {str(ex)}")
-        subprocess.run(f"ip link set {peer1Name}", shell=True)
-        subprocess.run(f"ip link set {peer2Name}", shell=True)
+        subprocess.run(f"ip link set {peer1Name} up", shell=True)
+        subprocess.run(f"ip link set {peer2Name} up", shell=True)
     
     # Brief: Set the interface to node
     # Params:
