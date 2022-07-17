@@ -139,8 +139,11 @@ class Link():
     # Return:
     #   None
     def addRoute(self, nodeName: str, peerName: str, ip: str, mask: int):
+        ip = ip.split('.')
+        ip[3] = '0'
+        ip = '.'.join(ip)
         try:
-            subprocess.run(f"docker exec {nodeName} ip route add {ip}/{mask} via {peerName}", shell=True)
+            subprocess.run(f"docker exec {nodeName} ip route add {ip}/{mask} dev {peerName}", shell=True)
         except Exception as ex:
             logging.error(f"Error adding route {ip}/{mask} via {peerName} in {nodeName}: {str(ex)}")
             raise Exception(f"Error adding route {ip}/{mask} via {peerName} in {nodeName}: {str(ex)}")
