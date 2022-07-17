@@ -48,8 +48,8 @@ class Link():
         self.__create(self.__peer1Name, self.__peer2Name)
         self.__setInterface(self.__peer1.getNodeName(), self.__peer1Name)
         self.__setInterface(self.__peer2.getNodeName(), self.__peer2Name)
-        self.__setIp(self.__peer1Name, peer1Ip, peer1Mask)
-        self.__setIp(self.__peer2Name, peer2Ip, peer2Mask)
+        self.__setIp(self.__peer1.getNodeName(), self.__peer1Name, peer1Ip, peer1Mask)
+        self.__setIp(self.__peer2.getNodeName(), self.__peer2Name, peer2Ip, peer2Mask)
 
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
@@ -80,13 +80,15 @@ class Link():
 
     # Brief: Set Ip to an interface
     # Params:
-    #   String nodeName: Name of the node network namespace
+    #   String nodeName: Name of the node's network namespace
     #   String peerName: Name of the interface to set to node
+    #   String ip: IP address to be set to peerName interface
+    #   String mask: Network mask for the IP address
     # Return:
     #   None
-    def __setIp(self, interfaceName: str, ip: str, mask: int) -> None:
+    def __setIp(self, nodeName: str, peerName: str, ip: str, mask: int) -> None:
         try:
-            subprocess.run(f"ip -n {self.__peer1Name} addr add {ip}/{mask} dev {interfaceName}", shell=True)
+            subprocess.run(f"ip -n {nodeName} addr add {ip}/{mask} dev {peerName}", shell=True)
         except Exception as ex:
             logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
             raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
