@@ -43,7 +43,7 @@ class Link():
     # Return:
     #   None
     def connect(self, peer1Ip: str, peer2Ip: str) -> None:
-        self.__create(self.__peer1name, self.__peer2Name)
+        self.__create(self.__peer1Name, self.__peer2Name)
         self.__set(self.__peer1.getNodeName(), self.__peer1Name)
         self.__set(self.__peer2.getNodeName(), self.__peer2Name)
 
