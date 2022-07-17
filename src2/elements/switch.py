@@ -25,6 +25,7 @@ class Switch(Node):
         super().instantiate(dockerCommand=f"docker run -d --network=none --privileged --name={self.getNodeName()} openvswitch")
         try:
             subprocess.run(f"docker exec {self.getNodeName()} ovs-vsctl add-br {self.getNodeName()}", shell=True)
+            subprocess.run(f"docker exec {self.getNodeName()} ip link set {self.getNodeName()} up", shell=True)
         except Exception as ex:
             logging.error(f"Error while creating the switch {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while creating the switch {self.getNodeName()}: {str(ex)}")

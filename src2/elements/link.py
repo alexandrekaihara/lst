@@ -48,12 +48,19 @@ class Link():
         self.__create(self.__peer1Name, self.__peer2Name)
         self.__setInterface(self.__peer1.getNodeName(), self.__peer1Name)
         self.__setInterface(self.__peer2.getNodeName(), self.__peer2Name)
-        self.__setIp(self.__peer1.getNodeName(), self.__peer1Name, peer1Ip, peer1Mask)
-        self.__setIp(self.__peer2.getNodeName(), self.__peer2Name, peer2Ip, peer2Mask)
-
+        
         # If the any of the node peers is switch, it needs to create a 
-        if self.__peer1.__class__.__name__ == "Switch": self.__createSwitchPort(self.__peer1.getNodeName(), self.__peer1Name)
-        if self.__peer2.__class__.__name__ == "Switch": self.__createSwitchPort(self.__peer2.getNodeName(), self.__peer1Name)
+        if self.__peer1.__class__.__name__ == "Switch": 
+            self.__setSwitchIp(self.__peer1.getNodeName(), self.__peer1Name, peer1Ip, peer1Mask)
+            self.__createSwitchPort(self.__peer1.getNodeName(), self.__peer1Name)
+        else:
+            self.__setIp(self.__peer1.getNodeName(), self.__peer1Name, peer1Ip, peer1Mask)
+        if self.__peer2.__class__.__name__ == "Switch": 
+            self.__setSwitchIp(self.__peer2.getNodeName(), self.__peer2Name, peer2Ip, peer2Mask)
+            self.__createSwitchPort(self.__peer2.getNodeName(), self.__peer1Name)
+        else: 
+            self.__setIp(self.__peer2.getNodeName(), self.__peer2Name, peer2Ip, peer2Mask)
+
 
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
@@ -95,7 +102,7 @@ class Link():
             logging.error(f"Error while creating port {peerName} in switch {nodeName}: {str(ex)}")
             raise Exception(f"Error while creating port {peerName} in switch {nodeName}: {str(ex)}")
 
-    # Brief: Set Ip to an interface
+    # Brief: Set Ip to an interface (the ip must be set only after connecting it to a container, because)
     # Params:
     #   String nodeName: Name of the node's network namespace
     #   String peerName: Name of the interface to set to node
@@ -110,6 +117,20 @@ class Link():
             logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
             raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
 
+    # Brief: Set Ip to a bridge 
+    # Params:
+    #   String nodeName: Name of the node's network namespace
+    #   String peerName: Name of the interface to set to node
+    #   String ip: IP address to be set to peerName interface
+    #   String mask: Network mask for the IP address
+    # Return:
+    #   None
+    def __setSwitchIp(self, nodeName: str, peerName: str, ip: str, mask: int) -> None:
+        try:
+            subprocess.run(f"ip -n {nodeName} addr add {ip}/{mask} dev {nodeName}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
+            raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
 
     # Brief: Returns the value of peer1
     # Params:
