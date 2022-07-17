@@ -50,8 +50,8 @@ class Link():
         self.__setInterface(self.__node1.getNodeName(), self.__peer1Name)
         self.__setInterface(self.__node2.getNodeName(), self.__peer2Name)
 
-        if self.__peer1.__class__.__name__ == "Switch": self.__createSwitchPort(self.__node1.getNodeName(), self.__peer1Name)
-        if self.__peer2.__class__.__name__ == "Switch": self.__createSwitchPort(self.__node2.getNodeName(), self.__peer2Name)
+        if self.__node1.__class__.__name__ == "Switch": self.__createSwitchPort(self.__node1.getNodeName(), self.__peer1Name)
+        if self.__node2.__class__.__name__ == "Switch": self.__createSwitchPort(self.__node2.getNodeName(), self.__peer2Name)
 
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
