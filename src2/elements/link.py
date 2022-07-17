@@ -46,10 +46,10 @@ class Link():
     #   None
     def connect(self, peer1Ip: str, peer1Mask: int, peer2Ip: str, peer2Mask: int) -> None:
         self.__create(self.__peer1Name, self.__peer2Name)
-        self.__setIp(self.__peer1Name, peer1Ip, peer1Mask)
-        self.__setIp(self.__peer2Name, peer2Ip, peer2Mask)
         self.__setInterface(self.__peer1.getNodeName(), self.__peer1Name)
         self.__setInterface(self.__peer2.getNodeName(), self.__peer2Name)
+        self.__setIp(self.__peer1Name, peer1Ip, peer1Mask)
+        self.__setIp(self.__peer2Name, peer2Ip, peer2Mask)
 
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
@@ -63,8 +63,6 @@ class Link():
         except Exception as ex:
             logging.error(f"Error while creating virtual interfaces {peer1Name} and {peer2Name}: {str(ex)}")
             raise Exception(f"Error while creating virtual interfaces {peer1Name} and {peer2Name}: {str(ex)}")
-        subprocess.run(f"ip link set {peer1Name} up", shell=True)
-        subprocess.run(f"ip link set {peer2Name} up", shell=True)
     
     # Brief: Set the interface to node
     # Params:
@@ -75,6 +73,7 @@ class Link():
     def __setInterface(self, nodeName: str, peerName: str) -> None:
         try:
             subprocess.run(f"ip link set {peerName} netns {nodeName}", shell=True)
+            subprocess.run(f"ip -n {nodeName} link set {peerName} up", shell=True)
         except Exception as ex:
             logging.error(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
             raise Exception(f"Error while setting virtual interfaces {peerName} to {nodeName}: {str(ex)}")
@@ -87,7 +86,7 @@ class Link():
     #   None
     def __setIp(self, interfaceName: str, ip: str, mask: int) -> None:
         try:
-            subprocess.run(f"ip addr add {ip}/{mask} dev {interfaceName}", shell=True)
+            subprocess.run(f"ip -n {self.__peer1Name} addr add {ip}/{mask} dev {interfaceName}", shell=True)
         except Exception as ex:
             logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
             raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
