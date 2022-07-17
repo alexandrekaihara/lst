@@ -40,9 +40,9 @@ class Node:
         try:    
             if dockerCommand == '':
                 subprocess.run(f"docker run -d --network=none --name={self.getNodeName()} {dockerImage} tail -f /dev/null", shell=True)
-                self.__enableNamespace(self.getNodeName())
             else:
                 subprocess.run(dockerCommand, shell=True)
+            self.__enableNamespace(self.getNodeName())
         except Exception as ex:
             logging.error(f"Error while criating the container {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while criating the container {self.getNodeName()}: {str(ex)}")
