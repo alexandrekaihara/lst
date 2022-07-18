@@ -103,9 +103,9 @@ class Link():
     #   None
     def setIp(self, node: Node, ip: str, mask: int, setGateway=True) -> None:
         # Raise error if received node does not belong to the link
-        if not(self.__isNode1(node) or self.__isNode2(self)):
-            logging.error(f"Incorrect node reference for this Link class, expected reference of object {self.__node1.getNodeName()} or {self.__node2.getNodeName()}")
-            raise Exception(f"Incorrect node reference for this Link class, expected reference of object {self.__node1.getNodeName()} or {self.__node2.getNodeName()}")
+        if not(self.__isNode1(node) or self.__isNode2(node)):
+            logging.error(f"Incorrect node reference for this Link class, expected reference for {self.__node1.getNodeName()} or {self.__node2.getNodeName()} object")
+            raise Exception(f"Incorrect node reference for this Link class, expected reference for {self.__node1.getNodeName()} or {self.__node2.getNodeName()} object")
 
         # Check which node is to be configured and not accept if the received node it do not belongs to the link
         if self.__isNode1(node): 
