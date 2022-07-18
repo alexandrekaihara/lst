@@ -98,33 +98,33 @@ class Link():
     #   String node: Node object to set the interface
     #   String ip: IP address to be set to peerName interface
     #   String mask: Network mask for the IP address
+    #   bool setGateway: Enables setting the default gateway if not already configured
     # Return:
     #   None
-    def setIp(self, node: Node, ip: str, mask: int) -> None:
-        # Check which node is to be configured
-        if node == self.__node1:
-            peerName = self.__peer1Name
-            otherPeerName = self.__peer2Name
-            otherNode = self.__node2
-        elif node == self.__node2:
-            peerName = self.__peer2Name
-            otherPeerName = self.__peer1Name
-            otherNode = self.__node1
-        else:
+    def setIp(self, node: Node, ip: str, mask: int, setGateway=True) -> None:
+        # Raise error if received node does not belong to the link
+        if not(self.__isNode1(node) or self.__isNode2(self)):
             logging.error(f"Incorrect node reference for this Link class, expected reference of object {self.__node1.getNodeName()} or {self.__node2.getNodeName()}")
             raise Exception(f"Incorrect node reference for this Link class, expected reference of object {self.__node1.getNodeName()} or {self.__node2.getNodeName()}")
 
-        if node.__class__.__name__ == "Switch": 
-            # If it is a switch, needs to set the ip in bridge instead of the created interface
-            command = f"ip -n {node.getNodeName()} addr add {ip}/{mask} dev {node.getNodeName()}"
+        # Check which node is to be configured and not accept if the received node it do not belongs to the link
+        if self.__isNode1(node): 
+            peerName = self.__peer1Name
+            otherPeerName = self.__peer2Name
+            otherNode = self.__node2
         else:
-            command = f"ip -n {node.getNodeName()} addr add {ip}/{mask} dev {peerName}"
-            self.setDefaultGateway(otherNode.getNodeName(), otherPeerName, ip)
-        try:
-            subprocess.run(command, shell=True)
-        except Exception as ex:
-            logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
-            raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
+            peerName = self.__peer2Name
+            otherPeerName = self.__peer1Name
+            otherNode = self.__node1
+            
+        # If it is a switch, needs to set the ip in bridge instead of the created interface
+        if node.__class__.__name__ == "Switch": 
+            self.__setIpSwitch(node, ip, mask, peerName)
+            # If no gateway is defined, then define the gateway 
+            if self.__isDefaultGateway(node.getNodeName()) and setGateway:
+                self.setDefaultGateway(otherNode.getNodeName(), otherPeerName, ip)
+        else:
+            self.__setIpNonSwitch(node, ip, mask, peerName)
 
         # If other peer node is a switch,then configure the route to the bridge instead to the interface 
         if otherNode.__class__.__name__ == "Switch":
@@ -134,6 +134,29 @@ class Link():
             self.addRoute(otherNode.getNodeName(), otherPeerName, ip, mask)
             # Define the interface as the default gateway if it doensn't exist
             self.setDefaultGateway(otherNode.getNodeName(), otherPeerName, ip)
+
+    def __isNode1(self, node: Node) -> bool:
+        if node == self.__node1: return True
+        return False
+
+    def __isNode2(self, node: Node) -> bool:
+        if node == self.__node2: return True
+        return False
+
+    def __setIpNonSwitch(self, node: Node, ip: str, mask: int, peerName: str) -> None:
+        try:
+            subprocess.run(f"ip -n {node.getNodeName()} addr add {ip}/{mask} dev {peerName}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
+            raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
+
+    def __setIpSwitch(self, node: Node, ip: str, mask: int, peerName: str) -> None:
+        try:
+            subprocess.run(f"ip -n {node.getNodeName()} addr add {ip}/{mask} dev {node.getNodeName()}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
+            raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
+
 
     # Brief: Add a route in routing table of container
     # Params:
@@ -171,10 +194,6 @@ class Link():
     # Params:
     #   String nodeName: Name of the container to check if already exists default gateway
     # Return:
-    #   None
-    def __isDefaultGateway(self, nodeName: str):
-        try:
-            subprocess.run(f"docker exec {nodeName} ", shell=True)
-        except Exception as ex:
-            logging.error(f"Error while setting gateway {destinationIp} on device {outputInterface} in {nodeName}: {str(ex)}")
-            raise Exception(f"Error while setting gateway {destinationIp} on device {outputInterface} in {nodeName}: {str(ex)}")
+    #   Returns true if there is a gateway configured already and False otherwise
+    def __isDefaultGateway(self, nodeName: str) -> bool:
+        return True #implement
