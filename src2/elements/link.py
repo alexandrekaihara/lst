@@ -105,11 +105,11 @@ class Link():
         if node == self.__node1:
             peerName = self.__peer1Name
             otherPeerName = self.__peer2Name
-            otherNodeName = self.__node2.getNodeName()
+            otherNode = self.__node2
         elif node == self.__node2:
             peerName = self.__peer2Name
             otherPeerName = self.__peer1Name
-            otherNodeName = self.__node1.getNodeName()
+            otherNode = self.__node1
         else:
             logging.error(f"Incorrect node reference for this Link class, expected reference of object {self.__node1.getNodeName()} or {self.__node2.getNodeName()}")
             raise Exception(f"Incorrect node reference for this Link class, expected reference of object {self.__node1.getNodeName()} or {self.__node2.getNodeName()}")
@@ -125,10 +125,14 @@ class Link():
             logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
             raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {peerName}: {str(ex)}")
 
-        # Insert a new route on the other peer automatically
-        self.addRoute(otherNodeName, otherPeerName, ip, mask)
-        # Define the interface as the default gateway if it doensn't exist
-        self.setDefaultGateway(otherNodeName, otherPeerName, ip)
+        # If other peer node is a switch,then configure the route to the bridge instead to the interface 
+        if otherNode.__class__.__name__ == "Switch":
+            self.addRoute(otherNode.getNodeName(), otherNode.getNodeName(), ip, mask)
+        else: 
+            # Insert a new route on the other peer automatically
+            self.addRoute(otherNode.getNodeName(), otherPeerName, ip, mask)
+            # Define the interface as the default gateway if it doensn't exist
+            self.setDefaultGateway(otherNode.getNodeName(), otherPeerName, ip)
 
     # Brief: Add a route in routing table of container
     # Params:
