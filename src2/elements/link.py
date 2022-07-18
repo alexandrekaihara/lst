@@ -101,7 +101,7 @@ class Link():
     # Return:
     #   None
     def setIp(self, node: Node, ip: str, mask: int) -> None:
-        # Check if the node is a switch
+        # Check which node is to be configured
         if node == self.__node1:
             peerName = self.__peer1Name
             otherPeerName = self.__peer2Name
@@ -119,6 +119,7 @@ class Link():
             command = f"ip -n {node.getNodeName()} addr add {ip}/{mask} dev {node.getNodeName()}"
         else:
             command = f"ip -n {node.getNodeName()} addr add {ip}/{mask} dev {peerName}"
+            self.setDefaultGateway(otherNode.getNodeName(), otherPeerName, ip)
         try:
             subprocess.run(command, shell=True)
         except Exception as ex:
