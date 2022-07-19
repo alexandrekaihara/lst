@@ -45,7 +45,8 @@ class Topology(metaclass=TopologyMeta):
         del self.__nodes[node.getNodeName()]
 
     def addConnection(self, node1, node2):
-        
+        self.__nodes[node1.getNodeName()]["connections"][node2.getNodeName()] = node2
+        self.__nodes[node2.getNodeName()]["connections"][node1.getNodeName()] = node1
 
     # Brief: Save the ip and mask information
     # Params:
