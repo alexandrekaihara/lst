@@ -75,7 +75,7 @@ class Topology(metaclass=TopologyMeta):
     def isConnected(self, node, destNode) -> None:
         # Check if the received node is already connected to this container
         try:
-            self.__connections[node.getNodeName()]
+            self.__connections[node.getNodeName()]['connections'][destNode.getNodeName()]
         except:
             logging.error(f"Incorrect node reference for {self.getNodeName()}, connect {destNode.getNodeName()} first")
             raise Exception(f"Incorrect node reference for {self.getNodeName()}, connect {destNode.getNodeName()} first")
