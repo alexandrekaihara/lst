@@ -14,6 +14,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import logging
+
+
 # Brief: This class defines the metaclass of Topology in order to implement Singleton Pattern
 class TopologyMeta(type):
     _instances = {}

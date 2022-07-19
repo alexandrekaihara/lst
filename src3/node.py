@@ -76,7 +76,7 @@ class Node:
     # Return:
     #   None
     def setIp(self, ip: str, mask: int, node: Node) -> None:
-        self.__isConnected(node)
+        self.topology.isConnected(node)
         # Set the ip on an interface
         interfaceName = self.__getThisInterfaceName(node)
         self.__setIp(ip, mask, interfaceName)
@@ -182,7 +182,7 @@ class Node:
     # Return:
     #   None
     def __addRoute(self,ip: str, mask: int,  node: Node):
-        self.__isConnected(node)
+        self.topology.isConnected(node)
         
         ip = ip.split('.')
         ip[3] = '0'
@@ -201,7 +201,7 @@ class Node:
     # Return:
     #   None
     def setDefaultGateway(self, destinationIp: str, node: Node) -> None:
-        self.__isConnected(node)
+        self.topology.isConnected(node)
         outputInterface = self.__getThisInterfaceName(node)
         try:
             subprocess.run(f"docker exec {self.getNodeName()} route add default gw {destinationIp} dev {outputInterface}", shell=True)
