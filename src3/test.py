@@ -17,6 +17,7 @@ s2 = Switch("s2")
 s2.instantiate()
 
 h1.connect(s1)
+h1.setIp('192.168.56.2', 24, s1)
 h2.connect(s1)
 h3.connect(s1)
 
