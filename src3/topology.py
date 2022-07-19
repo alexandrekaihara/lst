@@ -29,15 +29,23 @@ class Topology(metaclass=TopologyMeta):
     def __init__(self):
         self.__nodes = {}
 
+    # Brief: Adds an entry for a node
+    # Params:
+    #   Node node: Reference to the node to be added
+    # Return:
     def setNode(self, node) -> None:
-        self.__nodes[node.getNodeName()] = {}
-        self.__nodes[node.getNodeName()]["nodeRef"] = node
-        self.__nodes[node.getNodeName()]["connections"] = {}
-        self.__nodes[node.getNodeName()]["ip"] = []
-        self.__nodes[node.getNodeName()]["gateway"] = 0
+        nodeName = node.getNodeName()
+        self.__nodes[nodeName] = {}
+        self.__nodes[nodeName]["nodeRef"] = node
+        self.__nodes[nodeName]["connections"] = {}
+        self.__nodes[nodeName]["ip"] = []
+        self.__nodes[nodeName]["gateway"] = 0
 
     def delNode(self, node) -> None:
         del self.__nodes[node.getNodeName()]
+
+    def addConnection(self, node1, node2):
+        
 
     # Brief: Save the ip and mask information
     # Params:
@@ -45,7 +53,6 @@ class Topology(metaclass=TopologyMeta):
     #   int mask: Integer that represents the network mask
     #   String interfaceName: The name of the interface the IP was set
     # Return:
-    #   None
     def setNodeIp(self, node, ip: str, mask: int, interfaceName: str) -> None:
         self.__ipv4[node.getNodeName()]["ip"].append({ip, mask, interfaceName})
 

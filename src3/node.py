@@ -111,13 +111,12 @@ class Node:
             logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
             raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
         # Save the ip, mask an interface name that was set to this container
-        self.__setNodeIp(ip, mask, interfaceName)    
+        self.topology.setNodeIp(self, ip, mask, interfaceName)    
 
     # Brief: Returns the value of the container name
     # Params:
-    #   String containerName: Name of the container
     # Return:
-    #   None
+    #   Returns the name of the node
     def getNodeName(self) -> str:
         return self.__nodeName
 

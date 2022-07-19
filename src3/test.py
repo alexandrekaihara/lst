@@ -2,7 +2,9 @@ from host import Host
 from switch import Switch
 from link import Link
 from controller import Controller
+from topology import Topology
 
+t = Topology()
 h1 = Host("h1")
 h1.instantiate()
 h2 = Host("h2")
