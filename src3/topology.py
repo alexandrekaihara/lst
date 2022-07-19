@@ -58,7 +58,7 @@ class Topology(metaclass=TopologyMeta):
     #   String interfaceName: The name of the interface the IP was set
     # Return:
     def setNodeIp(self, node, ip: str, mask: int, interfaceName: str) -> None:
-        self.__ipv4[node.getNodeName()]["ip"].append({ip, mask, interfaceName})
+        self.__nodes[node.getNodeName()]["ip"].append({ip, mask, interfaceName})
 
     # Brief: Returns the container network informations 
     # Params:
