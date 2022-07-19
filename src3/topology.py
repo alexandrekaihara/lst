@@ -14,9 +14,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from node import Node
-
-
 # Brief: This class defines the metaclass of Topology in order to implement Singleton Pattern
 class TopologyMeta(type):
     _instances = {}
@@ -32,7 +29,7 @@ class Topology(metaclass=TopologyMeta):
     def __init__(self):
         self.__nodes = {}
 
-    def setNode(self, node: Node) -> None:
+    def setNode(self, node) -> None:
         self.__nodes[node.getNodeName()] = {}
         self.__nodes[node.getNodeName()]["nodeRef"] = node
         self.__nodes[node.getNodeName()]["connections"] = {}
@@ -46,14 +43,14 @@ class Topology(metaclass=TopologyMeta):
     #   String interfaceName: The name of the interface the IP was set
     # Return:
     #   None
-    def setNodeIp(self, node: Node, ip: str, mask: int, interfaceName: str) -> None:
+    def setNodeIp(self, node, ip: str, mask: int, interfaceName: str) -> None:
         self.__ipv4[node.getNodeName()]["ip"].append({ip, mask, interfaceName})
 
     # Brief: Returns the container network informations 
     # Params:
     #   Node node: Refernce to the node to get the container informations
     # Return:
-    def getNode(self, node: Node) -> None:
+    def getNode(self, node) -> None:
         return self.__nodes[node.getNodeName()]
 
     # Brief: Check if this container is connected to another node reference
@@ -61,7 +58,7 @@ class Topology(metaclass=TopologyMeta):
     #   Node node: Reference to the node to check if this container is connected to
     # Return:
     #   None
-    def isConnected(self, node: Node, destNode: Node) -> None:
+    def isConnected(self, node, destNode) -> None:
         # Check if the received node is already connected to this container
         try:
             self.__connections[node.getNodeName()]
