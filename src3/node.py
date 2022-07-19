@@ -34,9 +34,7 @@ class Node:
     #   None
     def __init__(self, nodeName: str) -> None:
         self.__nodeName = nodeName
-        self.__dns = "8.8.8.8"
         self.topology = Topology()
-        self.topology.setNode(self)
 
     # Brief: Instantiate the container
     # Params:
@@ -54,6 +52,7 @@ class Node:
         except Exception as ex:
             logging.error(f"Error while criating the container {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while criating the container {self.getNodeName()}: {str(ex)}")
+        self.topology.setNode(self)
 
     # Brief: Instantiate the container
     # Params:
@@ -67,6 +66,7 @@ class Node:
         except Exception as ex:
             logging.error(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
+        self.topology.delNode(self)
 
     # Brief: Set Ip to an interface (the ip must be set only after connecting it to a container)
     # Params:

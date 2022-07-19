@@ -35,7 +35,10 @@ class Topology(metaclass=TopologyMeta):
         self.__nodes[node.getNodeName()]["connections"] = {}
         self.__nodes[node.getNodeName()]["ip"] = []
         self.__nodes[node.getNodeName()]["gateway"] = 0
-    
+
+    def delNode(self, node) -> None:
+        del self.__nodes[node.getNodeName()]
+
     # Brief: Save the ip and mask information
     # Params:
     #   String ip: IP address to be set to peerName interface
