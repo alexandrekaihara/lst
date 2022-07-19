@@ -81,13 +81,7 @@ class Switch(Node):
     # Return:
     #   None
     def setIp(self, ip: str, mask: int, node: Node) -> None:
-        # Check if the received node is already connected to this container
-        try:
-            self.__connections[node.getNodeName()]
-        except:
-            logging.error(f"Incorrect node reference for {self.getNodeName()}, connect {node.getNodeName()} first")
-            raise Exception(f"Incorrect node reference for {self.getNodeName()}, connect {node.getNodeName()} first")
-
+        self.__isConnected(node)
         # Set the ip on an interface
         interfaceName = self.getNodeName()
         self.__setIp(ip, mask, interfaceName)

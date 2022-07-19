@@ -16,6 +16,7 @@
 
 import logging
 import subprocess
+from topology import Topology
 from exceptions import NodeInstantiationFailed
 
 
@@ -33,9 +34,9 @@ class Node:
     #   None
     def __init__(self, nodeName: str) -> None:
         self.__nodeName = nodeName
-        self.__connections = {}
         self.__dns = "8.8.8.8"
-        self.__ipv4 = []
+        self.topology = Topology()
+        self.topology.setNode(self)
 
     # Brief: Instantiate the container
     # Params:
@@ -96,25 +97,6 @@ class Node:
         # Save the information about the nodes this container is connected to
         self.__addConnection(node)
 
-    def __updateNeighbors(self):
-        pass
-        
-    # Brief: Check if this container is connected to another node reference
-    # Params:
-    #   Node node: Reference to the node to check if this container is connected to
-    # Return:
-    #   None
-    def __isConnected(self, node: Node) -> None:
-        # Check if the received node is already connected to this container
-        try:
-            self.__connections[node.getNodeName()]
-        except:
-            logging.error(f"Incorrect node reference for {self.getNodeName()}, connect {node.getNodeName()} first")
-            raise Exception(f"Incorrect node reference for {self.getNodeName()}, connect {node.getNodeName()} first")
-
-    def __addConnection(self, node: Node) -> None:
-        self.__connections[node.getNodeName()] = node
-
     # Brief: Set Ip to an interface
     # Params:
     #   String ip: IP address to be set to peerName interface
@@ -131,16 +113,6 @@ class Node:
         # Save the ip, mask an interface name that was set to this container
         self.__setNodeIp(ip, mask, interfaceName)    
 
-    # Brief: Save the ip and mask information
-    # Params:
-    #   String ip: IP address to be set to peerName interface
-    #   int mask: Integer that represents the network mask
-    #   String interfaceName: The name of the interface the IP was set
-    # Return:
-    #   None
-    def __setNodeIp(self, ip: str, mask: int, interfaceName: str) -> None:
-        self.__ipv4.append({ip, mask, interfaceName})
-
     # Brief: Returns the value of the container name
     # Params:
     #   String containerName: Name of the container
@@ -155,7 +127,7 @@ class Node:
     # Return:
     #   Name of the interface with pattern veth + this node name + other node name
     def __getThisInterfaceName(self, node: Node) -> str:
-        return "veth"+self.getNodeName()+node.getNodeName()
+        return "veth-"+self.getNodeName()+'-'+node.getNodeName()
 
     # Brief: Returns the name of the interface to be created on other node
     # Params:
@@ -163,7 +135,7 @@ class Node:
     # Return:
     #   Name of the interface with pattern veth + other node name + this node name
     def __getOtherInterfaceName(self, node: Node) -> str:
-        return "veth"+node.getNodeName()+self.getNodeName()
+        return "veth-"+node.getNodeName()+'-'+self.getNodeName()
 
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
