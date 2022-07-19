@@ -95,7 +95,7 @@ class Node:
         self.__setInterface(node.getNodeName(), peer2Name)
 
         # Save the information about the nodes this container is connected to
-        self.__addConnection(node)
+        self.topology.addConnection(self, node)
 
     # Brief: Set Ip to an interface
     # Params:
