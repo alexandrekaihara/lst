@@ -19,6 +19,11 @@ import subprocess
 from exceptions import NodeInstantiationFailed
 
 
+# Just to enable the declaration of Type in methods
+class Node:
+    pass
+
+
 # Brief: This is a super class that define methods common for network nodes
 class Node:
     # Brief: Constructor of Node super class
