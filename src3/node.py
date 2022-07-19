@@ -85,7 +85,7 @@ class Node:
     #   Node node: Reference of another node to connect to
     # Return:
     #   None
-    def connect(self, node: Node, configureGateway=True) -> None:
+    def connect(self, node: Node) -> None:
         peer1Name = self.__getThisInterfaceName(node)
         peer2Name = self.__getOtherInterfaceName(node)
         
@@ -95,9 +95,9 @@ class Node:
 
         # Save the information about the nodes this container is connected to
         self.__addConnection(node)
-        
-        if configureGateway:
-            self.__setDefaultGateway()
+
+    def __updateNeighbors(self):
+        pass
         
     # Brief: Check if this container is connected to another node reference
     # Params:
