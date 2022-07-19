@@ -8,6 +8,7 @@ h1.instantiate()
 h2 = Host("h2")
 h2.instantiate()
 h3 = Host("h3")
+h3.instantiate()
 s1 = Switch("s1")
 s1.instantiate()
 s2 = Switch("s2")
@@ -31,8 +32,10 @@ c1 = Controller("c1")
 c1.instantiate()
 
 s1.delete()
+s2.delete()
 h1.delete()
 h2.delete()
+h3.delete()
 
 
 
