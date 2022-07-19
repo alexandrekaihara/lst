@@ -7,28 +7,14 @@ from topology import Topology
 t = Topology()
 h1 = Host("h1")
 h1.instantiate()
-h2 = Host("h2")
-h2.instantiate()
-h3 = Host("h3")
-h3.instantiate()
 s1 = Switch("s1")
 s1.instantiate()
-s2 = Switch("s2")
-s2.instantiate()
 
 h1.connect(s1)
 h1.setIp('192.168.56.2', 24, s1)
-h2.connect(s1)
-h3.connect(s1)
-
-c1 = Controller("c1")
-c1.instantiate()
 
 s1.delete()
-s2.delete()
 h1.delete()
-h2.delete()
-h3.delete()
 
 
 
