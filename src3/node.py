@@ -37,9 +37,10 @@ class Node:
         self.topology = Topology()
         try:
             self.topology.getNode(self) 
-        except:
             logging.error(f"Cannot create node with name {self.getNodeName()}, it already exists")
             raise NodeInstantiationFailed(f"Cannot create node with name {self.getNodeName()}, it already exists")
+        except:
+            pass
 
     # Brief: Instantiate the container
     # Params:
