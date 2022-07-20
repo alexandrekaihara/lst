@@ -85,3 +85,4 @@ class Switch(Node):
         # Set the ip on an interface
         interfaceName = self.getNodeName()
         self.topology.setNodeIp(self, ip, mask, interfaceName)
+        self.topology.updateGatewayHosts(self, ip)

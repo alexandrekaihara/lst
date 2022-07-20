@@ -84,9 +84,13 @@ class Topology(metaclass=TopologyMeta):
         pass
 
     def updateGatewayHosts(self, node, ip: str) -> None:
+        # Condition to set the gateway is the neighbor be a Host class and not have already be set the gateway
+        def condition(neighbor):
+            if self.getNode(neighbor)['gateway'] == 0 and neighbor.__class__.__name__ == "Host":
+                return True
+            return False
         neighbors = self.getNode(node)['connections']
-        [neighbor.setDefaultGateway(ip, node) for _,neighbor in neighbors.items() if self.getNode(neighbor)['gateway'] == 0]
+        [neighbor.setDefaultGateway(ip, node) for _,neighbor in neighbors.items() if condition(neighbor)]
           
     def setGateway(self, node, ip: str, destNode) -> None:
         self.getNode(node)['gateway'] = (ip, destNode)
-    
