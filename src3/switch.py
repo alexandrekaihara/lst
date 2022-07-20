@@ -71,7 +71,7 @@ class Switch(Node):
     #   String node: Reference to the node it is connected to this container to discover the intereface to set the ip to
     # Return:
     def setIp(self, ip: str, mask: int, node: Node) -> None:
-        if not self.__isConnected(node):
+        if not self._Node__isConnected(node):
             logging.error(f"Incorrect node reference {node.getNodeName()}, connect {self.getNodeName()} first")
             raise Exception(f"Incorrect node reference {node.getNodeName()}, connect {self.getNodeName()} first")
         interfaceName = self.getNodeName()
