@@ -63,16 +63,12 @@ class Controller(Node):
         
     def delete(self):
         process = self.__getProcess()
-        if process != 0:
-            try:
-                self.__process.kill()
-                _, stderr = self.__process.communicate()
-            except Exception as ex:
-                logging.error(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}\nThreads error: {stderr}")
-                raise NodeInstantiationFailed(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}\nThreads error: {stderr}")
-        else:
-            logging.error(f"Can't delete {self.getNodeName()}. {self.getNodeName()} was not instantiated.")
-            raise Exception(f"Can't delete {self.getNodeName()}. {self.getNodeName()} was not instantiated.")
+        try:
+            self.__process.kill()
+            _, stderr = self.__process.communicate()
+        except Exception as ex:
+            logging.error(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}\nThreads error: {stderr}")
+            raise NodeInstantiationFailed(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}\nThreads error: {stderr}")
         
     def __getProcess(self):
         return self.__process
