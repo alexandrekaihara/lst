@@ -12,6 +12,7 @@ s1.instantiate()
 
 h1.connect(s1)
 h1.setIp('192.168.56.2', 24, s1)
+s1.setIp('192.168.56.1', 24, h1)
 
 s1.delete()
 h1.delete()
