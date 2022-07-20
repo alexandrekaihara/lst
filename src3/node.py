@@ -35,6 +35,11 @@ class Node:
     def __init__(self, nodeName: str) -> None:
         self.__nodeName = nodeName
         self.topology = Topology()
+        try:
+            self.topology.getNode(self) 
+        except:
+            logging.error(f"Cannot create node with name {self.getNodeName()}, it already exists")
+            raise NodeInstantiationFailed(f"Cannot create node with name {self.getNodeName()}, it already exists")
 
     # Brief: Instantiate the container
     # Params:
@@ -43,6 +48,7 @@ class Node:
     # Return:
     #   None
     def instantiate(self, dockerImage="host:latest", dockerCommand = '') -> None:
+
         try:    
             if dockerCommand == '':
                 subprocess.run(f"docker run -d --network=none --privileged --name={self.getNodeName()} {dockerImage} tail -f /dev/null", shell=True)
@@ -189,10 +195,10 @@ class Node:
     # Params:
     #   String ip: IP address of the route
     #   String mask: Network mask for the IP address route
-    #   String node: Reference to the node to be the gateway
+    #   String interfaceName: Name of the interface to forward to
     # Return:
     #   None
-    def __addRoute(self,ip: str, mask: int,  node: Node):
+    def __addRoute(self, ip: str, mask: int,  node: Node):
         if not self.topology.isConnected(self, node):
             logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
             raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")

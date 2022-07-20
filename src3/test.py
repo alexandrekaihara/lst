@@ -1,3 +1,9 @@
+
+class Test:
+    def a():
+        pass
+
+
 from host import Host
 from switch import Switch
 from link import Link
@@ -17,6 +23,17 @@ s1.setIp('192.168.56.1', 24, h1)
 s1.delete()
 h1.delete()
 
+
+
+Host(0) -> Connect -> Switch(0) -> Switch adc port -> Host definir gateway
+Host(0) -> Connect -> Switch(+1) -> Swith adc port -> Host definir gateway
+Host(+1) -> Connect -> Switch(+1) -> Swith adc port -> Host definir gateway
+Switch(0) -> Connect -> Switch(0) -> Switch adc port -> Switch adc port 
+Switch(0) -> Connect -> Switch(+1) -> Switch adc port -> Switch adc port -> Switch adc rota -> Propagar rota
+Switch(+1) -> Connect -> Switch(+1)
+Switch(0) -> Connect -> Host(0) -> Switch adc port
+Switch(0) -> Connect -> Host(+1) -> Swith Ad
+Switch(+1) -> Connect -> Host(+1) -> 
 
 
 

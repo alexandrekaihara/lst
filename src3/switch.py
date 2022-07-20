@@ -79,10 +79,20 @@ class Switch(Node):
     #   int mask: Integer that represents the network mask
     #   String node: Reference to the node it is connected to this container to discover the intereface to set the ip to
     # Return:
-    #   None
     def setIp(self, ip: str, mask: int, node: Node) -> None:
         self.topology.isConnected(self, node)
         interfaceName = self.getNodeName()
         self._Node__setIp(ip, mask, interfaceName)
         self.topology.setNodeIp(self, ip, mask, interfaceName)
         self.topology.updateGatewayHosts(self, ip)
+        self.__addDefaultRoute()
+    
+    # Brief: Set default route to forward all incoming packets to s1 bridge and let the bridge handle the forwarding
+    # Params:
+    # Return:
+    def __addDefaultRoute(self) -> None:
+        try:
+            subprocess.run(f"docker exec {self.getNodeName()} ip route add 0.0.0.0/0 dev {self.getNodeName()}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error adding route default route for switch {self.getNodeName()}: {str(ex)}")
+            raise Exception(f"Error adding route default route for switch {self.getNodeName()}: {str(ex)}")

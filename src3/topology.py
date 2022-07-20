@@ -59,7 +59,7 @@ class Topology(metaclass=TopologyMeta):
     # Return:
     def setNodeIp(self, node, ip: str, mask: int, interfaceName: str) -> None:
         self.getNode(node)["ip"].append({ip, mask, interfaceName})
-
+        
     # Brief: Returns the container network informations 
     # Params:
     #   Node node: Refernce to the node to get the container informations
@@ -80,9 +80,6 @@ class Topology(metaclass=TopologyMeta):
         except:
             return False
 
-    def __updateRoutesNeighbors(self) -> None:
-        pass
-
     def updateGatewayHosts(self, node, ip: str) -> None:
         # Condition to set the gateway is the neighbor be a Host class and not have already be set the gateway
         def condition(neighbor):
@@ -94,3 +91,4 @@ class Topology(metaclass=TopologyMeta):
           
     def setGateway(self, node, ip: str, destNode) -> None:
         self.getNode(node)['gateway'] = (ip, destNode)
+
