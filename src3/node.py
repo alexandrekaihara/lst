@@ -94,6 +94,11 @@ class Node:
         self.__setInterface(self.getNodeName(), peer1Name)
         self.__setInterface(node.getNodeName(), peer2Name)
 
+        if self.__class__.__name__ == 'Switch':
+            node._Switch__createPort(node.getNodeName(), node.__getThisInterfaceName(node))
+        if node.__class__.__name__ == 'Switch':
+            node._Switch__createPort(node.getNodeName(), node.__getThisInterfaceName(node))
+
         # Save the information about the nodes this container is connected to
         self.topology.addConnection(self, node)
 
