@@ -76,8 +76,10 @@ class Node:
     # Return:
     #   None
     def setIp(self, ip: str, mask: int, node: Node) -> None:
-        self.topology.isConnected(self, node)
-        # Set the ip on an interface
+        if not self.topology.isConnected(self, node):
+            logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
+            raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
+
         interfaceName = self.__getThisInterfaceName(node)
         self.__setIp(ip, mask, interfaceName)
 
@@ -87,6 +89,10 @@ class Node:
     # Return:
     #   None
     def connect(self, node: Node) -> None:
+        if self.topology.isConnected(node):
+            logging.error(f"Cannot connect to {node.getNodeName()}, node already connected")
+            raise Exception(f"Cannot connect to {node.getNodeName()}, node already connected")
+
         peer1Name = self.__getThisInterfaceName(node)
         peer2Name = self.__getOtherInterfaceName(node)
         
@@ -187,7 +193,9 @@ class Node:
     # Return:
     #   None
     def __addRoute(self,ip: str, mask: int,  node: Node):
-        self.topology.isConnected(self, node)
+        if not self.topology.isConnected(self, node):
+            logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
+            raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
         
         ip = ip.split('.')
         ip[3] = '0'
@@ -206,7 +214,10 @@ class Node:
     # Return:
     #   None
     def setDefaultGateway(self, destinationIp: str, node: Node) -> None:
-        self.topology.isConnected(self, node)
+        if not self.topology.isConnected(self, node):
+            logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
+            raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
+            
         outputInterface = self.__getThisInterfaceName(node)
         try:
             subprocess.run(f"docker exec {self.getNodeName()} route add default gw {destinationIp} dev {outputInterface}", shell=True)
