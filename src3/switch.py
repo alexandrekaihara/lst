@@ -82,7 +82,7 @@ class Switch(Node):
     #   None
     def setIp(self, ip: str, mask: int, node: Node) -> None:
         self.topology.isConnected(self, node)
-        # Set the ip on an interface
         interfaceName = self.getNodeName()
+        self.__setIp(ip, mask, interfaceName)
         self.topology.setNodeIp(self, ip, mask, interfaceName)
         self.topology.updateGatewayHosts(self, ip)
