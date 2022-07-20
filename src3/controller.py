@@ -22,7 +22,7 @@ from exceptions import NodeInstantiationFailed
 
 class Controller(Node):
     def __init__(self, nodeName: str) -> None:
-        super(Controller, self).__init__(nodeName)
+        super().__init__(nodeName)
         self.__process = 0
 
     # Brief: Instantiate a controller container
@@ -42,7 +42,7 @@ class Controller(Node):
     def initController(self, ip:str, port: int, command=[]):
         try:
             if len(command) == 0:
-                subprocess.run(f"docker exec {self.getNodeName()} ryu-manager --ofp-listen-host={ip} --ofp-tcp-listen-port={port} /home/controller.py > controller.log", shell=True)
+                subprocess.run(f"docker exec {self.getNodeName()} ryu-manager --ofp-listen-host={ip} --ofp-tcp-listen-port={port} /home/controller.py > controller.log &", shell=True)
             else:
                 for c in command: subprocess.run(c, shell=True)
         except Exception as ex:
