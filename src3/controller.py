@@ -61,14 +61,18 @@ class Controller(Node):
             logging.error(f"Controller {self.getNodeName()} already instantiated")
             raise Exception(f"Controller {self.getNodeName()} already instantiated")
         
-    def delete(self):
+    def delete_local(self):
         process = self.__getProcess()
-        try:
-            self.__process.kill()
-            _, stderr = self.__process.communicate()
-        except Exception as ex:
-            logging.error(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}\nThreads error: {stderr}")
-            raise NodeInstantiationFailed(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}\nThreads error: {stderr}")
+        if process != 0:
+            try:
+                self.__process.kill()
+                _, stderr = self.__process.communicate()
+            except Exception as ex:
+                logging.error(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}\nThreads error: {stderr}")
+                raise NodeInstantiationFailed(f"Error while deleting the switch {self.getNodeName()}: {str(ex)}\nThreads error: {stderr}")
+        else:
+            logging.error(f"Can't delete {self.getNodeName()}. {self.getNodeName()} was not instantiated.")
+            raise Exception(f"Can't delete {self.getNodeName()}. {self.getNodeName()} was not instantiated.")
         
     def __getProcess(self):
         return self.__process

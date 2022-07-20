@@ -18,10 +18,9 @@ c1.setIp("192.168.56.3", 24, s1)
 c1.setDefaultGateway('192.168.56.1', s1)
 c1.initController('192.168.56.3', 100)
 
-
 h1.connect(s1)
 s1.setIp('192.168.56.1', 24, h1)
-s1.setController('192.168.56.3', 100)
+#s1.setController('192.168.56.3', 100)
 h1.setIp('192.168.56.2', 24, s1)
 h1.setDefaultGateway('192.168.56.1', s1)
 
@@ -31,10 +30,11 @@ h2._Node__addRoute('192.168.56.1', 24, s1)
 h2.setDefaultGateway('192.168.56.1', s1)
 
 
-
-
 s1.delete()
 h1.delete()
+h2.delete()
+c1.delete()
+
 
 
 
