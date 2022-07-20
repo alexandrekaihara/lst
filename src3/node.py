@@ -72,7 +72,7 @@ class Node:
     # Return:
     #   None
     def setIp(self, ip: str, mask: int, node: Node) -> None:
-        if not self.__isConnected(self, node):
+        if not self.__isConnected(node):
             logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
             raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
 
@@ -85,7 +85,7 @@ class Node:
     # Return:
     #   None
     def connect(self, node: Node) -> None:
-        if self.__isConnected(self, node):
+        if self.__isConnected(node):
             logging.error(f"Cannot connect to {node.getNodeName()}, node already connected")
             raise Exception(f"Cannot connect to {node.getNodeName()}, node already connected")
 
@@ -184,7 +184,7 @@ class Node:
     # Return:
     #   None
     def __addRoute(self, ip: str, mask: int,  node: Node):
-        if not self.__isConnected(self, node):
+        if not self.__isConnected(node):
             logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
             raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
         
@@ -205,7 +205,7 @@ class Node:
     # Return:
     #   None
     def setDefaultGateway(self, destinationIp: str, node: Node) -> None:
-        if not self.__isConnected(self, node):
+        if not self.__isConnected(node):
             logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
             raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
             
