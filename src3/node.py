@@ -208,3 +208,4 @@ class Node:
         except Exception as ex:
             logging.error(f"Error while setting gateway {destinationIp} on device {outputInterface} in {self.getNodeName()}: {str(ex)}")
             raise Exception(f"Error while setting gateway {destinationIp} on device {outputInterface} in {self.getNodeName()}: {str(ex)}")
+        self.topology.setGateway(destinationIp, node)

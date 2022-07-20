@@ -58,7 +58,7 @@ class Topology(metaclass=TopologyMeta):
     #   String interfaceName: The name of the interface the IP was set
     # Return:
     def setNodeIp(self, node, ip: str, mask: int, interfaceName: str) -> None:
-        self.__nodes[node.getNodeName()]["ip"].append({ip, mask, interfaceName})
+        self.getNode(node)["ip"].append({ip, mask, interfaceName})
 
     # Brief: Returns the container network informations 
     # Params:
@@ -75,7 +75,18 @@ class Topology(metaclass=TopologyMeta):
     def isConnected(self, node, destNode) -> None:
         # Check if the received node is already connected to this container
         try:
-            self.__nodes[node.getNodeName()]['connections'][destNode.getNodeName()]
+            self.getNode(node)['connections'][destNode.getNodeName()]
         except:
             logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {destNode.getNodeName()} first")
             raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {destNode.getNodeName()} first")
+
+    def __updateRoutesNeighbors(self) -> None:
+        pass
+
+    def updateGatewayHosts(self, node, ip: str) -> None:
+        neighbors = self.getNode(node)['connections']
+        [neighbor.setDefaultGateway(ip, node) for _,neighbor in neighbors.items() if self.getNode(neighbor)['gateway'] == 0]
+          
+    def setGateway(self, node, ip: str, destNode) -> None:
+        self.getNode(node)['gateway'] = (ip, destNode)
+    
