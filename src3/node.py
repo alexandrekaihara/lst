@@ -89,7 +89,7 @@ class Node:
     # Return:
     #   None
     def connect(self, node: Node) -> None:
-        if self.topology.isConnected(node):
+        if self.topology.isConnected(self, node):
             logging.error(f"Cannot connect to {node.getNodeName()}, node already connected")
             raise Exception(f"Cannot connect to {node.getNodeName()}, node already connected")
 
