@@ -43,6 +43,10 @@ class Topology(metaclass=TopologyMeta):
         self.__nodes[nodeName]["connections"] = {}
         self.__nodes[nodeName]["ip"] = []
         self.__nodes[nodeName]["gateway"] = 0
+        self.__nodes[nodeName]["instantiated"] = False
+
+    def setInstantiated(self, node) -> None:
+        self.__nodes[node.getNodeName()]['instantiated'] = True
 
     def delNode(self, node) -> None:
         del self.__nodes[node.getNodeName()]

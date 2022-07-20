@@ -51,15 +51,6 @@ class Switch(Node):
             logging.error(f"Error connecting switch {self.getNodeName()} to controller on IP {ip}/{port}: {str(ex)}")
             raise Exception(f"Error connecting switch {self.getNodeName()} to controller on IP {ip}/{port}: {str(ex)}")
 
-    # Brief: Creates Linux virtual interfaces and connects peers to the nodes and for switches, needs to create the port in bridge
-    # Params:
-    #   Node node: Reference of another node to connect to
-    # Return:
-    #   None
-    def connect(self, node: Node) -> None:
-        super().connect(node)
-        self.__createPort(self.getNodeName(), self.__getThisInterfaceName(node))
-
     # Brief: Creates a port in OpenvSwitch bridge
     # Params:
     #   String nodeName: The name of the bridge is for default the same name of the switch container
@@ -80,11 +71,11 @@ class Switch(Node):
     #   String node: Reference to the node it is connected to this container to discover the intereface to set the ip to
     # Return:
     def setIp(self, ip: str, mask: int, node: Node) -> None:
-        self.topology.isConnected(self, node)
+        if not self.__isConnected(self, node):
+            logging.error(f"Incorrect node reference {node.getNodeName()}, connect {self.getNodeName()} first")
+            raise Exception(f"Incorrect node reference {node.getNodeName()}, connect {self.getNodeName()} first")
         interfaceName = self.getNodeName()
         self._Node__setIp(ip, mask, interfaceName)
-        self.topology.setNodeIp(self, ip, mask, interfaceName)
-        self.topology.updateGatewayHosts(self, ip)
         self.__addDefaultRoute()
     
     # Brief: Set default route to forward all incoming packets to s1 bridge and let the bridge handle the forwarding

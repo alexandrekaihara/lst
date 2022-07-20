@@ -16,7 +16,6 @@
 
 import logging
 import subprocess
-from topology import Topology
 from exceptions import NodeInstantiationFailed
 
 
@@ -34,13 +33,6 @@ class Node:
     #   None
     def __init__(self, nodeName: str) -> None:
         self.__nodeName = nodeName
-        self.topology = Topology()
-        try:
-            self.topology.getNode(self) 
-            logging.error(f"Cannot create node with name {self.getNodeName()}, it already exists")
-            raise NodeInstantiationFailed(f"Cannot create node with name {self.getNodeName()}, it already exists")
-        except:
-            pass
 
     # Brief: Instantiate the container
     # Params:
@@ -49,7 +41,6 @@ class Node:
     # Return:
     #   None
     def instantiate(self, dockerImage="host:latest", dockerCommand = '') -> None:
-
         try:    
             if dockerCommand == '':
                 subprocess.run(f"docker run -d --network=none --privileged --name={self.getNodeName()} {dockerImage} tail -f /dev/null", shell=True)
@@ -59,7 +50,6 @@ class Node:
         except Exception as ex:
             logging.error(f"Error while criating the container {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while criating the container {self.getNodeName()}: {str(ex)}")
-        self.topology.setNode(self)
 
     # Brief: Instantiate the container
     # Params:
@@ -73,7 +63,6 @@ class Node:
         except Exception as ex:
             logging.error(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
-        self.topology.delNode(self)
 
     # Brief: Set Ip to an interface (the ip must be set only after connecting it to a container)
     # Params:
@@ -83,7 +72,7 @@ class Node:
     # Return:
     #   None
     def setIp(self, ip: str, mask: int, node: Node) -> None:
-        if not self.topology.isConnected(self, node):
+        if not self.__isConnected(self, node):
             logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
             raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
 
@@ -96,7 +85,7 @@ class Node:
     # Return:
     #   None
     def connect(self, node: Node) -> None:
-        if self.topology.isConnected(self, node):
+        if self.__isConnected(self, node):
             logging.error(f"Cannot connect to {node.getNodeName()}, node already connected")
             raise Exception(f"Cannot connect to {node.getNodeName()}, node already connected")
 
@@ -112,9 +101,6 @@ class Node:
         if node.__class__.__name__ == 'Switch':
             node._Switch__createPort(node.getNodeName(), node.__getThisInterfaceName(self))
 
-        # Save the information about the nodes this container is connected to
-        self.topology.addConnection(self, node)
-
     # Brief: Set Ip to an interface
     # Params:
     #   String ip: IP address to be set to peerName interface
@@ -128,8 +114,6 @@ class Node:
         except Exception as ex:
             logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
             raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
-        # Save the ip, mask an interface name that was set to this container
-        self.topology.setNodeIp(self, ip, mask, interfaceName)    
 
     # Brief: Returns the value of the container name
     # Params:
@@ -200,7 +184,7 @@ class Node:
     # Return:
     #   None
     def __addRoute(self, ip: str, mask: int,  node: Node):
-        if not self.topology.isConnected(self, node):
+        if not self.__isConnected(self, node):
             logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
             raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
         
@@ -221,7 +205,7 @@ class Node:
     # Return:
     #   None
     def setDefaultGateway(self, destinationIp: str, node: Node) -> None:
-        if not self.topology.isConnected(self, node):
+        if not self.__isConnected(self, node):
             logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
             raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
             
@@ -231,4 +215,11 @@ class Node:
         except Exception as ex:
             logging.error(f"Error while setting gateway {destinationIp} on device {outputInterface} in {self.getNodeName()}: {str(ex)}")
             raise Exception(f"Error while setting gateway {destinationIp} on device {outputInterface} in {self.getNodeName()}: {str(ex)}")
-        self.topology.setGateway(self, destinationIp, node)
+
+    def __isConnected(self, node: Node) -> bool:
+        interfaceName = self.__getThisInterfaceName(node)
+        output = subprocess.run(f"docker exec {self.getNodeName()} ifconfig -a | sed 's/[ \t].*//;/^$/d'", shell=True, capture_output=True)
+        interfaces = output.stdout.decode('utf8').replace(":", '').split('\n')
+        for interface in interfaces: 
+            if interface == interfaceName: return True
+        return False
