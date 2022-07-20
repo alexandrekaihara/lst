@@ -46,7 +46,7 @@ class Switch(Node):
     #   None
     def setController(self, ip:str, port: str):
         try:
-            subprocess.run(f"ovs-vsctl set-controller {self.getNodeName()} tcp:{ip}:{port}", shell=True)
+            subprocess.run(f"docker exec {self.getNodeName()} ovs-vsctl set-controller {self.getNodeName()} tcp:{ip}:{port}", shell=True)
         except Exception as ex:
             logging.error(f"Error connecting switch {self.getNodeName()} to controller on IP {ip}/{port}: {str(ex)}")
             raise Exception(f"Error connecting switch {self.getNodeName()} to controller on IP {ip}/{port}: {str(ex)}")
