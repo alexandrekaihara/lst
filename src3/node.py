@@ -100,6 +100,18 @@ class Node:
             self._Switch__createPort(self.getNodeName(), self.__getThisInterfaceName(node))
         if node.__class__.__name__ == 'Switch':
             node._Switch__createPort(node.getNodeName(), node.__getThisInterfaceName(self))
+    
+    def connectToInternet(self, hostIP, hostMask) -> None:
+        peer1Name = f"veth-{self.getNodeName()}-host"
+        peer2Name = f"veth-host-{self.getNodeName()}"
+
+        self.__create(peer1Name, peer2Name)
+        self.__setInterface(self.getNodeName(), peer1Name)
+        if self.__class__.__name__ == 'Switch':
+            self._Switch__createPort(self.getNodeName(), peer1Name)
+        
+        subprocess.run(f"ip link {peer2Name} up", shell=True)
+        subprocess.run(f"ip route add {hostIP}/{hostMask} dev {peer2Name}", shell=True)
 
     # Brief: Set Ip to an interface
     # Params:

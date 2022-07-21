@@ -14,20 +14,19 @@ c1 = Controller("c1")
 c1. instantiate()
 
 c1.connect(s1)
-c1.setIp("192.168.56.3", 24, s1)
-c1.setDefaultGateway('192.168.56.1', s1)
-c1.initController('192.168.56.3', 100)
+c1.setIp("192.168.200.3", 24, s1)
+c1.initController('192.168.200.3', 100)
 
 h1.connect(s1)
-s1.setIp('192.168.56.1', 24, h1)
-#s1.setController('192.168.56.3', 100)
-h1.setIp('192.168.56.2', 24, s1)
-h1.setDefaultGateway('192.168.56.1', s1)
+s1.setIp('192.168.200.1', 24, h1)
+s1.setController('192.168.200.3', 100)
+h1.setIp('192.168.200.2', 24, s1)
+h1._Node__addRoute('192.168.100.0', 24, s1)
 
 h2.connect(s1)
 h2.setIp('192.168.100.1', 24, s1)
-h2._Node__addRoute('192.168.56.1', 24, s1)
-h2.setDefaultGateway('192.168.56.1', s1)
+h2._Node__addRoute('192.168.200.0', 24, s1)
+s1.setIp('192.168.100.2', 24, h2)
 
 
 s1.delete()

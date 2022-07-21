@@ -76,7 +76,7 @@ class Switch(Node):
             raise Exception(f"Incorrect node reference {node.getNodeName()}, connect {self.getNodeName()} first")
         interfaceName = self.getNodeName()
         self._Node__setIp(ip, mask, interfaceName)
-        self.__addDefaultRoute()
+        #self.__addDefaultRoute()
     
     # Brief: Set default route to forward all incoming packets to s1 bridge and let the bridge handle the forwarding
     # Params:
