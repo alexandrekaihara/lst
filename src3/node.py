@@ -110,8 +110,8 @@ class Node:
         if self.__class__.__name__ == 'Switch':
             self._Switch__createPort(self.getNodeName(), peer1Name)
         
-        subprocess.run(f"ip link {peer2Name} up", shell=True)
-        subprocess.run(f"ip route add {hostIP}/{hostMask} dev {peer2Name}", shell=True)
+        subprocess.run(f"ip link set {peer2Name} up", shell=True)
+        subprocess.run(f"ip addr add {hostIP}/{hostMask} dev {peer2Name}", shell=True)
 
     # Brief: Set Ip to an interface
     # Params:
