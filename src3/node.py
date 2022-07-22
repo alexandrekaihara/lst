@@ -34,6 +34,7 @@ class Node:
     def __init__(self, nodeName: str) -> None:
         self.__nodeName = nodeName
 
+    # OBS: Create nodes with short name lenght due to a restriction on a iproute2 to define and create interfaces. Peers names can't have more than 14 chars
     # Brief: Instantiate the container
     # Params:
     #   String dockerImage: Name of the container of a local image or in a Docker Hub repository

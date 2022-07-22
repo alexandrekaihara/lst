@@ -37,8 +37,8 @@ nodes['brex'].setIp(brex_ip, 24)
 nodes['brex'].connectToInternet(ex_gateway, 24)
 
 # Create Seafile Server
-nodes['seafileserver'] = create_node('seafileserver', repository+':seafile', nodes['brex'], external_subnet, 1)
-subprocess.run(f'docker cp seafileserver:/home/seafolder seafolder', shell=True)
+nodes['seafile'] = create_node('seafile', repository+':seafile', nodes['brex'], external_subnet, 1)
+subprocess.run(f'docker cp seafile:/home/seafolder seafolder', shell=True)
 subprocess.run("cat seafolder", shell=True)
 # Change the serverconfig.ini file with the seafilefolder id
 
@@ -59,10 +59,10 @@ nodes['brint'].setController(brex_ip, c2port)
 
 
 # Set Server Subnet
-nodes['mail']   = create_node('mailserver',   repository+':mailserver',   nodes['brint'], server_subnet, 1)
-nodes['file']   = create_node('fileserver',   repository+':fileserver',   nodes['brint'], server_subnet, 2)
-nodes['web']    = create_node('webserver',    repository+':webserver',    nodes['brint'], server_subnet, 3)
-nodes['backup'] = create_node('backupserver', repository+':backupserver', nodes['brint'], server_subnet, 4)
+nodes['mail']   = create_node('mail',   repository+':mailserver',   nodes['brint'], server_subnet, 1)
+nodes['file']   = create_node('file',   repository+':fileserver',   nodes['brint'], server_subnet, 2)
+nodes['web']    = create_node('web',    repository+':webserver',    nodes['brint'], server_subnet, 3)
+nodes['backup'] = create_node('backup', repository+':backupserver', nodes['brint'], server_subnet, 4)
 
 
 # Set Management Subnet
@@ -97,7 +97,7 @@ nodes['d13'] = create_linuxclient('d13', repository+'linuxclient', nodes['brint'
 
 
 # Set External Subnet
-nodes['eweb'] =  create_node('ewebserver', repository+':webserver',  nodes['brex'], external_subnet, 2)
+nodes['eweb'] =  create_node('eweb', repository+':webserver',  nodes['brex'], external_subnet, 2)
 nodes['e1'] = create_linuxclient('e1', repository+'linuxclient', nodes['brex'], external_subnet, 3, 'external_attacker')
 nodes['e2'] = create_linuxclient('e2', repository+'linuxclient', nodes['brex'], external_subnet, 4, 'external_attacker')
 
