@@ -2,10 +2,10 @@
 import signal
 import sys
 import subprocess
-from src3.host import Host
-from src3.switch import Switch
-from src3.controller import Controller
-from src3.node import Node
+from host import Host
+from switch import Switch
+from controller import Controller
+from node import Node
 
 
 class Cids:
