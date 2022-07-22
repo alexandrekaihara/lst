@@ -140,7 +140,7 @@ class Node:
     # Return:
     #   Name of the interface with pattern veth + this node name + other node name
     def __getThisInterfaceName(self, node: Node) -> str:
-        return "veth-"+self.getNodeName()+'-'+node.getNodeName()
+        return self.getNodeName()+node.getNodeName()
 
     # Brief: Returns the name of the interface to be created on other node
     # Params:
@@ -148,7 +148,7 @@ class Node:
     # Return:
     #   Name of the interface with pattern veth + other node name + this node name
     def __getOtherInterfaceName(self, node: Node) -> str:
-        return "veth-"+node.getNodeName()+'-'+self.getNodeName()
+        return node.getNodeName()+self.getNodeName()
 
     # Brief: Creates the virtual interfaces and set them up (names cant be the same as some existing one in host's namespace)
     # Params:
