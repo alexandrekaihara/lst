@@ -49,9 +49,9 @@ class Cids:
         
     def set_server_subnet(self) -> None:
         self.mail   = self.__create_node('mailserver',   self.repository+':mailserver',   self.br_int, self.server_subnet, 1)
-        self.file   = self.__create_node('fileserver',   self.repository+':fileserver',   self.br_int, self.server_subnet, 1)
-        self.web    = self.__create_node('webserver',    self.repository+':webserver',    self.br_int, self.server_subnet, 1)
-        self.backup = self.__create_node('backupserver', self.repository+':backupserver', self.br_int, self.server_subnet, 1)
+        self.file   = self.__create_node('fileserver',   self.repository+':fileserver',   self.br_int, self.server_subnet, 2)
+        self.web    = self.__create_node('webserver',    self.repository+':webserver',    self.br_int, self.server_subnet, 3)
+        self.backup = self.__create_node('backupserver', self.repository+':backupserver', self.br_int, self.server_subnet, 4)
 
     def set_management_subnet(self) -> None:
         self.mprinter = self.__create_node('mprinter', self.repository+'printerserver', self.br_int, self.management_subnet, 1)
@@ -88,9 +88,9 @@ class Cids:
         
     def __create_linuxclient(self, name: str, image: str, bridge: Node, subnet: str, address: int, behaviour: str) -> Node:
         node = self.__create_node(name, image, bridge, subnet, address)
-        subprocess.run(f"docker cp printersip {name}:/home/debian/printerip", shell=True)
+        subprocess.run(f"docker cp printersip/{subnet.split('.')[2]} {name}:/home/debian/printerip", shell=True)
         subprocess.run(f"docker cp sshiplist.ini {name}:/home/debian/sshiplist.ini", shell=True)
-        subprocess.run(f"docker cp client_behaviour/{behaviour} {name}:/home/debian/config.ini", shell=True)
+        subprocess.run(f"docker cp client_behaviour/{behaviour}.ini {name}:/home/debian/config.ini", shell=True)
         if behaviour == 'external_attacker':
             subprocess.run(f"docker cp attack/external_ipListPort80.txt {name}:/home/debian/ipListPort80.txt", shell=True)
             subprocess.run(f"docker cp attack/external_ipList.txt {name}:/home/debian/ipList.txt", shell=True)
@@ -99,6 +99,7 @@ class Cids:
             subprocess.run(f"docker cp attack/internal_ipListPort80.txt {name}:/home/debian/ipListPort80.txt", shell=True)
             subprocess.run(f"docker cp attack/internal_ipList.txt {name}:/home/debian/ipList.txt", shell=True)
             subprocess.run(f"docker cp attack/internal_iprange.txt {name}:/home/debian/iprange.txt", shell=True)
+        return node
 
     def __create_node(self, name: str, image: str, bridge: Node, subnet: str, address: int) -> Node:
         node = Host(name)
@@ -116,6 +117,9 @@ class Cids:
 
     def run(self) -> None:
         self.seafile_server = self.__create_node('seafileserver', self.repository+':seafile', self.br_ex, self.external_subnet, 1)
+        subprocess.run(f'docker cp seafileserver:/home/seafolder seafolder', shell=True)
+        subprocess.run("cat seafolder", shell=True)
+        # Change the serverconfig.ini file with the seafilefolder id
         self.set_bridges()
         self.set_controllers()
         self.set_server_subnet()
