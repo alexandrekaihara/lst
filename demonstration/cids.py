@@ -11,8 +11,16 @@ from node import Node
 
 # Dados 
 repository = 'mdewinged/cidds'
+seafileserver = repository + ':seafileserver'
+mailserver = repository + ':mailserver'
+webserver = repository + ':webserver'
+fileserver = repository + ':fileserver'
+backupserver = repository + ':backupserver'
+printerserver = repository + ':printerserver'
+linuxclient = repository + ':linuxclient'
 brint_ip = '192.168.100.100'
 int_gateway = '192.168.100.101'
+c1_ip = '192.168.100.102'
 server_subnet = '192.168.100.'
 management_subnet = '192.168.200.'
 office_subnet = '192.168.210.'
@@ -20,13 +28,14 @@ developer_subnet = '192.168.220.'
 external_subnet = '192.168.50.'
 brex_ip = external_subnet+'100'
 ex_gateway= '192.168.50.101'
+c2_ip = '192.168.50.102'
 c1port = 9001
 c2port = 9001
 nodes = {}
 
 
 def create_seafile() -> Node:
-    node = create_node('seafile', repository+':seafileserver', nodes['brex'], external_subnet, 1, setFiles=False)
+    node = create_node('seafile', seafileserver, nodes['brex'], external_subnet, 1, setFiles=False)
     subprocess.run(f'docker cp seafile:/home/seafolder seafolder', shell=True)
     out = subprocess.run("cat seafolder", shell=True, capture_output=True)
     parser = ConfigParser()
@@ -104,60 +113,60 @@ nodes['seafile'] = create_seafile()
 nodes['c1'] = Controller("c1")
 nodes['c1'].instantiate()
 nodes['c1'].connect(nodes['brint'])
-nodes['c1'].setIp(brint_ip, 24, nodes['brint'])
-nodes['c1'].initController(brint_ip, c1port)
-nodes['brint'].setController(brint_ip, c1port)
+nodes['c1'].setIp(c1_ip, 24, nodes['brint'])
+nodes['c1'].initController(c1_ip, c1port)
+nodes['brint'].setController(c1_ip, c1port)
 
 nodes['c2'] = Controller("c2")
 nodes['c2'].instantiate()
 nodes['c2'].connect(nodes['brex'])
-nodes['c2'].setIp(brex_ip, 24, nodes['brex'])
-nodes['c2'].initController(brex_ip, c2port)
-nodes['brint'].setController(brex_ip, c2port)
+nodes['c2'].setIp(c2_ip, 24, nodes['brex'])
+nodes['c2'].initController(c2_ip, c2port)
+nodes['brint'].setController(c2_ip, c2port)
 
 
 # Set Server Subnet
-nodes['mail']   = create_node('mail',   repository+':mailserver',   nodes['brint'], server_subnet, 1)
-nodes['file']   = create_node('file',   repository+':fileserver',   nodes['brint'], server_subnet, 2)
-nodes['web']    = create_node('web',    repository+':webserver',    nodes['brint'], server_subnet, 3)
-nodes['backup'] = create_node('backup', repository+':backupserver', nodes['brint'], server_subnet, 4)
+nodes['mail']   = create_node('mail',   mailserver,   nodes['brint'], server_subnet, 1)
+nodes['file']   = create_node('file',   fileserver,   nodes['brint'], server_subnet, 2)
+nodes['web']    = create_node('web',    webserver,    nodes['brint'], server_subnet, 3)
+nodes['backup'] = create_node('backup', backupserver, nodes['brint'], server_subnet, 4)
 
 
 # Set Management Subnet
-nodes['mprinter'] = create_node('mprinter', repository+'printerserver', nodes['brint'], management_subnet, 1)
-nodes['m1'] = create_linuxclient('m1', repository+'linuxclient', nodes['brint'], management_subnet, 2, 'management')
-nodes['m2'] = create_linuxclient('m2', repository+'linuxclient', nodes['brint'], management_subnet, 3, 'management')
-nodes['m3'] = create_linuxclient('m3', repository+'linuxclient', nodes['brint'], management_subnet, 4, 'management')
-nodes['m4'] = create_linuxclient('m4', repository+'linuxclient', nodes['brint'], management_subnet, 5, 'management')
+nodes['mprinter'] = create_node('mprinter', printerserver, nodes['brint'], management_subnet, 1)
+nodes['m1'] = create_linuxclient('m1', linuxclient, nodes['brint'], management_subnet, 2, 'management')
+nodes['m2'] = create_linuxclient('m2', linuxclient, nodes['brint'], management_subnet, 3, 'management')
+nodes['m3'] = create_linuxclient('m3', linuxclient, nodes['brint'], management_subnet, 4, 'management')
+nodes['m4'] = create_linuxclient('m4', linuxclient, nodes['brint'], management_subnet, 5, 'management')
     
 
 # Set Office Subnet
-nodes['oprinter'] = create_node('oprinter', repository+'printerserver', nodes['brint'], office_subnet, 1)
-nodes['o1'] = create_linuxclient('o1', repository+'linuxclient', nodes['brint'], office_subnet, 2, 'office')
-nodes['o2'] = create_linuxclient('o2', repository+'linuxclient', nodes['brint'], office_subnet, 3, 'office')
+nodes['oprinter'] = create_node('oprinter', printerserver, nodes['brint'], office_subnet, 1)
+nodes['o1'] = create_linuxclient('o1', linuxclient, nodes['brint'], office_subnet, 2, 'office')
+nodes['o2'] = create_linuxclient('o2', linuxclient, nodes['brint'], office_subnet, 3, 'office')
 
 
 # Set Developer Subnet
-nodes['dprinter'] = create_node('dprinter', repository+'printerserver', nodes['brint'], developer_subnet, 1)
-nodes['d1' ] = create_linuxclient('d1',   repository+'linuxclient', nodes['brint'], developer_subnet, 2,  'administrator')
-nodes['d2' ] = create_linuxclient('d2',   repository+'linuxclient', nodes['brint'], developer_subnet, 3,  'administrator')
-nodes['d3' ] = create_linuxclient('d3',   repository+'linuxclient', nodes['brint'], developer_subnet, 4,  'developer')
-nodes['d4' ] = create_linuxclient('d4',   repository+'linuxclient', nodes['brint'], developer_subnet, 5,  'developer')
-nodes['d5' ] = create_linuxclient('d5',   repository+'linuxclient', nodes['brint'], developer_subnet, 6,  'developer')
-nodes['d6' ] = create_linuxclient('d6',   repository+'linuxclient', nodes['brint'], developer_subnet, 7,  'developer')
-nodes['d7' ] = create_linuxclient('d7',   repository+'linuxclient', nodes['brint'], developer_subnet, 8,  'developer')
-nodes['d8' ] = create_linuxclient('d8',   repository+'linuxclient', nodes['brint'], developer_subnet, 9,  'developer')
-nodes['d9' ] = create_linuxclient('d9',   repository+'linuxclient', nodes['brint'], developer_subnet, 10, 'developer')
-nodes['d10'] = create_linuxclient('d10', repository+'linuxclient', nodes['brint'], developer_subnet, 11, 'developer')
-nodes['d11'] = create_linuxclient('d11', repository+'linuxclient', nodes['brint'], developer_subnet, 12, 'developer')
-nodes['d12'] = create_linuxclient('d12', repository+'linuxclient', nodes['brint'], developer_subnet, 13, 'attacker')
-nodes['d13'] = create_linuxclient('d13', repository+'linuxclient', nodes['brint'], developer_subnet, 14, 'attacker')
+nodes['dprinter'] = create_node('dprinter', printerserver, nodes['brint'], developer_subnet, 1)
+nodes['d1' ] = create_linuxclient('d1',   linuxclient, nodes['brint'], developer_subnet, 2,  'administrator')
+nodes['d2' ] = create_linuxclient('d2',   linuxclient, nodes['brint'], developer_subnet, 3,  'administrator')
+nodes['d3' ] = create_linuxclient('d3',   linuxclient, nodes['brint'], developer_subnet, 4,  'developer')
+nodes['d4' ] = create_linuxclient('d4',   linuxclient, nodes['brint'], developer_subnet, 5,  'developer')
+nodes['d5' ] = create_linuxclient('d5',   linuxclient, nodes['brint'], developer_subnet, 6,  'developer')
+nodes['d6' ] = create_linuxclient('d6',   linuxclient, nodes['brint'], developer_subnet, 7,  'developer')
+nodes['d7' ] = create_linuxclient('d7',   linuxclient, nodes['brint'], developer_subnet, 8,  'developer')
+nodes['d8' ] = create_linuxclient('d8',   linuxclient, nodes['brint'], developer_subnet, 9,  'developer')
+nodes['d9' ] = create_linuxclient('d9',   linuxclient, nodes['brint'], developer_subnet, 10, 'developer')
+nodes['d10'] = create_linuxclient('d10', linuxclient, nodes['brint'], developer_subnet, 11, 'developer')
+nodes['d11'] = create_linuxclient('d11', linuxclient, nodes['brint'], developer_subnet, 12, 'developer')
+nodes['d12'] = create_linuxclient('d12', linuxclient, nodes['brint'], developer_subnet, 13, 'attacker')
+nodes['d13'] = create_linuxclient('d13', linuxclient, nodes['brint'], developer_subnet, 14, 'attacker')
 
 
 # Set External Subnet
-nodes['eweb'] =  create_node('eweb', repository+':webserver',  nodes['brex'], external_subnet, 2)
-nodes['e1'] = create_linuxclient('e1', repository+'linuxclient', nodes['brex'], external_subnet, 3, 'external_attacker')
-nodes['e2'] = create_linuxclient('e2', repository+'linuxclient', nodes['brex'], external_subnet, 4, 'external_attacker')
+nodes['eweb'] =  create_node('eweb', repository+'webserver',  nodes['brex'], external_subnet, 2)
+nodes['e1'] = create_linuxclient('e1', linuxclient, nodes['brex'], external_subnet, 3, 'external_attacker')
+nodes['e2'] = create_linuxclient('e2', linuxclient, nodes['brex'], external_subnet, 4, 'external_attacker')
 
 signal.signal(signal.SIGINT, signal_handler)
 print('Press Ctrl+C to destroy experiment')
