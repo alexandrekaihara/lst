@@ -1,9 +1,16 @@
 #!/usr/bin/env python
-from functions import *
+import signal
+import sys
+import subprocess
+from host import Host
+from switch import Switch
+from controller import Controller
+from configparser import ConfigParser
+from node import Node
 
 
 # Dados 
-repository = 'mdewinged/cids'
+repository = 'mdewinged/cidds'
 brint_ip = '192.168.100.100'
 int_gateway = '192.168.100.101'
 server_subnet = '192.168.100.'
@@ -18,14 +25,65 @@ c2port = 9001
 nodes = {}
 
 
+def create_seafile() -> Node:
+    node = create_node('seafile', repository+':seafileserver', nodes['brex'], external_subnet, 1)
+    subprocess.run(f'docker cp seafile:/home/seafolder seafolder', shell=True)
+    out = subprocess.run("cat seafolder", shell=True, capture_output=True)
+    parser = ConfigParser()
+    parser.read('serverconfig.ini')
+    parser.set("50", "seafolder", out.stdout.decode('utf8'))
+    parser.set("200", "seafolder", out.stdout.decode('utf8'))
+    parser.set("210", "seafolder", out.stdout.decode('utf8'))
+    parser.set("220", "seafolder", out.stdout.decode('utf8'))
+    with open('serverconfig.ini', 'w') as configfile:
+        parser.write(configfile)
+    return node
+
+
+def create_linuxclient(name: str, image: str, bridge: Node, subnet: str, address: int, behaviour: str) -> Node:
+    node = create_node(name, image, bridge, subnet, address)
+    subprocess.run(f"docker cp printersip/{subnet.split('.')[2]} {name}:/home/debian/printerip", shell=True)
+    subprocess.run(f"docker cp sshiplist.ini {name}:/home/debian/sshiplist.ini", shell=True)
+    subprocess.run(f"docker cp client_behaviour/{behaviour}.ini {name}:/home/debian/config.ini", shell=True)
+    if behaviour == 'external_attacker':
+        subprocess.run(f"docker cp attack/external_ipListPort80.txt {name}:/home/debian/ipListPort80.txt", shell=True)
+        subprocess.run(f"docker cp attack/external_ipList.txt {name}:/home/debian/ipList.txt", shell=True)
+        subprocess.run(f"docker cp attack/external_iprange.txt {name}:/home/debian/iprange.txt", shell=True)
+    elif behaviour == 'attacker':
+        subprocess.run(f"docker cp attack/internal_ipListPort80.txt {name}:/home/debian/ipListPort80.txt", shell=True)
+        subprocess.run(f"docker cp attack/internal_ipList.txt {name}:/home/debian/ipList.txt", shell=True)
+        subprocess.run(f"docker cp attack/internal_iprange.txt {name}:/home/debian/iprange.txt", shell=True)
+    return node
+
+
+def create_node(name: str, image: str, bridge: Node, subnet: str, address: int) -> Node:
+    node = Host(name)
+    node.instantiate(image)
+    node.connect(bridge)
+    node.setIp(subnet+str(address), 24, bridge)
+    # Define default gateway of nodes
+    if bridge == nodes['brint']: node.setDefaultGateway(int_gateway, bridge)
+    if bridge == nodes['brex']:  node.setDefaultGateway(ex_gateway , bridge)
+    # Add routes to enable nodes within internal subnet communicate with server subnet
+    if subnet != server_subnet: node.addRoute(server_subnet+'0', 24, bridge)
+    subprocess.run(f"docker cp serverconfig.ini {name}:/home/debian/serverconfig.ini", shell=True)
+    subprocess.run(f"docker cp backup.py {name}:/home/debian/backup.py", shell=True)
+    return node
+
+
+def unmakeChanges(nodes):
+    [node.delete() for _,node in nodes.items()]
+
+
+
 def signal_handler(sig, frame):
     print('You pressed Ctrl+C!')
     unmakeChanges(nodes)
     sys.exit(0)
 
 
-try:
-    # Set up Switches
+#try:
+# Set up Switches
 nodes['brint'] = Switch("brint")
 nodes['brint'].instantiate()
 nodes['brint'].setIp(brint_ip, 24)
@@ -36,11 +94,10 @@ nodes['brex'].instantiate()
 nodes['brex'].setIp(brex_ip, 24)
 nodes['brex'].connectToInternet(ex_gateway, 24)
 
+
 # Create Seafile Server
-nodes['seafile'] = create_node('seafile', repository+':seafile', nodes['brex'], external_subnet, 1)
-subprocess.run(f'docker cp seafile:/home/seafolder seafolder', shell=True)
-subprocess.run("cat seafolder", shell=True)
-# Change the serverconfig.ini file with the seafilefolder id
+nodes['seafile'] = create_seafile()
+
 
 # Set up controllers
 nodes['c1'] = Controller("c1")
