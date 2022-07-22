@@ -34,6 +34,11 @@ c2port = 9001
 nodes = {}
 
 
+subprocess.run(f"ip route add 192.168.200.0/24 dev veth-host-brint", shell=True)
+subprocess.run(f"ip route add 192.168.210.0/24 dev veth-host-brint", shell=True)
+subprocess.run(f"ip route add 192.168.220.0/24 dev veth-host-brint", shell=True)
+
+
 def create_seafile() -> Node:
     node = create_node('seafile', seafileserver, nodes['brex'], external_subnet, 1, setFiles=False)
     subprocess.run(f'docker cp seafile:/home/seafolder seafolder', shell=True)
@@ -75,7 +80,7 @@ def create_node(name: str, image: str, bridge: Node, subnet: str, address: int, 
     if bridge == nodes['brint']: node.setDefaultGateway(int_gateway, bridge)
     if bridge == nodes['brex']:  node.setDefaultGateway(ex_gateway , bridge)
     # Add routes to enable nodes within internal subnet communicate with server subnet
-    if subnet != server_subnet: node.addRoute(server_subnet+'0  ', 24, bridge)
+    if subnet != server_subnet: node.addRoute(server_subnet+'0', 24, bridge)
     if setFiles:
         subprocess.run(f"docker cp serverconfig.ini {name}:/home/debian/serverconfig.ini", shell=True)
         subprocess.run(f"docker cp backup.py {name}:/home/debian/backup.py", shell=True)

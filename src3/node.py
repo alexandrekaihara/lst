@@ -162,8 +162,8 @@ class Node:
         try:
             subprocess.run(f"docker exec {self.getNodeName()} echo -e \'{resolvconf}\' > /etc/resolv.conf", shell=True)
         except Exception as ex:
-            logging.error(f"Error adding route {ip}/{mask} via {peerName} in {self.getNodeName()}: {str(ex)}")
-            raise Exception(f"Error adding route {ip}/{mask} via {peerName} in {self.getNodeName()}: {str(ex)}")
+            logging.error(f"Error adding DNS to {self.getNodeName()}")
+            raise Exception(f"Error adding DNS to {self.getNodeName()}")
 
     # Brief: Returns the name of the interface to be created on this node
     # Params:
