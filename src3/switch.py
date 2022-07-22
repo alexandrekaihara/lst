@@ -70,10 +70,7 @@ class Switch(Node):
     #   int mask: Integer that represents the network mask
     #   String node: Reference to the node it is connected to this container to discover the intereface to set the ip to
     # Return:
-    def setIp(self, ip: str, mask: int, node: Node) -> None:
-        if not self._Node__isConnected(node):
-            logging.error(f"Incorrect node reference {node.getNodeName()}, connect {self.getNodeName()} first")
-            raise Exception(f"Incorrect node reference {node.getNodeName()}, connect {self.getNodeName()} first")
+    def setIp(self, ip: str, mask: int) -> None:
         interfaceName = self.getNodeName()
         self._Node__setIp(ip, mask, interfaceName)
         #self.__addDefaultRoute()

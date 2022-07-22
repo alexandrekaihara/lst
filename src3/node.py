@@ -195,7 +195,7 @@ class Node:
     #   String interfaceName: Name of the interface to forward to
     # Return:
     #   None
-    def __addRoute(self, ip: str, mask: int,  node: Node):
+    def addRoute(self, ip: str, mask: int,  node: Node):
         if not self.__isConnected(node):
             logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
             raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
@@ -220,7 +220,8 @@ class Node:
         if not self.__isConnected(node):
             logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
             raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
-            
+        
+        self.addRoute(destinationIp, 32, node)
         outputInterface = self.__getThisInterfaceName(node)
         try:
             subprocess.run(f"docker exec {self.getNodeName()} route add default gw {destinationIp} dev {outputInterface}", shell=True)
