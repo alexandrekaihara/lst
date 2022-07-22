@@ -70,11 +70,12 @@ def create_node(name: str, image: str, bridge: Node, subnet: str, address: int, 
     node.instantiate(image)
     node.connect(bridge)
     node.setIp(subnet+str(address), 24, bridge)
+    node.setDns(['8.8.8.8', '8.8.4.4'])
     # Define default gateway of nodes
     if bridge == nodes['brint']: node.setDefaultGateway(int_gateway, bridge)
     if bridge == nodes['brex']:  node.setDefaultGateway(ex_gateway , bridge)
     # Add routes to enable nodes within internal subnet communicate with server subnet
-    if subnet != server_subnet: node.addRoute(server_subnet+'0', 24, bridge)
+    if subnet != server_subnet: node.addRoute(server_subnet+'0  ', 24, bridge)
     if setFiles:
         subprocess.run(f"docker cp serverconfig.ini {name}:/home/debian/serverconfig.ini", shell=True)
         subprocess.run(f"docker cp backup.py {name}:/home/debian/backup.py", shell=True)

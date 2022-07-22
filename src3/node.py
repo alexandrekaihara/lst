@@ -135,6 +135,36 @@ class Node:
     def getNodeName(self) -> str:
         return self.__nodeName
 
+    # Brief: Add a route in routing table of container
+    # Params:
+    #   String ip: IP address of the route
+    #   String mask: Network mask for the IP address route
+    #   String interfaceName: Name of the interface to forward to
+    # Return:
+    #   None
+    def addRoute(self, ip: str, mask: int,  node: Node):
+        if not self.__isConnected(node):
+            logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
+            raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
+        peerName = self.__getThisInterfaceName(node)
+        try:
+            subprocess.run(f"docker exec {self.getNodeName()} ip route add {ip}/{mask} dev {peerName}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error adding route {ip}/{mask} via {peerName} in {self.getNodeName()}: {str(ex)}")
+            raise Exception(f"Error adding route {ip}/{mask} via {peerName} in {self.getNodeName()}: {str(ex)}")
+
+    # Brief: Set DNS server ip on a machine
+    # Params:
+    #   List ips: List of IP values to set the DNS
+    # Return:
+    def setDns(self, ips: list) -> None:
+        resolvconf = ''.join(['nameserver '+ip+'\n' for ip in ips])
+        try:
+            subprocess.run(f"docker exec {self.getNodeName()} echo -e \'{resolvconf}\' > /etc/resolv.conf", shell=True)
+        except Exception as ex:
+            logging.error(f"Error adding route {ip}/{mask} via {peerName} in {self.getNodeName()}: {str(ex)}")
+            raise Exception(f"Error adding route {ip}/{mask} via {peerName} in {self.getNodeName()}: {str(ex)}")
+
     # Brief: Returns the name of the interface to be created on this node
     # Params:
     #   Node node: Reference of another node to connect to
@@ -189,28 +219,6 @@ class Node:
             logging.error(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
             raise Exception(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
 
-    # Brief: Add a route in routing table of container
-    # Params:
-    #   String ip: IP address of the route
-    #   String mask: Network mask for the IP address route
-    #   String interfaceName: Name of the interface to forward to
-    # Return:
-    #   None
-    def addRoute(self, ip: str, mask: int,  node: Node):
-        if not self.__isConnected(node):
-            logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
-            raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
-        
-        ip = ip.split('.')
-        ip[3] = '0'
-        ip = '.'.join(ip)
-        peerName = self.__getThisInterfaceName(node)
-        try:
-            subprocess.run(f"docker exec {self.getNodeName()} ip route add {ip}/{mask} dev {peerName}", shell=True)
-        except Exception as ex:
-            logging.error(f"Error adding route {ip}/{mask} via {peerName} in {self.getNodeName()}: {str(ex)}")
-            raise Exception(f"Error adding route {ip}/{mask} via {peerName} in {self.getNodeName()}: {str(ex)}")
-
     # Brief: Set Ip to an interface (the ip must be set only after connecting it to a container, because)
     # Params:
     #   String destinationIp: The destination IP address of the gateway in format "XXX.XXX.XXX.XXX"
@@ -237,3 +245,4 @@ class Node:
         for interface in interfaces: 
             if interface == interfaceName: return True
         return False
+
