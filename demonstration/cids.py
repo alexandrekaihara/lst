@@ -26,7 +26,7 @@ nodes = {}
 
 
 def create_seafile() -> Node:
-    node = create_node('seafile', repository+':seafileserver', nodes['brex'], external_subnet, 1)
+    node = create_node('seafile', repository+':seafileserver', nodes['brex'], external_subnet, 1, setFiles=False)
     subprocess.run(f'docker cp seafile:/home/seafolder seafolder', shell=True)
     out = subprocess.run("cat seafolder", shell=True, capture_output=True)
     parser = ConfigParser()
@@ -56,7 +56,7 @@ def create_linuxclient(name: str, image: str, bridge: Node, subnet: str, address
     return node
 
 
-def create_node(name: str, image: str, bridge: Node, subnet: str, address: int) -> Node:
+def create_node(name: str, image: str, bridge: Node, subnet: str, address: int, setFiles=True) -> Node:
     node = Host(name)
     node.instantiate(image)
     node.connect(bridge)
@@ -66,8 +66,9 @@ def create_node(name: str, image: str, bridge: Node, subnet: str, address: int) 
     if bridge == nodes['brex']:  node.setDefaultGateway(ex_gateway , bridge)
     # Add routes to enable nodes within internal subnet communicate with server subnet
     if subnet != server_subnet: node.addRoute(server_subnet+'0', 24, bridge)
-    subprocess.run(f"docker cp serverconfig.ini {name}:/home/debian/serverconfig.ini", shell=True)
-    subprocess.run(f"docker cp backup.py {name}:/home/debian/backup.py", shell=True)
+    if setFiles:
+        subprocess.run(f"docker cp serverconfig.ini {name}:/home/debian/serverconfig.ini", shell=True)
+        subprocess.run(f"docker cp backup.py {name}:/home/debian/backup.py", shell=True)
     return node
 
 
