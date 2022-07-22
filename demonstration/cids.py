@@ -146,7 +146,8 @@ try:
     signal.signal(signal.SIGINT, signal_handler)
     print('Press Ctrl+C to destroy experiment')
     signal.pause()
-except:
+except Exception as e:
+    print(str(e))
     c.unmakeChanges()
 
 
