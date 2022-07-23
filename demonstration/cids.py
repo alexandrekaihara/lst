@@ -91,7 +91,6 @@ def unmakeChanges(nodes):
     [node.delete() for _,node in nodes.items()]
 
 
-
 def signal_handler(sig, frame):
     print('You pressed Ctrl+C!')
     unmakeChanges(nodes)

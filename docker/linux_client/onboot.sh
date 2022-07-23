@@ -70,6 +70,6 @@ export PATH="$PATH:/opt/"
 # Keep alive
 until cd /home/debian/automation
 do 
-  sleep(1000)
+  sleep 1000
 done
 python3 readIni.py >> "/home/debian/log/${IP}_onboot.log"
