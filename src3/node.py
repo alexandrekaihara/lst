@@ -44,7 +44,7 @@ class Node:
     def instantiate(self, dockerImage="host:latest", dockerCommand = '', dns='8.8.8.8') -> None:
         try:    
             if dockerCommand == '':
-                subprocess.run(f"docker run -d --network=none --privileged --name={self.getNodeName()}  --dns={dns} {dockerImage} tail -f /dev/null", shell=True)
+                subprocess.run(f"docker run -d --network=none --privileged --name={self.getNodeName()}  --dns={dns} {dockerImage}", shell=True)
             else:
                 subprocess.run(dockerCommand, shell=True)
         except Exception as ex:

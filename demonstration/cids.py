@@ -52,17 +52,18 @@ def create_seafile() -> Node:
 def create_linuxclient(name: str, image: str, bridge: Node, subnet: str, address: int, behaviour: str) -> Node:
     node = create_node(name, image, bridge, subnet, address)
     subprocess.run(f"docker cp automation {name}:/home/debian/automation", shell=True)
-    subprocess.run(f"docker cp printersip/{subnet.split('.')[2]} {name}:/home/debian/printerip", shell=True)
-    subprocess.run(f"docker cp sshiplist.ini {name}:/home/debian/sshiplist.ini", shell=True)
-    subprocess.run(f"docker cp client_behaviour/{behaviour}.ini {name}:/home/debian/config.ini", shell=True)
+    subprocess.run(f"docker cp printersip/{subnet.split('.')[2]} {name}:/home/debian/automation/packages/system/printerip", shell=True)
+    subprocess.run(f"docker cp sshiplist.ini {name}:/home/debian/automation/packages/system/sshiplist.ini", shell=True)
+    subprocess.run(f"docker cp client_behaviour/{behaviour}.ini {name}:/home/debian/automation/packages/system/config.ini", shell=True)
+    subprocess.run(f"docker cp serverconfig.ini {name}:/home/debian/automation/packages/system/serverconfig.ini", shell=True)
     if behaviour == 'external_attacker':
-        subprocess.run(f"docker cp attack/external_ipListPort80.txt {name}:/home/debian/ipListPort80.txt", shell=True)
-        subprocess.run(f"docker cp attack/external_ipList.txt {name}:/home/debian/ipList.txt", shell=True)
-        subprocess.run(f"docker cp attack/external_iprange.txt {name}:/home/debian/iprange.txt", shell=True)
+        subprocess.run(f"docker cp attack/external_ipListPort80.txt {name}:/home/debian/automation/packages/attacking/ipListPort80.txt", shell=True)
+        subprocess.run(f"docker cp attack/external_ipList.txt {name}:/home/debian/automation/packages/attacking/ipList.txt", shell=True)
+        subprocess.run(f"docker cp attack/external_iprange.txt {name}:/home/debian/automation/packages/attacking/iprange.txt", shell=True)
     elif behaviour == 'attacker':
-        subprocess.run(f"docker cp attack/internal_ipListPort80.txt {name}:/home/debian/ipListPort80.txt", shell=True)
-        subprocess.run(f"docker cp attack/internal_ipList.txt {name}:/home/debian/ipList.txt", shell=True)
-        subprocess.run(f"docker cp attack/internal_iprange.txt {name}:/home/debian/iprange.txt", shell=True)
+        subprocess.run(f"docker cp attack/internal_ipListPort80.txt {name}:/home/debian/automation/packages/attacking/ipListPort80.txt", shell=True)
+        subprocess.run(f"docker cp attack/internal_ipList.txt {name}:/home/debian/automation/packages/attacking/ipList.txt", shell=True)
+        subprocess.run(f"docker cp attack/internal_iprange.txt {name}:/home/debian/automation/packages/attacking/iprange.txt", shell=True)
     return node
 
 def create_node(name: str, image: str, bridge: Node, subnet: str, address: int, setFiles=True) -> Node:
@@ -108,6 +109,7 @@ nodes['brex'] = Switch("brex")
 nodes['brex'].instantiate()
 nodes['brex'].setIp(brex_ip, 24)
 nodes['brex'].connectToInternet(ex_gateway, 24)
+nodes['brex'].connect(nodes['brint'])
 
 subprocess.run(f"ip route add 192.168.200.0/24 dev veth-host-brint", shell=True)
 subprocess.run(f"ip route add 192.168.210.0/24 dev veth-host-brint", shell=True)
