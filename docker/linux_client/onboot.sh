@@ -68,5 +68,8 @@ chown -R mininet:mininet /home/debian/sea/ /home/debian/seafile-client/ /home/de
 export PATH="$PATH:/opt/"
 
 # Keep alive
-cd /home/debian/automation
+until cd /home/debian/automation
+do 
+  sleep(1000)
+done
 python3 readIni.py >> "/home/debian/log/${IP}_onboot.log"
