@@ -115,7 +115,7 @@ class Node:
         subprocess.run(f"ip addr add {hostIP}/{hostMask} dev {peer2Name}", shell=True)
 
         # Enable forwading packets from host to interface
-        hostGatewayInterface = subprocess.run(f"route | grep '^default' | grep -o '[^ ]*$'", shell=True, capture_output=True).stdout.decode('utf8')
+        hostGatewayInterface = subprocess.run(f"route | grep \'^default' | grep -o '[^ ]*$\'", shell=True, capture_output=True).stdout.decode('utf8').replace("\n", '')
         subprocess.run(f"iptables -t nat -I POSTROUTING -o {hostGatewayInterface} -j MASQUERADE", shell=True)
         subprocess.run(f"iptables -t nat -I POSTROUTING -o {peer2Name} -j MASQUERADE", shell=True)
         subprocess.run(f"iptables -A FORWARD -i {peer2Name} -o {hostGatewayInterface} -j ACCEPT", shell=True)
