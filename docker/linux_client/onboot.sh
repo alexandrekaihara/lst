@@ -72,4 +72,8 @@ until cd /home/debian/automation
 do 
   sleep 1
 done
-python3 readIni.py >> "/home/debian/log/${IP}_onboot.log"
+
+until false
+do
+  python3 readIni.py >> "/home/debian/log/${IP}_onboot.log"
+done
