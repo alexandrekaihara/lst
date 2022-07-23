@@ -51,10 +51,10 @@ def create_seafile() -> Node:
 
 def create_linuxclient(name: str, image: str, bridge: Node, subnet: str, address: int, behaviour: str) -> Node:
     node = create_node(name, image, bridge, subnet, address)
+    subprocess.run(f"docker cp automation {name}:/home/debian/automation", shell=True)
     subprocess.run(f"docker cp printersip/{subnet.split('.')[2]} {name}:/home/debian/printerip", shell=True)
     subprocess.run(f"docker cp sshiplist.ini {name}:/home/debian/sshiplist.ini", shell=True)
     subprocess.run(f"docker cp client_behaviour/{behaviour}.ini {name}:/home/debian/config.ini", shell=True)
-    subprocess.run(f"docker cp automation {name}:/home/debian/automation", shell=True)
     if behaviour == 'external_attacker':
         subprocess.run(f"docker cp attack/external_ipListPort80.txt {name}:/home/debian/ipListPort80.txt", shell=True)
         subprocess.run(f"docker cp attack/external_ipList.txt {name}:/home/debian/ipList.txt", shell=True)
