@@ -30,16 +30,6 @@ $ONBOOTLOG="${IP}_onboot.log"
 # Open Brackets to send all outputs into a log file
 {
 
-# Update the automation directory
-until unzip -o main.zip -d /home/debian
-do
-  wget https://github.com/alexandrekaihara/lst/archive/refs/heads/main.zip --no-check-certificate
-done
-main.zip
-mv /home/debian/lst-main/scripts/automation /home/debian/
-chmod -R 755 /home/debian/automation
-rm -r /home/debian/lst-main
-
 # Move all configure files received
 mv /home/debian/printerip        /home/debian/automation/packages/system/printerip   
 mv /home/debian/config.ini       /home/debian/automation/packages/system/config.ini
