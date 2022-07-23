@@ -30,7 +30,6 @@ COPY setup.sh .
 RUN chmod +x setup.sh\
 && ./setup.sh
 
-# Start samba and dummy files on start
 COPY onboot.sh /home
 RUN chmod +x /home/onboot.sh
 CMD ["./home/onboot.sh"] 

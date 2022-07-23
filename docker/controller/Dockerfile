@@ -25,6 +25,10 @@ RUN apt update \
 
 COPY controller.py /home
 
+COPY onboot.sh /home
+RUN chmod +x /home/onboot.sh
+CMD ["./home/onboot.sh"]
+
 # For conecting via Open SSL
 EXPOSE 22
 

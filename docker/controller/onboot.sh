@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 # Copyright (C) 2022 Alexandre Mitsuru Kaihara
 #
@@ -16,14 +18,5 @@
 #
 
 
-FROM ubuntu:20.04
-RUN apt update \
-&&  RUNLEVEL=1 apt install -y --no-install-recommends sudo net-tools iproute2 iputils-ping iptables nano
-
-COPY onboot.sh /home
-RUN chmod +x /home/onboot.sh
-CMD ["./home/onboot.sh"] 
-
-# For conecting via Open SSL
-EXPOSE 22
-
+# Start container and keep alive
+tail -f /dev/null
