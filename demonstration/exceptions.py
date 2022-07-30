@@ -25,3 +25,7 @@ class MissingObjectParameter(Exception):
 # Brief: This exception is related to a failure during docker container instantiation 
 class NodeInstantiationFailed(Exception):
     pass
+
+# Brief: This exception is related to the creation of a 
+class InvalidNodeName(Exception):
+    pass

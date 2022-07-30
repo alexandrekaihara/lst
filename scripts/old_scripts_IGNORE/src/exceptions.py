@@ -21,7 +21,3 @@ class InvalidCommandLineInput(Exception):
 # Brief: This expection is related a invalid parameter
 class MissingObjectParameter(Exception):
     pass
-
-# Brief: This exception is related to a failure during docker container instantiation 
-class NodeInstantiationFailed(Exception):
-    pass

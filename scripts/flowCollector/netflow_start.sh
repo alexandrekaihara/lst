@@ -9,3 +9,6 @@ create  NetFlow  targets=\"${COLLECTOR_IP}:${COLLECTOR_PORT}\"  active-timeout=$
 
 sudo ovs-vsctl -- set Bridge br-ex netflow=@nf --  --id=@nf  \
 create  NetFlow  targets=\"${COLLECTOR_IP}:${COLLECTOR_PORT}\"  active-timeout=${TIMEOUT} 
+
+
+sudo ovs-vsctl -- set Bridge br-int netflow=@nf --  --id=@nf create  NetFlow  targets=\"${COLLECTOR_IP}:${COLLECTOR_PORT}\"  active-timeout=${TIMEOUT} 

@@ -40,7 +40,7 @@ def create_seafile() -> Node:
     out = subprocess.run("cat seafolder", shell=True, capture_output=True)
     parser = ConfigParser()
     parser.read('serverconfig.ini')
-    parser.set("50", "seafolder", out.stdout.decode('utf8'))
+    parser.set("50", "seafolder",  out.stdout.decode('utf8'))
     parser.set("200", "seafolder", out.stdout.decode('utf8'))
     parser.set("210", "seafolder", out.stdout.decode('utf8'))
     parser.set("220", "seafolder", out.stdout.decode('utf8'))
@@ -65,6 +65,7 @@ def create_linuxclient(name: str, image: str, bridge: Node, subnet: str, address
         subprocess.run(f"docker cp attack/internal_ipList.txt {name}:/home/debian/automation/packages/attacking/ipList.txt", shell=True)
         subprocess.run(f"docker cp attack/internal_iprange.txt {name}:/home/debian/automation/packages/attacking/iprange.txt", shell=True)
     return node
+
 
 def create_node(name: str, image: str, bridge: Node, subnet: str, address: int, setFiles=True) -> Node:
     node = Host(name)
@@ -113,6 +114,7 @@ nodes['brex'].connect(nodes['brint'])
 subprocess.run(f"ip route add 192.168.200.0/24 dev veth-host-brint", shell=True)
 subprocess.run(f"ip route add 192.168.210.0/24 dev veth-host-brint", shell=True)
 subprocess.run(f"ip route add 192.168.220.0/24 dev veth-host-brint", shell=True)
+
 
 # Create Seafile Server
 nodes['seafile'] = create_seafile()

@@ -16,7 +16,7 @@
 
 import logging
 import subprocess
-from exceptions import NodeInstantiationFailed
+from exceptions import *
 
 
 # Just to enable the declaration of Type in methods
@@ -44,7 +44,7 @@ class Node:
     def instantiate(self, dockerImage="host:latest", dockerCommand = '', dns='8.8.8.8') -> None:
         try:    
             if dockerCommand == '':
-                subprocess.run(f"docker run -d --network=none --privileged --name={self.getNodeName()}  --dns={dns} {dockerImage}", shell=True)
+                subprocess.run(f"docker run -d --network=none --privileged --name={self.getNodeName()} --dns={dns} {dockerImage}", shell=True)
             else:
                 subprocess.run(dockerCommand, shell=True)
         except Exception as ex:
@@ -121,20 +121,6 @@ class Node:
         subprocess.run(f"iptables -A FORWARD -i {peer2Name} -o {hostGatewayInterface} -j ACCEPT", shell=True)
         subprocess.run(f"iptables -A FORWARD -i {hostGatewayInterface} -o {peer2Name} -j ACCEPT", shell=True)
 
-    # Brief: Set Ip to an interface
-    # Params:
-    #   String ip: IP address to be set to peerName interface
-    #   int mask: Integer that represents the network mask
-    #   String interfaceName: Name of the interface to set the ip
-    # Return:
-    #   None
-    def __setIp(self, ip: str, mask: int, interfaceName: str) -> None:
-        try:
-            subprocess.run(f"ip -n {self.getNodeName()} addr add {ip}/{mask} dev {interfaceName}", shell=True)
-        except Exception as ex:
-            logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
-            raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
-
     # Brief: Returns the value of the container name
     # Params:
     # Return:
@@ -160,17 +146,44 @@ class Node:
             logging.error(f"Error adding route {ip}/{mask} via {peerName} in {self.getNodeName()}: {str(ex)}")
             raise Exception(f"Error adding route {ip}/{mask} via {peerName} in {self.getNodeName()}: {str(ex)}")
 
-    # Brief: Set DNS server ip on a machine
+    # Brief: Set Ip to an interface (the ip must be set only after connecting it to a container, because)
     # Params:
-    #   List ips: List of IP values to set the DNS
+    #   String destinationIp: The destination IP address of the gateway in format "XXX.XXX.XXX.XXX"
+    #   String node: Reference to the node that will serve as gateway
     # Return:
-    def setDns(self, ips: list) -> None:
-        resolvconf = ''.join(['nameserver '+ip+'\n' for ip in ips])
+    #   None
+    def setDefaultGateway(self, destinationIp: str, node: Node) -> None:
+        if not self.__isConnected(node):
+            logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
+            raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
+        
+        self.addRoute(destinationIp, 32, node)
+        outputInterface = self.__getThisInterfaceName(node)
         try:
-            subprocess.run(f"docker exec {self.getNodeName()} echo -e \'{resolvconf}\' > /etc/resolv.conf", shell=True)
+            subprocess.run(f"docker exec {self.getNodeName()} route add default gw {destinationIp} dev {outputInterface}", shell=True)
         except Exception as ex:
-            logging.error(f"Error adding DNS to {self.getNodeName()}")
-            raise Exception(f"Error adding DNS to {self.getNodeName()}")
+            logging.error(f"Error while setting gateway {destinationIp} on device {outputInterface} in {self.getNodeName()}: {str(ex)}")
+            raise Exception(f"Error while setting gateway {destinationIp} on device {outputInterface} in {self.getNodeName()}: {str(ex)}")
+
+    # Brief: Runs a command inside the container
+    # Params:
+    #   String command: String containing the command to run inside the container
+    # Return:
+    #   Returns variable that contains stdout and stderr (more information in subprocess documentation)
+    def run(self, command: str) -> str:
+        try:
+            return subprocess.run(f"docker {command}", shell=True, capture_output=True)
+        except Exception as ex:
+            logging.error(f"Error executing command {command} in {self.getNodeName()}: {str(ex)}")
+            raise Exception(f"Error executing command {command} in {self.getNodeName()}: {str(ex)}")
+
+    # Brief: Runs multiple commands inside the container
+    # Params:
+    #   List<String> commands: Runs multiple comands inside the container
+    # Return:
+    #   Returns a list with the variable that contains stdout and stderr (more information in subprocess documentation)
+    def runs(self, commands: list) -> list:
+        return [self.run(command) for command in commands]
 
     # Brief: Returns the name of the interface to be created on this node
     # Params:
@@ -179,6 +192,20 @@ class Node:
     #   Name of the interface with pattern veth + this node name + other node name
     def __getThisInterfaceName(self, node: Node) -> str:
         return self.getNodeName()+node.getNodeName()
+
+    # Brief: Set Ip to an interface
+    # Params:
+    #   String ip: IP address to be set to peerName interface
+    #   int mask: Integer that represents the network mask
+    #   String interfaceName: Name of the interface to set the ip
+    # Return:
+    #   None
+    def __setIp(self, ip: str, mask: int, interfaceName: str) -> None:
+        try:
+            subprocess.run(f"ip -n {self.getNodeName()} addr add {ip}/{mask} dev {interfaceName}", shell=True)
+        except Exception as ex:
+            logging.error(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
+            raise Exception(f"Error while setting IP {ip}/{mask} to virtual interface {interfaceName}: {str(ex)}")
 
     # Brief: Returns the name of the interface to be created on other node
     # Params:
@@ -226,25 +253,11 @@ class Node:
             logging.error(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
             raise Exception(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
 
-    # Brief: Set Ip to an interface (the ip must be set only after connecting it to a container, because)
+    # Brief: Verifies if there is a connection with a node
     # Params:
-    #   String destinationIp: The destination IP address of the gateway in format "XXX.XXX.XXX.XXX"
-    #   String node: Reference to the node that will serve as gateway
+    #   Node node: Node to check connection
     # Return:
-    #   None
-    def setDefaultGateway(self, destinationIp: str, node: Node) -> None:
-        if not self.__isConnected(node):
-            logging.error(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
-            raise Exception(f"Incorrect node reference for {node.getNodeName()}, connect {self.getNodeName()} first")
-        
-        self.addRoute(destinationIp, 32, node)
-        outputInterface = self.__getThisInterfaceName(node)
-        try:
-            subprocess.run(f"docker exec {self.getNodeName()} route add default gw {destinationIp} dev {outputInterface}", shell=True)
-        except Exception as ex:
-            logging.error(f"Error while setting gateway {destinationIp} on device {outputInterface} in {self.getNodeName()}: {str(ex)}")
-            raise Exception(f"Error while setting gateway {destinationIp} on device {outputInterface} in {self.getNodeName()}: {str(ex)}")
-
+    #   Return true if it is connected or false otherwise
     def __isConnected(self, node: Node) -> bool:
         interfaceName = self.__getThisInterfaceName(node)
         output = subprocess.run(f"docker exec {self.getNodeName()} ifconfig -a | sed 's/[ \t].*//;/^$/d'", shell=True, capture_output=True)
@@ -253,3 +266,10 @@ class Node:
             if interface == interfaceName: return True
         return False
 
+    # Brief: Verifies if the container is active
+    # Params:
+    # Return:
+    #   Return true if it is active or false otherwise
+    def __isActive(self) -> bool:
+        if subprocess.run(f"docker ps | grep {self.getNodeName()}'", shell=True, capture_output=True).stdout.decode('utf8') != '': return True
+        return False
