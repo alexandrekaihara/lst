@@ -59,7 +59,6 @@ def setLinuxClientFileConfig(node: LinuxClient, subnet: str, behaviour: str):
 def setNetworkConfig(node: Node, bridge: Node, subnet: str, address: int, setFiles=True) -> Node:
     node.connect(bridge)
     node.setIp(subnet+str(address), 24, bridge)
-    node.setDns(['8.8.8.8', '8.8.4.4'])
     # Define default gateway of nodes
     if bridge == nodes['brint']: node.setDefaultGateway(int_gateway, bridge)
     if bridge == nodes['brex']:  node.setDefaultGateway(ex_gateway , bridge)
@@ -91,7 +90,7 @@ def createController(name: str, bridgeName: str, controllerIp: str, controllerPo
     
 
 def createServer(name: str, serverImage: str, subnet: str,  address: int) -> None:
-    nodes[name] = Host[name]
+    nodes[name] = Host(name)
     nodes[name].instantiate(serverImage)
     setNetworkConfig(nodes[name], nodes['brint'], subnet, address)
 
@@ -102,8 +101,8 @@ def createLinuxClient(name, bridge: Node, subnet: str, address: int) -> None:
     setNetworkConfig(nodes[name], bridge, subnet, address)
 
 
-def createPrinter(name, subnet: str) -> None:
-    nodes[name] = Host()
+def createPrinter(name: str, subnet: str) -> None:
+    nodes[name] = Host(name)
     nodes[name].instantiate(printerserver)
     setNetworkConfig(nodes[name], nodes['brint'], subnet, 1)
 
@@ -120,8 +119,8 @@ def signal_handler(sig, frame):
 
 
 # Create Bridges and connect them
-nodes['brint'] = createBridge('brint', brint_ip, int_gateway)
-nodes['brex'] = createBridge('brex', brex_ip, ex_gateway)
+createBridge('brint', brint_ip, int_gateway)
+createBridge('brex', brex_ip, ex_gateway)
 nodes['brex'].connect(nodes['brint'])
 
 subprocess.run(f"ip route add 192.168.200.0/24 dev veth-host-brint", shell=True)
@@ -131,7 +130,7 @@ subprocess.run(f"ip route add 192.168.220.0/24 dev veth-host-brint", shell=True)
 # Create seafile server
 nodes['seafile'] = Seafile('seafile')
 nodes['seafile'].instantiate()
-setNetworkConfig(nodes['seafile'], seafileserver, nodes['brint'], external_subnet, 1, setFiles=False)
+setNetworkConfig(nodes['seafile'], nodes['brint'], external_subnet, 1, setFiles=False)
 nodes['seafile'].updateServerConfig()
 
 # Create controllers
@@ -178,12 +177,12 @@ createLinuxClient('e1', nodes['brex'], external_subnet, 3)
 createLinuxClient('e2', nodes['brex'], external_subnet, 4)
 
 # Set Configuration Files
-[setLinuxClientFileConfig(nodes[f'm{i}'], management_subnet, 'management') for i in range(4)]
-[setLinuxClientFileConfig(nodes[f'o{i}'], office_subnet, 'office') for i in range(2)]
-[setLinuxClientFileConfig(nodes[f'd{i}'], developer_subnet, 'administrator') for i in range(2)]
+[setLinuxClientFileConfig(nodes[f'm{i}'], management_subnet, 'management') for i in range(1, 5)]
+[setLinuxClientFileConfig(nodes[f'o{i}'], office_subnet, 'office') for i in range(1,3)]
+[setLinuxClientFileConfig(nodes[f'd{i}'], developer_subnet, 'administrator') for i in range(1,3)]
 [setLinuxClientFileConfig(nodes[f'd{i}'], developer_subnet, 'developer') for i in range(3,13)]
 [setLinuxClientFileConfig(nodes[f'd{i}'], developer_subnet, 'attacker') for i in range(13,15)]
-[setLinuxClientFileConfig(nodes[f'e{i}'], developer_subnet, 'external_attacker') for i in range(2)]
+[setLinuxClientFileConfig(nodes[f'e{i}'], developer_subnet, 'external_attacker') for i in range(1,3)]
 
 unmakeChanges(nodes)
 
