@@ -7,30 +7,9 @@ from switch import Switch
 from controller import Controller
 from configparser import ConfigParser
 from node import Node
+from globalvariables import *
 
 
-# Dados 
-repository = 'mdewinged/cidds'
-seafileserver = repository + ':seafileserver'
-mailserver = repository + ':mailserver'
-webserver = repository + ':webserver'
-fileserver = repository + ':fileserver'
-backupserver = repository + ':backupserver'
-printerserver = repository + ':printerserver'
-linuxclient = repository + ':linuxclient'
-brint_ip = '192.168.100.100'
-int_gateway = '192.168.100.101'
-c1_ip = '192.168.100.102'
-server_subnet = '192.168.100.'
-management_subnet = '192.168.200.'
-office_subnet = '192.168.210.'
-developer_subnet = '192.168.220.'
-external_subnet = '192.168.50.'
-brex_ip = external_subnet+'100'
-ex_gateway= '192.168.50.101'
-c2_ip = '192.168.50.102'
-c1port = 9001
-c2port = 9001
 nodes = {}
 
 

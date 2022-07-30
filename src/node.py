@@ -185,6 +185,22 @@ class Node:
     def runs(self, commands: list) -> list:
         return [self.run(command) for command in commands]
 
+    # Brief: Copy local file into container
+    # Params:
+    #   String path: Absolute or relative path to the file to be copied (path+filename)
+    #   String destPath: Absolute path to copy the file inside the container (path+filename)
+    # Return:
+    def copyLocalToContainer(self, path: str, destPath: str) -> None:
+        self.run(f"docker cp {path} {self.getNodeName()}:{destPath}")
+
+    # Brief: Copy local file into container
+    # Params:
+    #   String path: Absolute path to the file to be copied (path+filename)
+    #   String destPath: Absolute or relative path to copy to local (path+filename)
+    # Return:
+    def copyContainerToLocal(self, path: str, destPath: str) -> None:
+        self.run(f"docker cp {self.getNodeName()}:{destPath} {path}")
+
     # Brief: Returns the name of the interface to be created on this node
     # Params:
     #   Node node: Reference of another node to connect to
