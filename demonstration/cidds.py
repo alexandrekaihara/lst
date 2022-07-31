@@ -73,11 +73,12 @@ def setNetworkConfig(node: Node, bridge: Node, subnet: str, address: int, setFil
         subprocess.run(f"docker cp backup.py {node.getNodeName()}:/home/debian/backup.py", shell=True)
 
 
-def createBridge(name: str, ip: str, gatewayIp: str) -> None: 
+def createBridge(name: str, ip: str, gatewayIp: str, netflowPort=9000) -> None: 
     nodes[name] = Switch(name)
     nodes[name].instantiate()
     nodes[name].setIp(ip, 24)
     nodes[name].connectToInternet(gatewayIp, 24)
+    nodes[name].enableNetflow(gatewayIp, netflowPort)
 
 
 def createController(name: str, bridgeName: str, controllerIp: str, controllerPort: int) -> None:
@@ -134,8 +135,8 @@ setNetworkConfig(nodes['seafile'], nodes['brint'], external_subnet, 1, setFiles=
 nodes['seafile'].updateServerConfig()
 
 # Create controllers
-nodes['c1'] = createController('c1', 'brint', c1_ip, c1port)
-nodes['c2'] = createController('c2', 'ex', c1_ip, c1port)
+createController('c1', 'brint', c1_ip, c1port)
+createController('c2', 'ex', c1_ip, c1port)
 
 # Create server subnet
 createServer('mail',   mailserver,   server_subnet, 1)

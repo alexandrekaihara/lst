@@ -44,9 +44,9 @@ class Node:
     def instantiate(self, dockerImage="host:latest", dockerCommand = '', dns='8.8.8.8') -> None:
         try:    
             if dockerCommand == '':
-                subprocess.run(f"docker run -d --network=none --privileged --name={self.getNodeName()} --dns={dns} {dockerImage}", shell=True)
+                subprocess.run(f"docker run -d --network=none --privileged --name={self.getNodeName()} --dns={dns} {dockerImage}", shell=True, capture_output=True)
             else:
-                subprocess.run(dockerCommand, shell=True)
+                subprocess.run(dockerCommand, shell=True, capture_output=True)
         except Exception as ex:
             logging.error(f"Error while criating the container {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while criating the container {self.getNodeName()}: {str(ex)}")
@@ -60,7 +60,7 @@ class Node:
     #   None
     def delete(self) -> None:
         try:    
-            subprocess.run(f"docker kill {self.getNodeName()} && docker rm {self.getNodeName()}", shell=True)
+            subprocess.run(f"docker kill {self.getNodeName()} && docker rm {self.getNodeName()}", shell=True, capture_output=True)
         except Exception as ex:
             logging.error(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")
             raise NodeInstantiationFailed(f"Error while deleting the host {self.getNodeName()}: {str(ex)}")

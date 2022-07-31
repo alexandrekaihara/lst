@@ -85,7 +85,7 @@ class Switch(Node):
             logging.error(f"Error adding route default route for switch {self.getNodeName()}: {str(ex)}")
             raise Exception(f"Error adding route default route for switch {self.getNodeName()}: {str(ex)}")
 
-    def enableNetflow(self, destIp: str, destPort: int, activeTimeout: int)  -> None:
+    def enableNetflow(self, destIp: str, destPort: int, activeTimeout=60)  -> None:
         try:
             subprocess.run(f"docker exec {self.getNodeName()} ovs-vsctl -- set Bridge {self.getNodeName()} netflow=@nf --  --id=@nf create  NetFlow  targets=\"{destIp}:{destPort}\"  active-timeout={activeTimeout}", shell=True)
         except Exception as ex:
