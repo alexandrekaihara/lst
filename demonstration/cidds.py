@@ -128,7 +128,7 @@ def collectLogs():
 
 
 # Create folder to store the 
-subprocess.run("mkdir flows", shell=True)
+subprocess.run("mkdir flows 2>/dev/null", shell=True)
 
 # Create Bridges and connect them
 createBridge('brint', brint_ip, int_gateway)
