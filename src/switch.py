@@ -20,13 +20,22 @@ from node import Node
 from exceptions import NodeInstantiationFailed
 
 
-class Switch(Node):
+class Switch(Node): 
+    def __init__(self, name: str, collectMetrics=False, collectTo=''):
+        if collectMetrics:
+            self.collect = True
+            self.collectTo = collectTo
+        super().__init__(name)
+
+
     # Brief: Instantiate an OpenvSwitch switch container
     # Params:
     # Return:
     #   None
     def instantiate(self, controllerIP='', controllerPort=-1) -> None:
-        super().instantiate(dockerCommand=f"docker run -d --network=none --privileged --name={self.getNodeName()} openvswitch")
+        mount = ''
+        if self.collect: mount = f'-v {self.collectTo}:/TCPDUMP_and_CICFlowMeter/csv'
+        super().instantiate(dockerCommand=f"docker run -d --network=none --privileged {mount} --name={self.getNodeName()} openvswitch")
         try:
             # Create bridge and set it up
             subprocess.run(f"docker exec {self.getNodeName()} ovs-vsctl add-br {self.getNodeName()}", shell=True)
@@ -73,7 +82,6 @@ class Switch(Node):
     def setIp(self, ip: str, mask: int) -> None:
         interfaceName = self.getNodeName()
         self._Node__setIp(ip, mask, interfaceName)
-        #self.__addDefaultRoute()
     
     # Brief: Set default route to forward all incoming packets to s1 bridge and let the bridge handle the forwarding
     # Params:
@@ -126,4 +134,11 @@ class Switch(Node):
         except Exception as ex:
             logging.error(f"Error clearing IPFIX on {self.getNodeName()} switch: {str(ex)}")
             raise Exception(f"Error clearing IPFIX on {self.getNodeName()} switch: {str(ex)}")
+
+    def __collectFlows(self, node: Node) -> None:
+        try:
+            subprocess.run(f"sudo ./TCPDUMP_and_CICFlowMeter/capture_interface_pcap.sh {self.__getThisInterfaceName(node)} /TCPDUMP_and_CICFlowMeter/collecteddata", shell=True)
+        except Exception as ex:
+            logging.error(f"Error set the collector on {self.getNodeName()} to {node.getNodeName()}: {str(ex)}")
+            raise Exception(f"Error set the collector on {self.getNodeName()} to {node.getNodeName()}: {str(ex)}")
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from gc import collect
 import signal
 import sys
 import subprocess
@@ -8,6 +9,7 @@ from switch import Switch
 from controller import Controller
 from configparser import ConfigParser
 from node import Node
+from os import getcwd
 from globalvariables import *
 
 class Seafile(Host):
@@ -74,7 +76,7 @@ def setNetworkConfig(node: Node, bridge: Node, subnet: str, address: int, setFil
 
 
 def createBridge(name: str, ip: str, gatewayIp: str, netflowPort=9000) -> None: 
-    nodes[name] = Switch(name)
+    nodes[name] = Switch(name, True, getcwd()+'/flows')
     nodes[name].instantiate()
     nodes[name].setIp(ip, 24)
     nodes[name].connectToInternet(gatewayIp, 24)
@@ -123,6 +125,10 @@ def collectLogs():
     def getLog(ip, host):
         subprocess.run(f'docker cp {host}:/home/debian/log/192.168.{ip}.log logs/192.168.{ip}.log', shell=True)
     [getLog(ip, host) for ip, host in zip(ips, hosts)]
+
+
+# Create folder to store the 
+subprocess.run("mkdir flows", shell=True)
 
 # Create Bridges and connect them
 createBridge('brint', brint_ip, int_gateway)

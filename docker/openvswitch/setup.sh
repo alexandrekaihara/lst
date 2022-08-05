@@ -11,5 +11,6 @@ wget https://github.com/iPAS/TCPDUMP_and_CICFlowMeter/archive/refs/heads/master.
 unzip master.zip
 rm master.zip
 
+mkdir /TCPDUMP_and_CICFlowMeter/collecteddata
 
 
