@@ -34,7 +34,7 @@ class Switch(Node):
     #   None
     def instantiate(self, controllerIP='', controllerPort=-1) -> None:
         mount = ''
-        if self.__collect: mount = f'-v {self.__collectTo}:/TCPDUMP_and_CICFlowMeter-master//csv'
+        if self.__collect: mount = f'-v {self.__collectTo}:/TCPDUMP_and_CICFlowMeter-master/csv'
         super().instantiate(dockerCommand=f"docker run -d --network=none --privileged {mount} --name={self.getNodeName()} openvswitch")
         try:
             # Create bridge and set it up
@@ -137,8 +137,8 @@ class Switch(Node):
 
     def __collectFlows(self, node: Node) -> None:
         try:
-            subprocess.run(f"chmod +x /TCPDUMP_and_CICFlowMeter-master//capture_interface_pcap.sh", shell=True)
-            subprocess.run(f"sudo /TCPDUMP_and_CICFlowMeter-master//capture_interface_pcap.sh {self._Node__getThisInterfaceName(node)} /TCPDUMP_and_CICFlowMeter-master/collecteddata", shell=True)
+            subprocess.run(f"chmod +x /TCPDUMP_and_CICFlowMeter-master/capture_interface_pcap.sh", shell=True)
+            subprocess.run(f"sudo /TCPDUMP_and_CICFlowMeter-master/capture_interface_pcap.sh {self._Node__getThisInterfaceName(node)} /TCPDUMP_and_CICFlowMeter-master/collecteddata", shell=True)
         except Exception as ex:
             logging.error(f"Error set the collector on {self.getNodeName()} to {node.getNodeName()}: {str(ex)}")
             raise Exception(f"Error set the collector on {self.getNodeName()} to {node.getNodeName()}: {str(ex)}")
