@@ -23,8 +23,8 @@ from exceptions import NodeInstantiationFailed
 class Switch(Node): 
     def __init__(self, name: str, collectMetrics=False, collectTo=''):
         if collectMetrics:
-            self.collect = True
-            self.collectTo = collectTo
+            self.__collect = True
+            self.__collectTo = collectTo
         super().__init__(name)
 
 
@@ -34,7 +34,7 @@ class Switch(Node):
     #   None
     def instantiate(self, controllerIP='', controllerPort=-1) -> None:
         mount = ''
-        if self.collect: mount = f'-v {self.collectTo}:/TCPDUMP_and_CICFlowMeter/csv'
+        if self.__collect: mount = f'-v {self.__collectTo}:/TCPDUMP_and_CICFlowMeter/csv'
         super().instantiate(dockerCommand=f"docker run -d --network=none --privileged {mount} --name={self.getNodeName()} openvswitch")
         try:
             # Create bridge and set it up
