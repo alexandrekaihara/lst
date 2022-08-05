@@ -137,7 +137,7 @@ class Switch(Node):
 
     def __collectFlows(self, node: Node) -> None:
         try:
-            subprocess.run(f"sudo ./TCPDUMP_and_CICFlowMeter/capture_interface_pcap.sh {self.__getThisInterfaceName(node)} /TCPDUMP_and_CICFlowMeter/collecteddata", shell=True)
+            subprocess.run(f"sudo ./TCPDUMP_and_CICFlowMeter/capture_interface_pcap.sh {self._Node__getThisInterfaceName(node)} /TCPDUMP_and_CICFlowMeter/collecteddata", shell=True)
         except Exception as ex:
             logging.error(f"Error set the collector on {self.getNodeName()} to {node.getNodeName()}: {str(ex)}")
             raise Exception(f"Error set the collector on {self.getNodeName()} to {node.getNodeName()}: {str(ex)}")
