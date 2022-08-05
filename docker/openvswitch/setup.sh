@@ -7,8 +7,10 @@ RUNLEVEL=1 apt install -y --no-install-recommends openvswitch-switch sudo net-to
 echo -e "export JAVA_HOME=\"/usr/lib/jvm/java-1.11.0-openjdk-amd64\"\nexport PATH=$JAVA_HOME/bin:$PATH" >> /etc/profile
 source /etc/profile
 
-wget https://github.com/iPAS/TCPDUMP_and_CICFlowMeter/archive/refs/heads/master.zip
-unzip master.zip
+until unzip master.zip 
+do
+    wget https://github.com/iPAS/TCPDUMP_and_CICFlowMeter/archive/refs/heads/master.zip
+done
 rm master.zip
 
 mkdir /TCPDUMP_and_CICFlowMeter/collecteddata
