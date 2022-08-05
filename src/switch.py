@@ -114,7 +114,7 @@ class Switch(Node):
             raise Exception(f"Error clearing sFlow on {self.getNodeName()} switch: {str(ex)}")
 
     def enableIPFIX(self, destIp: str, destPort: int, obsDomainId=123, obsPointId=456, cacheActiveTimeout=60, cacheMaxFlow=60, enableInputSampling=False, enableTunnelSampling=True) -> None:
-        try:
+        try:    
             subprocess.run(f"docker exec {self.getNodeName()} ovs-vsctl -- set Bridge {self.getNodeName()} ipfix=@i -- --id=@i create IPFIX targets=\\\"{destIp}:{destPort}\\\" obs_domain_id={str(obsDomainId)} obs_point_id={str(obsPointId)} cache_active_timeout={str(cacheActiveTimeout)} cache_max_flows={str(cacheMaxFlow)} other_config:enable-input-sampling={str(enableInputSampling).lower()} other_config:enable-tunnel-sampling={str(enableTunnelSampling).lower()}", shell=True)
         except Exception as ex:
             logging.error(f"Error setting IPFIX on {self.getNodeName()} switch: {str(ex)}")

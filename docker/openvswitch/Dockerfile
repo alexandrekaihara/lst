@@ -17,8 +17,11 @@
 
 
 FROM ubuntu:20.04
-RUN apt update \
-&&  RUNLEVEL=1 apt install -y --no-install-recommends openvswitch-switch sudo net-tools iproute2 iputils-ping nano iptables
+
+# Start setup
+COPY setup.sh .
+RUN chmod +x setup.sh\
+&& ./setup.sh
 
 COPY onboot.sh /home
 RUN chmod +x /home/onboot.sh

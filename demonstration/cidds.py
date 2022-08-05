@@ -117,7 +117,12 @@ def signal_handler(sig, frame):
     unmakeChanges(nodes)
     sys.exit(0)
 
-
+def collectLogs():
+    hosts = ['e1', 'e2', 'm1', 'm2', 'm3', 'm4', 'o1', 'o2', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9', 'd10', 'd11', 'd12', 'd13']
+    ips = ['50.3', '50.4', '200.2', '200.3', '200.4', '200.5', '210.2', '210.3', '220.2', '220.3', '220.4', '220.5', '220.6', '220.7', '220.8', '220.9', '220.10', '220.11', '220.12', '220.13', '220.14']
+    def getLog(ip, host):
+        subprocess.run(f'docker cp {host}:/home/debian/log/192.168.{ip}.log logs/192.168.{ip}.log', shell=True)
+    [getLog(ip, host) for ip, host in zip(ips, hosts)]
 
 # Create Bridges and connect them
 createBridge('brint', brint_ip, int_gateway)
@@ -136,7 +141,7 @@ nodes['seafile'].updateServerConfig()
 
 # Create controllers
 createController('c1', 'brint', c1_ip, c1port)
-createController('c2', 'ex', c1_ip, c1port)
+createController('c2', 'brex', c1_ip, c1port)
 
 # Create server subnet
 createServer('mail',   mailserver,   server_subnet, 1)
@@ -158,19 +163,19 @@ createLinuxClient('o2', nodes['brint'], office_subnet, 3)
 
 # Set Developer Subnet
 createPrinter('dprinter', developer_subnet)
-createLinuxClient('d1', nodes['brint'], office_subnet, 2)
-createLinuxClient('d2', nodes['brint'], office_subnet, 3)
-createLinuxClient('d3', nodes['brint'], office_subnet, 4)
-createLinuxClient('d4', nodes['brint'], office_subnet, 5)
-createLinuxClient('d5', nodes['brint'], office_subnet, 6)
-createLinuxClient('d6', nodes['brint'], office_subnet, 7)
-createLinuxClient('d7', nodes['brint'], office_subnet, 8)
-createLinuxClient('d8', nodes['brint'], office_subnet, 9)
-createLinuxClient('d9', nodes['brint'], office_subnet, 10)
-createLinuxClient('d10', nodes['brint'], office_subnet, 11)
-createLinuxClient('d11', nodes['brint'], office_subnet, 12)
-createLinuxClient('d12', nodes['brint'], office_subnet, 13)
-createLinuxClient('d13', nodes['brint'], office_subnet, 14)
+createLinuxClient('d1', nodes['brint'], developer_subnet, 2)
+createLinuxClient('d2', nodes['brint'], developer_subnet, 3)
+createLinuxClient('d3', nodes['brint'], developer_subnet, 4)
+createLinuxClient('d4', nodes['brint'], developer_subnet, 5)
+createLinuxClient('d5', nodes['brint'], developer_subnet, 6)
+createLinuxClient('d6', nodes['brint'], developer_subnet, 7)
+createLinuxClient('d7', nodes['brint'], developer_subnet, 8)
+createLinuxClient('d8', nodes['brint'], developer_subnet, 9)
+createLinuxClient('d9', nodes['brint'], developer_subnet, 10)
+createLinuxClient('d10', nodes['brint'], developer_subnet, 11)
+createLinuxClient('d11', nodes['brint'], developer_subnet, 12)
+createLinuxClient('d12', nodes['brint'], developer_subnet, 13)
+createLinuxClient('d13', nodes['brint'], developer_subnet, 14)
 
 # Set External Subnet
 createServer('eweb', webserver, external_subnet, 2)
@@ -181,10 +186,11 @@ createLinuxClient('e2', nodes['brex'], external_subnet, 4)
 [setLinuxClientFileConfig(nodes[f'm{i}'], management_subnet, 'management') for i in range(1, 5)]
 [setLinuxClientFileConfig(nodes[f'o{i}'], office_subnet, 'office') for i in range(1,3)]
 [setLinuxClientFileConfig(nodes[f'd{i}'], developer_subnet, 'administrator') for i in range(1,3)]
-[setLinuxClientFileConfig(nodes[f'd{i}'], developer_subnet, 'developer') for i in range(3,13)]
-[setLinuxClientFileConfig(nodes[f'd{i}'], developer_subnet, 'attacker') for i in range(13,15)]
+[setLinuxClientFileConfig(nodes[f'd{i}'], developer_subnet, 'developer') for i in range(3,12)]
+[setLinuxClientFileConfig(nodes[f'd{i}'], developer_subnet, 'attacker') for i in range(12,14)]
 [setLinuxClientFileConfig(nodes[f'e{i}'], developer_subnet, 'external_attacker') for i in range(1,3)]
 
-unmakeChanges(nodes)
+collectLogs()
+unmakeChanges()
 
 
