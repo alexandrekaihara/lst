@@ -1,4 +1,6 @@
 # Lightweight SDN Testbed (LST)
+## Deprecation Note
+This repository is deprecated, refer to the most revent version of the project on https://github.com/alexandrekaihara/lft. All capabilities from LST are extended and improved on Lightweight Fog Testbed (LFT).
 ## Description
 There are many Emulated Testbeds proposed for Software-Defined Networking (SDN). Nonetheless, there are still few studies that focus on security. And some of them are restricted to the context in which it was designed and/or do not always meet requirements such as easy installation and configuration, topology configurability and low cost, harming the reusability of the tool. Aiming to fulfill the identified gap, we propose the Lightweight SDN Testbed (LST), an easy-to-use tool for local executions for SDN and security studies. 
 
